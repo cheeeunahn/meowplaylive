@@ -3,6 +3,8 @@ let position;
 let velocity;
 let waterSound;
 let splashSound;
+let voiceSound;
+let bubbleSound;
 let mouseColor;
 let hit;
 let poly;
@@ -13,7 +15,9 @@ let rippleRadius;
 function preload() {
     soundFormats('mp3');
     waterSound = loadSound('/assets/waterstream.mp3');
+    voiceSound = loadSound('/assets/test-recording.m4a');
     splashSound = loadSound('/assets/splash.mp3');
+    bubbleSound = loadSound('/assets/bubble.mp3');
     fish_gif = loadImage('/assets/fish_blue.gif');
     angleMode(RADIANS);
 }
@@ -22,7 +26,9 @@ function setup() {
     createCanvas (windowWidth,windowHeight);
     addScreenPositionFunction();
 
-    position = createVector(random(0,windowWidth/2), random(0,windowHeight/2));
+    let px = random(0,windowWidth);
+    let py = random(0,windowHeight);
+    position = createVector(px, py);
     velocity = createVector (9, 9);
 
     rippleRadius = 1;
@@ -44,13 +50,35 @@ function setup() {
 function draw() {
     background(226,237,238);
 
-    position.add(velocity);
-
-    if ((position.x > width + 200) || (position.x < -100)) {
-        velocity.x = velocity.x * -1;
+    if (frameCount%20 ==0) {
+        let v = abs(sin(frameCount/50)*18+1);
+        if (velocity.x < 0) {
+            if (velocity.y < 0)
+                velocity = createVector(-v,-v);
+            else if (velocity.y >= 0)
+                velocity = createVector(-v,v);
+        }
+        else if (velocity.x >= 0){
+            if (velocity.y < 0)
+                velocity = createVector(v,-v);
+            else if (velocity.y >= 0)
+                velocity = createVector(v,v);
+        }
     }
-    if ((position.y > height + 200) || (position.y < -100)) {
+    
+        position.add(velocity);
+
+    if ((position.x > width + 250) || (position.x < -200)) {
+        //velocity.x = random(2,20);
+        velocity.x = velocity.x * -1;
+        bubbleSound.setVolume(0.1);
+        bubbleSound.play();
+    }
+    if ((position.y > height + 250) || (position.y < -200)) {
+        //velocity.y=random(2,20);
         velocity.y = velocity.y * -1;
+        bubbleSound.setVolume(0.1);
+        bubbleSound.play();
     }
 
     
@@ -67,6 +95,12 @@ function draw() {
     rotate(angle);
     image(fish_gif, 0,0, width/4,width/4);
     
+    textSize(width/50);
+    textAlign(CENTER, CENTER);
+    fill(0);
+    noStroke();
+    text('nickname', fish_gif.width/9, fish_gif.height/9);
+    
     let v1 = createVector(0,0);
     let v2 = createVector(fish_gif.width, 0);
     let v3 = createVector(fish_gif.width, fish_gif.height);
@@ -81,15 +115,19 @@ function draw() {
 
 
 
-    mouseColor = color(255,255,0);
-    mouseColor.setAlpha(100);
-    fill(mouseColor);
-    noStroke();
+    //mouseColor = color(255,255,0);
+    //mouseColor.setAlpha(100);
+    //fill(mouseColor);
+    //noStroke();
     if (mouseIsPressed){
-        strokeWeight(5);
-        stroke(50);
+        strokeWeight(6);
+        stroke(255,255,0);
     }
-    circle(pmouseX, pmouseY, height/15);
+    else{
+        noStroke();
+    }
+    noFill();
+    circle(pmouseX, pmouseY, height/10);
 
 
 
@@ -114,9 +152,13 @@ function touchEnded () {
     //console.log(hit);
     if (hit)
     {
-        position = createVector(random(0,windowWidth/2), random(-30,0));
-        splashSound.setVolume(1);
+        let px = random(0,windowWidth);
+        let py = random(0,windowHeight);
+        position = createVector(px, py);
+        splashSound.setVolume(0.2);
         splashSound.play();
+        voiceSound.setVolume(1.5);
+        voiceSound.play();
         displayRipple = true;
     } 
 }

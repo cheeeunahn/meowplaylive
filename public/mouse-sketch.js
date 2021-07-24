@@ -35,7 +35,7 @@ function setup() {
     poly[2] = createVector(0,0);
     poly[3] = createVector(0,0);
 
-    bgSound.setVolume(0.05);
+    bgSound.setVolume(0.1);
     bgSound.loop();
 
     hit = false;
