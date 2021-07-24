@@ -1,13 +1,31 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Main Empty Page</title>
+    <title>Main Page</title>
     <meta name="apple-mobile-web-app-capable" content= "yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
 </head>
 <body>
-    <p>This is the main page.</p>
-    <a href="/fish.html">Click here for Fish</a>
-    <a href="/mouse.html">Click here for Mouse</a>
-    <a href="/laser.html">Click here for Laser</a>
+    <div class="container" style="text-align: center;">
+        <h1 class="mdl-card__title-text" style="font-weight: bold; font-size: 300%; display:inline-block; margin-top: 20%">Welcome to MeowPlayLive!</h1>
+    </div>
+    <div class="containter" style="position: absolute; top: 50%; left: 50%; -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%); transform: translateX(-50%) translateY(-50%); text-align: center;">
+        <h2 class="mdl-card__title-text" style="margin-bottom: 10%">Start Interactive Session</h2>
+        <div class="content" id="fish" style="display: inline-block;">
+            <button onclick="window.location.href='./fish.html'" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                Fish
+            </button>
+        </div>
+        <div class="content" id ="mouse" style="display: inline-block;">
+            <button onclick="window.location.href='./mouse.html'" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                Mouse
+            </button>
+        </div>
+    </div>
 </body>
 </html>
