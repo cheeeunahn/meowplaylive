@@ -15,7 +15,7 @@ let rippleRadius;
 function preload() {
     soundFormats('mp3');
     waterSound = loadSound('/assets/waterstream.mp3');
-    voiceSound = loadSound('/assets/test-recording.m4a');
+    voiceSound = loadSound('/uploads/test-recording.m4a');
     splashSound = loadSound('/assets/splash.mp3');
     bubbleSound = loadSound('/assets/bubble.mp3');
     fish_gif = loadImage('/assets/fish_blue.gif');
