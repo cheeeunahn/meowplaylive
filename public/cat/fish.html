@@ -40,5 +40,15 @@
             }
         }
     </script>
+    <!--This is a test for nedb testing-->
+    <script>
+        getData();
+        async function getData() {
+            const response = await fetch('/test');
+            const data = await response.json();
+            console.log(data);
+        }
+    </script>
+    <!---------------------------------->
 </body>
 </html>

@@ -11,12 +11,19 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
 // Added to test socket.io communication
+// Delete after test complete ////////////////////
 const socket = require ('socket.io');
 const { SocketAddress } = require('net');
 const io = socket(server);
 
 io.sockets.on('connection', newConnection);
-////////////////////////////////////////
+
+// Testing nedb
+const Datastore = require('nedb');
+const { response } = require('express');
+const database = new Datastore('database.db');
+database.loadDatabase();
+//////////////////////////////////////////////////
 
 // Suppress CORS warning.
 app.use(cors());
@@ -27,9 +34,20 @@ const audioPath = path.join(__dirname, 'nicknameToResults');
 const uploadAudio = multer({dest: audioPath});
 const uploadAudioDetail = uploadAudio.fields([{name: 'nickname'}, {name: 'audio'}]);
 
+
 app.get('/test', (req, res) => {
-    res.send('Success!');
+    //res.send('Success!');
+    // testing nedb
+    //res.json({test: "test"});
+    database.find({}, (err, data) => {
+        if (err){
+            res.end;
+            return;
+        }
+        res.json(data);
+    });
 });
+
 
 app.post('/upload-audio', uploadAudioDetail, (req, res) => {
     const nickname = req.body.nickname;
@@ -41,16 +59,21 @@ app.post('/upload-audio', uploadAudioDetail, (req, res) => {
     console.log(`Saved ${nickname}.mp3!`);
 });
 
-// Handle sockets
+// Handle sockets for testing purposes
+// Delete after test complete ////////////////////
 function newConnection(socket) {
     console.log('new connection: ' + socket.id);
     socket.on('button-clicked', buttonClicked);
 
     function buttonClicked() {
+        const timestamp = Date.now(); // save current time
+        database.insert({content: "a button has been clicked", timestamp: timestamp}); // testing nedb
         socket.broadcast.emit('button-clicked', "button-clicked");
         console.log('button clicked!');
+
     }
 }
+//////////////////////////////////////////////////
 
 server.listen(PORT, function(){
     console.log(`initiating server at ${ PORT }`);
