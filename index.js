@@ -30,11 +30,6 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-//const audioPath = path.join(__dirname, 'nicknameToResults');
-//const uploadAudio = multer({dest: audioPath});
-//const uploadAudioDetail = uploadAudio.fields([{name: 'nickname'}, {name: 'audio'}]);
-
-
 app.get('/test', (req, res) => {
     // commented for nedb testing purposes
     //res.send('Success!');
@@ -66,7 +61,6 @@ app.post('/upload-audio', (req, res) => {
     fs.renameSync(path.join(audioPath, audio.filename), path.join(audioPath, `${nickname}.mp3`));
     res.send('Success!');
     console.log(`Saved ${nickname}.mp3!`);
-
 });*/
 
 // Handle sockets for testing purposes

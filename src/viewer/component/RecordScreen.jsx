@@ -21,11 +21,12 @@ export const RecordScreen = () => {
             onStop: blob => {
                 //playAudioBlob(blob);
 
+                const nickname = prompt('Nickname?'); // For testing.
                 const formData = new FormData();
-                formData.append('nickname', 'Hunmin Park');
-                formData.append('audio', blob, 'recording-Hunmin-Park.mp3');
+                formData.append('nickname', nickname);
+                formData.append('audio', blob);
 
-                fetch('https://goyangi-client-server-test.herokuapp.com/upload-audio', {
+                fetch('/upload-audio', {
                     method: 'POST',
                     body: formData
                 });
