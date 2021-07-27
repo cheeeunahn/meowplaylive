@@ -20,6 +20,10 @@ const audioPath = path.join(__dirname, 'nicknameToResults');
 const uploadAudio = multer({dest: audioPath});
 const uploadAudioDetail = uploadAudio.fields([{name: 'nickname'}, {name: 'audio'}]);
 
+app.get('/test', (req, res) => {
+    res.send('Success!');
+});
+
 app.post('/upload-audio', uploadAudioDetail, (req, res) => {
     const nickname = req.body.nickname;
     const audio = req.files['audio'][0];
