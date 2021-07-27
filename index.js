@@ -14,8 +14,6 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.get ('/', (req, res) => res.sendFile(__dirname + './public/fish.html'))
-//app.get('/mouse', (req, res) => res.setFile(__dirname+'/public/mouse.html'))
 
 const audioPath = path.join(__dirname, 'nicknameToResults');
 const uploadAudio = multer({dest: audioPath});

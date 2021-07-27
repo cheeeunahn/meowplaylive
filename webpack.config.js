@@ -4,10 +4,10 @@ const path = require('path');
 const rootPath = path.resolve(__dirname);
 
 // React source code files' path.
-const srcPath = path.join(rootPath, 'src', 'human');
+const srcPath = path.join(rootPath, 'src', 'viewer');
 
 // Output files' path.
-const outPath = path.join(rootPath, 'public', 'human', 'app');
+const outPath = path.join(rootPath, 'public', 'viewer');
 
 module.exports = (env, argv) => {
     const isDebugMode = !argv || argv.mode === 'development';
@@ -19,7 +19,7 @@ module.exports = (env, argv) => {
         target: ['web', 'es3'],
         output: {
             path: outPath,
-            filename: 'main.min.js'
+            filename: 'viewer.min.js'
         },
         resolve: {
             extensions: ['.js', '.jsx']
