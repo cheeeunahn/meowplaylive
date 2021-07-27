@@ -18,9 +18,9 @@ const io = socket(server);
 
 io.sockets.on('connection', newConnection);
 
-// Testing nedb
+// Testing nedb database
 const Datastore = require('nedb');
-const { response } = require('express');
+const {response} = require('express');
 const database = new Datastore('database.db');
 database.loadDatabase();
 //////////////////////////////////////////////////
@@ -30,15 +30,16 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-const audioPath = path.join(__dirname, 'nicknameToResults');
-const uploadAudio = multer({dest: audioPath});
-const uploadAudioDetail = uploadAudio.fields([{name: 'nickname'}, {name: 'audio'}]);
+//const audioPath = path.join(__dirname, 'nicknameToResults');
+//const uploadAudio = multer({dest: audioPath});
+//const uploadAudioDetail = uploadAudio.fields([{name: 'nickname'}, {name: 'audio'}]);
 
 
 app.get('/test', (req, res) => {
+    // commented for nedb testing purposes
     //res.send('Success!');
+    
     // testing nedb
-    //res.json({test: "test"});
     database.find({}, (err, data) => {
         if (err){
             res.end;
@@ -49,7 +50,9 @@ app.get('/test', (req, res) => {
 });
 
 
+
 app.post('/upload-audio', uploadAudioDetail, (req, res) => {
+
     const nickname = req.body.nickname;
     const audio = req.files['audio'][0];
 
@@ -57,6 +60,7 @@ app.post('/upload-audio', uploadAudioDetail, (req, res) => {
     fs.renameSync(path.join(audioPath, audio.filename), path.join(audioPath, `${nickname}.mp3`));
     res.send('Success!');
     console.log(`Saved ${nickname}.mp3!`);
+
 });
 
 // Handle sockets for testing purposes
@@ -67,6 +71,7 @@ function newConnection(socket) {
 
     function buttonClicked() {
         const timestamp = Date.now(); // save current time
+        // insert string whenever a button is clicked
         database.insert({content: "a button has been clicked", timestamp: timestamp}); // testing nedb
         socket.broadcast.emit('button-clicked', "button-clicked");
         console.log('button clicked!');
