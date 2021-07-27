@@ -89,15 +89,15 @@ function draw() {
 
 
 
-    mouseColor = color(255,255,0);
-    mouseColor.setAlpha(100);
-    fill(mouseColor);
-    noStroke();
     if (mouseIsPressed){
-        strokeWeight(5);
-        stroke(50);
+        strokeWeight(6);
+        stroke(255,255,0);
     }
-    circle(pmouseX, pmouseY, height/15);
+    else{
+        noStroke();
+    }
+    noFill();
+    circle(pmouseX, pmouseY, height/10);
 
 
 

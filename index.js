@@ -10,6 +10,14 @@ const server = http.createServer(app);
 
 const PORT = process.env.PORT || 5000;
 
+// Added to test socket.io communication
+const socket = require ('socket.io');
+const { SocketAddress } = require('net');
+const io = socket(server);
+
+io.sockets.on('connection', newConnection);
+////////////////////////////////////////
+
 // Suppress CORS warning.
 app.use(cors());
 
@@ -32,6 +40,17 @@ app.post('/upload-audio', uploadAudioDetail, (req, res) => {
     res.send('Success!');
     console.log(`Saved ${nickname}.mp3!`);
 });
+
+// Handle sockets
+function newConnection(socket) {
+    console.log('new connection: ' + socket.id);
+    socket.on('button-clicked', buttonClicked);
+
+    function buttonClicked() {
+        socket.broadcast.emit('button-clicked', "button-clicked");
+        console.log('button clicked!');
+    }
+}
 
 server.listen(PORT, function(){
     console.log(`initiating server at ${ PORT }`);

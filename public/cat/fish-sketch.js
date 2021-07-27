@@ -26,10 +26,12 @@ function setup() {
     createCanvas (windowWidth,windowHeight);
     addScreenPositionFunction();
 
+    /*
     let px = random(0,windowWidth);
     let py = random(0,windowHeight);
     position = createVector(px, py);
     velocity = createVector (9, 9);
+    */
 
     rippleRadius = 1;
 
@@ -45,75 +47,88 @@ function setup() {
     hit = false;
     displayRipple = false;
     fish_gif.play();
+
+    // socket connection
+    socket = io();
+    socket.on('button-clicked', drawFish);
 }
 
 function draw() {
     background(226,237,238);
+}
 
-    if (frameCount%20 ==0) {
-        let v = abs(sin(frameCount/50)*18+1);
-        if (velocity.x < 0) {
-            if (velocity.y < 0)
-                velocity = createVector(-v,-v);
-            else if (velocity.y >= 0)
-                velocity = createVector(-v,v);
+
+function draw() {
+    background(226,237,238);
+
+    if (velocity != null)
+    {
+
+        if (frameCount%20 ==0) {
+            let v = abs(sin(frameCount/50)*18+1);
+            if (velocity.x < 0) {
+                if (velocity.y < 0)
+                    velocity = createVector(-v,-v);
+                else if (velocity.y >= 0)
+                    velocity = createVector(-v,v);
+            }
+            else if (velocity.x >= 0){
+                if (velocity.y < 0)
+                    velocity = createVector(v,-v);
+                else if (velocity.y >= 0)
+                    velocity = createVector(v,v);
+            }
         }
-        else if (velocity.x >= 0){
-            if (velocity.y < 0)
-                velocity = createVector(v,-v);
-            else if (velocity.y >= 0)
-                velocity = createVector(v,v);
+        
+            position.add(velocity);
+
+        /*
+        if ((position.x > width + 250) || (position.x < -200)) {
+            //velocity.x = random(2,20);
+            velocity.x = velocity.x * -1;
+            bubbleSound.setVolume(0.1);
+            bubbleSound.play();
         }
+        if ((position.y > height + 250) || (position.y < -200)) {
+            //velocity.y=random(2,20);
+            velocity.y = velocity.y * -1;
+            bubbleSound.setVolume(0.1);
+            bubbleSound.play();
+        }*/
+
+        
+        push();
+        translate (position.x, position.y);
+
+        if (velocity.y > 0)
+            angle = (3*PI/2)-atan(velocity.y/velocity.x);
+        //rotate((3*PI/2)-atan(velocity.y/velocity.x));
+        else
+            angle = (-3*PI/2)-atan(velocity.y/velocity.x);
+            //rotate((-3*PI/2)-atan(velocity.y/velocity.x));
+
+        rotate(angle);
+        image(fish_gif, 0,0, width/4,width/4);
+        
+        textSize(width/50);
+        textAlign(CENTER, CENTER);
+        fill(0);
+        noStroke();
+        text('nickname', fish_gif.width/9, fish_gif.height/9);
+        
+        let v1 = createVector(0,0);
+        let v2 = createVector(fish_gif.width, 0);
+        let v3 = createVector(fish_gif.width, fish_gif.height);
+        let v4 = createVector(0,fish_gif.height);
+
+        poly[0] = screenPosition(v1);
+        poly[1] = screenPosition(v2);
+        poly[2] = screenPosition(v3);
+        poly[3] = screenPosition(v4);
+
+        pop();
+
     }
-    
-        position.add(velocity);
-
-    if ((position.x > width + 250) || (position.x < -200)) {
-        //velocity.x = random(2,20);
-        velocity.x = velocity.x * -1;
-        bubbleSound.setVolume(0.1);
-        bubbleSound.play();
-    }
-    if ((position.y > height + 250) || (position.y < -200)) {
-        //velocity.y=random(2,20);
-        velocity.y = velocity.y * -1;
-        bubbleSound.setVolume(0.1);
-        bubbleSound.play();
-    }
-
-    
-    push();
-    translate (position.x, position.y);
-
-    if (velocity.y > 0)
-        angle = (3*PI/2)-atan(velocity.y/velocity.x);
-    //rotate((3*PI/2)-atan(velocity.y/velocity.x));
-    else
-        angle = (-3*PI/2)-atan(velocity.y/velocity.x);
-        //rotate((-3*PI/2)-atan(velocity.y/velocity.x));
-
-    rotate(angle);
-    image(fish_gif, 0,0, width/4,width/4);
-    
-    textSize(width/50);
-    textAlign(CENTER, CENTER);
-    fill(0);
-    noStroke();
-    text('nickname', fish_gif.width/9, fish_gif.height/9);
-    
-    let v1 = createVector(0,0);
-    let v2 = createVector(fish_gif.width, 0);
-    let v3 = createVector(fish_gif.width, fish_gif.height);
-    let v4 = createVector(0,fish_gif.height);
-
-    poly[0] = screenPosition(v1);
-    poly[1] = screenPosition(v2);
-    poly[2] = screenPosition(v3);
-    poly[3] = screenPosition(v4);
-
-    pop();
-
-
 
     //mouseColor = color(255,255,0);
     //mouseColor.setAlpha(100);
@@ -143,8 +158,14 @@ function draw() {
             displayRipple = false;
         }
     }
-    
-}    
+}
+
+function drawFish () {
+    let px = random(0,windowWidth);
+    let py = random(0,windowHeight);
+    position = createVector(px, py);
+    velocity = createVector (9, 9);
+}
 
 function touchEnded () {
     //console.log(poly[0]);
