@@ -13,10 +13,10 @@ let rippleRadius;
 
 function preload() {
     soundFormats('mp3');
-    bgSound = loadSound('/assets/bgsound.mp3');
-    squeakSound = loadSound('/assets/squeak.mp3');
-    hitSound = loadSound('/assets/squeak2.mp3');
-    mouse_gif = loadImage('/assets/mouse.gif');
+    bgSound = loadSound('./assets/bgsound.mp3');
+    squeakSound = loadSound('./assets/squeak.mp3');
+    hitSound = loadSound('./assets/squeak2.mp3');
+    mouse_gif = loadImage('./assets/mouse.gif');
     angleMode(RADIANS);
 }
 
