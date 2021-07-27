@@ -10,7 +10,17 @@ const server = http.createServer(app);
 
 const PORT = process.env.PORT || 5000;
 
-app.use(cors()); // Suppress CORS warning.
+// Suppress CORS warning.
+app.use(cors());
+
+// Allow anyone to send the request.
+app.use(function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", '*');
+        res.header("Access-Control-Allow-Credentials", true);
+        res.header('Access-Control-Allow-Methods', 'GET,POST'); //'GET,PUT,POST,DELETE,OPTIONS');
+        res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+        next();
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.get ('/', (req, res) => res.sendFile(__dirname + './public/fish.html'))
