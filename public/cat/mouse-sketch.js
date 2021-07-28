@@ -174,6 +174,7 @@ function touchEnded () {
             voiceSound.stop();    
         voiceSound.play();
         displayRipple = true;
+        socket.emit('cat-tap-success');
     } 
 }
 

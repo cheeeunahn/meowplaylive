@@ -74,6 +74,7 @@ app.post('/upload-audio', (req, res) => {
 function newConnection(socket) {
     console.log('new connection: ' + socket.id);
     socket.on('button-clicked', buttonClicked);
+    socket.on('cat-tap-success', catTapSuccess);
 
     function buttonClicked() {
         const timestamp = Date.now(); // save current time
@@ -81,7 +82,11 @@ function newConnection(socket) {
         database.insert({content: "a button has been clicked", timestamp: timestamp}); // testing nedb
         socket.broadcast.emit('button-clicked', "button-clicked");
         console.log('button clicked!');
+    }
 
+    function catTapSuccess() {
+        socket.broadcast.emit('cat-tap-success', "cat-tap-success");
+        console.log('cat tap success!');
     }
 }
 //////////////////////////////////////////////////
