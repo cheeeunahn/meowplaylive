@@ -49,9 +49,15 @@ app.get('/test', (req, res) => {
     });
 });
 
+app.post('/upload-audio', (req, res) => {
+    const data = request.body;
+    database.insert(data);
+    res.json(data);
+    console.log("hello");
+});
 
 
-app.post('/upload-audio', uploadAudioDetail, (req, res) => {
+/*app.post('/upload-audio', uploadAudioDetail, (req, res) => {
 
     const nickname = req.body.nickname;
     const audio = req.files['audio'][0];
@@ -61,7 +67,7 @@ app.post('/upload-audio', uploadAudioDetail, (req, res) => {
     res.send('Success!');
     console.log(`Saved ${nickname}.mp3!`);
 
-});
+});*/
 
 // Handle sockets for testing purposes
 // Delete after test complete ////////////////////

@@ -13,12 +13,14 @@ let displayRipple;
 let rippleRadius;
 
 function preload() {
+    // load sound and image files
     soundFormats('mp3');
     waterSound = loadSound('./assets/waterstream.mp3');
     voiceSound = loadSound('./uploads/test-recording.m4a');
     splashSound = loadSound('./assets/splash.mp3');
     bubbleSound = loadSound('./assets/bubble.mp3');
     fish_gif = loadImage('./assets/fish_blue.gif');
+
     angleMode(RADIANS);
 }
 
@@ -46,6 +48,7 @@ function setup() {
 
     hit = false;
     displayRipple = false;
+
     fish_gif.play();
 
     // socket connection
@@ -61,60 +64,33 @@ function draw() {
 function draw() {
     background(226,237,238);
 
-    if (velocity != null)
-    {
-
-        if (frameCount%20 ==0) {
-            let v = abs(sin(frameCount/50)*18+1);
-            if (velocity.x < 0) {
-                if (velocity.y < 0)
-                    velocity = createVector(-v,-v);
-                else if (velocity.y >= 0)
-                    velocity = createVector(-v,v);
-            }
-            else if (velocity.x >= 0){
-                if (velocity.y < 0)
-                    velocity = createVector(v,-v);
-                else if (velocity.y >= 0)
-                    velocity = createVector(v,v);
-            }
-        }
+    if (velocity != null) {
         
-            position.add(velocity);
-
-        /*
-        if ((position.x > width + 250) || (position.x < -200)) {
-            //velocity.x = random(2,20);
-            velocity.x = velocity.x * -1;
-            bubbleSound.setVolume(0.1);
-            bubbleSound.play();
-        }
-        if ((position.y > height + 250) || (position.y < -200)) {
-            //velocity.y=random(2,20);
-            velocity.y = velocity.y * -1;
-            bubbleSound.setVolume(0.1);
-            bubbleSound.play();
-        }*/
-
+        position.add(velocity);
         
         push();
         translate (position.x, position.y);
 
-        if (velocity.y > 0)
-            angle = (3*PI/2)-atan(velocity.y/velocity.x);
-        //rotate((3*PI/2)-atan(velocity.y/velocity.x));
-        else
-            angle = (-3*PI/2)-atan(velocity.y/velocity.x);
-            //rotate((-3*PI/2)-atan(velocity.y/velocity.x));
-
+        if (velocity.y > 0) {
+            if (velocity.x > 0)
+                angle = atan(velocity.y/velocity.x)-(PI);
+            else
+                angle = (-3*PI/2)-atan(-velocity.y/velocity.x)-PI/2;    
+        }
+        else {
+            if (velocity.x > 0)
+                angle = (-3*PI/2)-atan(-velocity.y/velocity.x)+PI/2;
+            else
+                angle = (3*PI/2)-atan(-velocity.y/velocity.x)+PI/2;
+        }
         rotate(angle);
+
         image(fish_gif, 0,0, width/4,width/4);
-        
         textSize(width/50);
         textAlign(CENTER, CENTER);
         fill(0);
         noStroke();
-        text('nickname', fish_gif.width/9, fish_gif.height/9);
+        text('WonderLab', fish_gif.width/9, fish_gif.height/9);
         
         let v1 = createVector(0,0);
         let v2 = createVector(fish_gif.width, 0);
@@ -127,23 +103,17 @@ function draw() {
         poly[3] = screenPosition(v4);
 
         pop();
-
     }
 
-    //mouseColor = color(255,255,0);
-    //mouseColor.setAlpha(100);
-    //fill(mouseColor);
-    //noStroke();
-    if (mouseIsPressed){
+    if (mouseIsPressed) {
         strokeWeight(6);
         stroke(255,255,0);
     }
-    else{
+    else {
         noStroke();
     }
     noFill();
     circle(pmouseX, pmouseY, height/10);
-
 
 
     if (displayRipple) {
@@ -161,10 +131,29 @@ function draw() {
 }
 
 function drawFish () {
-    let px = random(0,windowWidth);
-    let py = random(0,windowHeight);
+    bubbleSound.setVolume(0.2);
+    bubbleSound.play();
+    let px = random(10,windowWidth+10);
+    let py = random(10,windowHeight-100);
     position = createVector(px, py);
-    velocity = createVector (9, 9);
+    let vx = random(-12,12);
+    let vy = random(-12,12);
+
+    while (vx == vy) {
+        if (abs(vx) < 6){
+            vx = random(-12,12);
+            vy = random(-12,12);
+        }
+        else
+            break;
+    }
+
+    if (vx > 0 && px > windowWidth/2)
+        vx = -vx;
+    if (vy > 0 && py > windowHeight/2)
+        vy = -vy;
+
+    velocity = createVector (vx, vy);
 }
 
 function touchEnded () {
@@ -173,12 +162,15 @@ function touchEnded () {
     //console.log(hit);
     if (hit)
     {
-        let px = random(0,windowWidth);
-        let py = random(0,windowHeight);
+        let px = -500;
+        let py = -500; // put it somewhere invisible
         position = createVector(px, py);
-        splashSound.setVolume(0.2);
+        velocity = createVector(0,0);
+        splashSound.setVolume(0.6);
         splashSound.play();
         voiceSound.setVolume(1.5);
+        if (voiceSound.isPlaying())
+            voiceSound.stop();    
         voiceSound.play();
         displayRipple = true;
     } 
