@@ -58,11 +58,6 @@ function setup() {
 
 function draw() {
     background(226,237,238);
-}
-
-
-function draw() {
-    background(226,237,238);
 
     if (velocity != null) {
         
@@ -131,7 +126,7 @@ function draw() {
 }
 
 function drawFish () {
-    bubbleSound.setVolume(0.2);
+    bubbleSound.setVolume(0.4);
     bubbleSound.play();
     let px = random(10,windowWidth+10);
     let py = random(10,windowHeight-100);
@@ -139,13 +134,9 @@ function drawFish () {
     let vx = random(-12,12);
     let vy = random(-12,12);
 
-    while (vx == vy) {
-        if (abs(vx) < 6){
-            vx = random(-12,12);
-            vy = random(-12,12);
-        }
-        else
-            break;
+    while (vx == vy || abs(vx) < 6) {
+        vx = random(-12,12);
+        vy = random(-12,12);
     }
 
     if (vx > 0 && px > windowWidth/2)
@@ -166,9 +157,9 @@ function touchEnded () {
         let py = -500; // put it somewhere invisible
         position = createVector(px, py);
         velocity = createVector(0,0);
-        splashSound.setVolume(0.6);
+        splashSound.setVolume(0.7);
         splashSound.play();
-        voiceSound.setVolume(1.5);
+        voiceSound.setVolume(2.0);
         if (voiceSound.isPlaying())
             voiceSound.stop();    
         voiceSound.play();
