@@ -5,35 +5,19 @@ import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import Slider from '@material-ui/core/Slider';
 import Input from '@material-ui/core/Input';
-import { css, keyframes } from '@emotion/css';
-
-const openAnimation = keyframes({
-    '0%': {
-        opacity: 0
-    },
-    '100%': {
-        opacity: 1
-    }
-});
+import { css } from '@emotion/css';
 
 /**
- * Component which represents a 'screen'.
+ * Color palette for the whole application.
  */
-export const CommonScreen = ({ children }) => (
-    <div className={css({
-        display: 'flex',
-        flexDirection: 'column',
-        boxSizing: 'border-box',
-        width: '100%',
-        height: '100%',
-        paddingTop: '2rem',
-        alignItems: 'center',
-        animation: `${openAnimation} 1s 1`,
-        flex: 1 // Fill the remaining height.
-    })}>
-        {children}
-    </div>
-);
+export const commonColorMap = {
+    black: '#3c4449',
+    brown: '#824a48',
+    blue: '#2e588e',
+    pink: '#f48fb1',
+    green: '#0a7073',
+    white: '#e5e5e5'
+};
 
 const brightTheme = createTheme({
     palette: {
