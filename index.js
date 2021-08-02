@@ -69,25 +69,33 @@ app.post('/upload-audio', (req, res) => {
 
 });*/
 
-// Handle sockets for testing purposes
-// Delete after test complete ////////////////////
+// Handle sockets for testing purposes//////
+// a nice cheat sheet from stackoverflow: https://stackoverflow.com/questions/10058226/send-response-to-all-clients-except-sender
 function newConnection(socket) {
     console.log('new connection: ' + socket.id);
-    socket.on('button-clicked', buttonClicked);
-    socket.on('cat-tap-success', catTapSuccess);
-
-    function buttonClicked() {
+    
+    socket.on('button-clicked', () => {
         const timestamp = Date.now(); // save current time
         // insert string whenever a button is clicked
         database.insert({content: "a button has been clicked", timestamp: timestamp}); // testing nedb
-        socket.broadcast.emit('button-clicked', "button-clicked");
+        socket.broadcast.emit('button-clicked', {id: socket.id, msg: "button-clicked"}); // save unique socket id
         console.log('button clicked!');
-    }
-
-    function catTapSuccess() {
-        socket.broadcast.emit('cat-tap-success', "cat-tap-success");
+    });
+    
+    socket.on('cat-tap-success', (socketid) => {
+        socket.broadcast.to(socketid).emit('cat-tap-success');
         console.log('cat tap success!');
-    }
+    });
+    
+    socket.on('name-sent', (arg) => {
+        console.log(arg);
+        socket.broadcast.emit('name-sent', (arg));
+      });
+    
+      socket.on('number-exceeded', (arg) => {
+        socket.broadcast.to(arg.id).emit('number-exceeded');
+        console.log('oops! too many objects on the screen!');
+    });
 }
 //////////////////////////////////////////////////
 
