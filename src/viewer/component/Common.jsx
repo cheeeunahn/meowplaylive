@@ -1,6 +1,5 @@
 import React from 'react';
-import ThemeProvider from '@material-ui/styles/ThemeProvider';
-import createTheme from '@material-ui/core/styles/createTheme';
+import { lighten, darken } from '@material-ui/core/styles/colorManipulator';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import Slider from '@material-ui/core/Slider';
@@ -10,7 +9,7 @@ import { css } from '@emotion/css';
 /**
  * Color palette for the whole application.
  */
-export const commonColorMap = {
+export const commonPalette = {
     black: '#3c4449',
     brown: '#824a48',
     blue: '#2e588e',
@@ -19,29 +18,6 @@ export const commonColorMap = {
     white: '#e5e5e5'
 };
 
-const brightTheme = createTheme({
-    palette: {
-        type: 'light'
-    }
-});
-
-const darkTheme = createTheme({
-    palette: {
-        type: 'dark'
-    }
-});
-
-/**
- * Wrap the components with this to set their theme easily.
- *
- * @param isBright Set the childs bright/dark.
- */
-export const CommonTheme = ({ isBright = true, children }) => (
-    <ThemeProvider theme={isBright ? brightTheme : darkTheme}>
-        {children}
-    </ThemeProvider>
-);
-
 /**
  * Simple 'box'.
  *
@@ -49,12 +25,10 @@ export const CommonTheme = ({ isBright = true, children }) => (
  * @param className Style to override
  */
 export const CommonCard = ({
-    fillWidth = true,
     className = '',
     children
 }) => {
     const defaultStyle = css({
-        width: fillWidth ? '100%' : 'auto',
         boxSizing: 'border-box',
         padding: '2rem'
     });
@@ -69,30 +43,36 @@ export const CommonCard = ({
 /**
  * Button component.
  *
- * @param fillWidth Fill the parent's width or not
+ * @param buttonColor Color of the button
  * @param isDisabled Disable the button or not
  * @param onClick The function to run when the button is clicked
  * @param className Style to override
  */
 export const CommonButton = ({
-    fillWidth = false,
+    buttonColor = commonPalette.blue,
     isDisabled = false,
     onClick = () => { },
     className = '',
     children
 }) => {
     const defaultStyle = css({
-        width: fillWidth ? '100%' : 'auto',
         fontFamily: 'inherit',
         // Stop Material from changing the text to uppercase.
-        textTransform: 'none !important',
-        fontSize: 'inherit !important'
+        textTransform: 'none',
+        fontSize: 'inherit',
+        color: commonPalette.white,
+        backgroundColor: buttonColor,
+        '&:hover': {
+            backgroundColor: darken(buttonColor, 0.2)
+        },
+        '&:disabled': {
+            backgroundColor: lighten(buttonColor, 0.2)
+        }
     });
 
     return (
         <Button
             className={css([defaultStyle, className])}
-            color={'primary'}
             variant={'contained'}
             onClick={onClick}
             disabled={isDisabled}
