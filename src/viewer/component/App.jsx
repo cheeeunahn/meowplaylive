@@ -2,17 +2,9 @@ import React from 'react';
 import { StylesProvider } from '@material-ui/core';
 import { css } from '@emotion/css';
 
+import { commonColors } from './Common';
 import { Header } from './Header';
-import { commonPalette } from './Common';
-
-const Content = () => (
-    <div className={css({
-        width: '100%',
-        flex: 1
-    })}>
-
-    </div>
-);
+import { Content } from './Content';
 
 export const App = () => {
     return (
@@ -22,10 +14,17 @@ export const App = () => {
                 flexDirection: 'column',
                 width: '100%',
                 height: '100%',
-                color: commonPalette.black
+                color: commonColors.black
             })}>
                 <Header />
-                <Content />
+                <div className={css({
+                    boxSizing: 'border-box',
+                    width: '100%',
+                    padding: '2rem',
+                    flex: 1
+                })}>
+                    <Content />
+                </div>
             </div>
         </StylesProvider>
     );

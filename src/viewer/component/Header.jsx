@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/css';
 
-import { CommonButton, CommonCard, commonPalette } from './Common';
+import { CommonButton, CommonBox, commonColors, commonSizes } from './Common';
 
 const Title = () => (
     <div className={css({
@@ -14,7 +14,8 @@ const Title = () => (
 const Subtitle = () => (
     <div className={css({
         display: 'flex',
-        width: '100%',
+        width: commonSizes.appWidth,
+        maxWidth: '100%',
         flexDirection: 'row',
         alignItems: 'center'
     })}>
@@ -23,7 +24,7 @@ const Subtitle = () => (
             className={css({
                 marginLeft: 'auto', // Align right.
             })}
-            buttonColor={commonPalette.brown}
+            buttonColor={commonColors.brown}
         >
             ⬅️ Exit
         </CommonButton>
@@ -31,15 +32,15 @@ const Subtitle = () => (
 );
 
 export const Header = () => (
-    <CommonCard className={css({
+    <CommonBox className={css({
         boxSizing: 'border-box',
         width: '100%',
         paddingBottom: '1rem',
         borderRadius: 0,
-        color: commonPalette.white,
-        backgroundColor: commonPalette.black
+        color: commonColors.white,
+        backgroundColor: commonColors.black
     })}>
         <Title />
         <Subtitle />
-    </CommonCard>
+    </CommonBox>
 );

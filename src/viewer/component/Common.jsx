@@ -1,15 +1,20 @@
 import React from 'react';
 import { lighten, darken } from '@material-ui/core/styles/colorManipulator';
-import Card from '@material-ui/core/Card';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Slider from '@material-ui/core/Slider';
 import Input from '@material-ui/core/Input';
 import { css } from '@emotion/css';
 
+export const commonSizes = {
+    // Our guess of proper content width.
+    appWidth: '600px'
+};
+
 /**
  * Color palette for the whole application.
  */
-export const commonPalette = {
+export const commonColors = {
     black: '#3c4449',
     brown: '#824a48',
     blue: '#2e588e',
@@ -24,7 +29,7 @@ export const commonPalette = {
  * @param fillWidth Fill the parent's width or not
  * @param className Style to override
  */
-export const CommonCard = ({
+export const CommonBox = ({
     className = '',
     children
 }) => {
@@ -34,9 +39,12 @@ export const CommonCard = ({
     });
 
     return (
-        <Card className={css([defaultStyle, className])}>
+        <Box
+            className={css([defaultStyle, className])}
+            boxShadow={3}
+        >
             {children}
-        </Card>
+        </Box>
     );
 };
 
@@ -49,7 +57,7 @@ export const CommonCard = ({
  * @param className Style to override
  */
 export const CommonButton = ({
-    buttonColor = commonPalette.blue,
+    buttonColor = commonColors.blue,
     isDisabled = false,
     onClick = () => { },
     className = '',
@@ -57,10 +65,8 @@ export const CommonButton = ({
 }) => {
     const defaultStyle = css({
         fontFamily: 'inherit',
-        // Stop Material from changing the text to uppercase.
-        textTransform: 'none',
         fontSize: 'inherit',
-        color: commonPalette.white,
+        color: commonColors.white,
         backgroundColor: buttonColor,
         '&:hover': {
             backgroundColor: darken(buttonColor, 0.2)
