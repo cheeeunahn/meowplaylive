@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { css } from '@emotion/css';
 
 import { CommonBox, commonSizes, commonColors, CommonButton } from './Common';
 import { CatScreen } from './CatScreen';
+import { RecordDialog } from './RecordDialog';
 
 const PointStatus = ({ currentPoint }) => (
     <div className={css({
@@ -17,17 +18,34 @@ const PointStatus = ({ currentPoint }) => (
     </div>
 );
 
-const RecordButton = () => (
-    <CommonButton
-        className={css({
-            flex: '0.5',
-            marginRight: '2rem'
-        })}
-        buttonColor={commonColors.blue}
-    >
-        ⏺️ Record new message
-    </CommonButton>
-);
+const RecordButton = () => {
+    // isDialogOpen: Whether RecordDialog is open or not. (Default: false)
+    // setDialogOpen: Open/close the dialog.
+    const [isDialogOpen, setDialogOpen] = useState(false);
+
+    return (
+        <>
+            <CommonButton
+                className={css({
+                    flex: '0.5',
+                    marginRight: '2rem'
+                })}
+                buttonColor={commonColors.blue}
+                onClick={() => {
+                    setDialogOpen(true);
+                }}
+            >
+                ⏺️ Record new message
+            </CommonButton>
+            <RecordDialog
+                isOpen={isDialogOpen}
+                onClose={() => {
+                    setDialogOpen(false);
+                }}
+            />
+        </>
+    );
+};
 
 const SendButton = () => (
     <CommonButton
