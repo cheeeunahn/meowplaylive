@@ -93,6 +93,15 @@ export const CommonButton = ({
     );
 };
 
+/**
+ * 'Icon button' (Circular button) component.
+ *
+ * @param buttonColor Color of the button
+ * @param isDisabled Disable the button or not
+ * @param onClick The function to run when the button is clicked
+ * @param className Style to override
+ * @param children Child component
+ */
 export const CommonIconButton = ({
     buttonColor = null,
     isDisabled = false,

@@ -16,7 +16,8 @@ const PlayButton = ({ onClick }) => (
             width: '3rem',
             height: '3rem',
             fontSize: '1.5rem',
-            lineHeight: '1.5rem'
+            lineHeight: '1.5rem',
+            marginBottom: '1rem'
         })}
         buttonColor={commonColors.green}
         onClick={onClick}
@@ -32,6 +33,7 @@ const Clock = ({ time }) => {
 
     return (
         <div className={css({
+            height: '3rem',
             fontSize: '2rem',
             fontWeight: 'bold',
             marginBottom: '1rem'
@@ -62,6 +64,8 @@ export const RecorderView = () => {
     // Called when elapsedTime or isRecording are changed.
     useEffect(() => {
         if (!isRecording) {
+            // Reset the timer when we stop recording.
+            setElapsedTime(0);
             return;
         }
 
@@ -121,7 +125,7 @@ export const RecorderView = () => {
                     }
                 }}
             >
-                {isRecording ? 'Stop recording' : 'Start recording'}
+                {isRecording ? 'Stop recording' : (audioBlob ? 'Record again' : 'Start recording')}
             </CommonButton>
             <CommonButton className={buttonStyle} isDisabled={true}>
                 Save recording
