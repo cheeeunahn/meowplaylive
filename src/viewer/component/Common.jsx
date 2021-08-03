@@ -1,5 +1,5 @@
 import React from 'react';
-import { lighten, darken } from '@material-ui/core/styles/colorManipulator';
+import { darken } from '@material-ui/core/styles/colorManipulator';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -167,7 +167,7 @@ export const CommonInput = ({
 /**
  * Slider component.
  *
- * @param trackColor Color of the slider.
+ * @param sliderColor Color of the slider.
  * @param showMark Show the marks or not.
  * @param showThumb Show the thumb or not.
  * @param isReadonly Allow or disallow the user to move the thumb.
@@ -252,6 +252,8 @@ export const CommonModal = ({
 
 /**
  * 'X' button which can be used for the dialogs.
+ *
+ * @param onClick Called when the button is clicked
  */
 export const CommonCloseButton = ({ onClick }) => (
     <CommonIconButton
