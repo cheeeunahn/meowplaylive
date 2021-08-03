@@ -25,6 +25,9 @@ const Subtitle = () => (
                 marginLeft: 'auto', // Align right.
             })}
             buttonColor={commonColors.brown}
+            onClick={() => {
+                location.href = '../index.html';
+            }}
         >
             ⬅️ Exit
         </CommonButton>
