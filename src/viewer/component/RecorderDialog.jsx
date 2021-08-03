@@ -1,10 +1,10 @@
 import React from 'react';
 import { css } from '@emotion/css';
 
-import { CommonBox, CommonIconButton, CommonModal } from './Common';
+import { CommonBox, CommonCloseButton, CommonModal } from './Common';
 import { RecorderView } from './RecorderView';
 
-export const RecordDialog = ({ isOpen, onClose }) => (
+export const RecorderDialog = ({ isOpen, onClose, setAudioBlob }) => (
     <CommonModal
         isOpen={isOpen}
         onClose={onClose}
@@ -25,18 +25,12 @@ export const RecordDialog = ({ isOpen, onClose }) => (
                     <br />
                     You can record up to 10 seconds.
                 </span>
-                <CommonIconButton
-                    className={css({
-                        fontSize: '1.5rem',
-                        width: '3rem',
-                        height: '3rem'
-                    })}
-                    onClick={onClose}
-                >
-                    X
-                </CommonIconButton>
+                <CommonCloseButton onClick={onClose} />
             </div>
-            <RecorderView />
+            <RecorderView onSave={blob => {
+                setAudioBlob(blob);
+                onClose();
+            }} />
         </CommonBox>
     </CommonModal>
 );

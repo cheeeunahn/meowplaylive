@@ -43,11 +43,11 @@ const Clock = ({ time }) => {
     );
 };
 
-export const RecorderView = () => {
+export const RecorderView = ({ onSave }) => {
     const [voiceRecorder, setVoiceRecorder] = useState(null);
     const [isRecording, setRecording] = useState(false);
     const [elapsedTime, setElapsedTime] = useState(0);
-    const [audioBlob, setAudioBlob] = useState(null);
+    const [currentAudioBlob, setCurrentAudioBlob] = useState(null);
 
     // Called at the first render.
     useEffect(() => {
@@ -56,7 +56,7 @@ export const RecorderView = () => {
                 setVoiceRecorder(recorder);
             },
             onStop: blob => {
-                setAudioBlob(blob);
+                setCurrentAudioBlob(blob);
             }
         });
     }, []);
@@ -94,12 +94,13 @@ export const RecorderView = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 width: '100%',
-                visibility: (audioBlob || isRecording) ? 'visible' : 'hidden'
+                visibility: (currentAudioBlob || isRecording) ? 'visible' : 'hidden'
             })}>
                 {isRecording ? <Clock time={elapsedTime} /> : <PlayButton onClick={() => {
-                    playAudioBlob(audioBlob);
+                    playAudioBlob(currentAudioBlob);
                 }} />}
                 <CommonSlider
+                    sliderColor={commonColors.green}
                     showMark={false}
                     showThumb={false}
                     isReadonly={true}
@@ -125,9 +126,15 @@ export const RecorderView = () => {
                     }
                 }}
             >
-                {isRecording ? 'Stop recording' : (audioBlob ? 'Record again' : 'Start recording')}
+                {isRecording ? 'Stop recording' : (currentAudioBlob ? 'Record again' : 'Start recording')}
             </CommonButton>
-            <CommonButton className={buttonStyle} isDisabled={true}>
+            <CommonButton
+                className={buttonStyle}
+                isDisabled={!currentAudioBlob}
+                onClick={() => {
+                    onSave(currentAudioBlob);
+                }}
+            >
                 Save recording
             </CommonButton>
         </div>

@@ -167,6 +167,7 @@ export const CommonInput = ({
 /**
  * Slider component.
  *
+ * @param trackColor Color of the slider.
  * @param showMark Show the marks or not.
  * @param showThumb Show the thumb or not.
  * @param isReadonly Allow or disallow the user to move the thumb.
@@ -178,6 +179,7 @@ export const CommonInput = ({
  * @param className Style to override
  */
 export const CommonSlider = ({
+    sliderColor = commonColors.blue,
     showMark = true,
     showThumb = true,
     isReadonly = false,
@@ -189,6 +191,14 @@ export const CommonSlider = ({
     className
 }) => {
     const defaultStyle = css([
+        {
+            '& .MuiSlider-track': {
+                backgroundColor: sliderColor
+            },
+            '& .MuiSlider-thumb': {
+                backgroundColor: sliderColor
+            }
+        },
         !showThumb && {
             '& .MuiSlider-thumb': {
                 display: 'none'
@@ -207,7 +217,9 @@ export const CommonSlider = ({
             value={value}
             step={step}
             marks={showMark}
-            onChange={onChange}
+            onChange={(event, value) => {
+                onChange(value);
+            }}
         />
     );
 };
@@ -236,4 +248,20 @@ export const CommonModal = ({
     >
         {children}
     </Dialog>
+);
+
+/**
+ * 'X' button which can be used for the dialogs.
+ */
+export const CommonCloseButton = ({ onClick }) => (
+    <CommonIconButton
+        className={css({
+            fontSize: '1.5rem',
+            width: '3rem',
+            height: '3rem'
+        })}
+        onClick={onClick}
+    >
+        X
+    </CommonIconButton>
 );
