@@ -69,9 +69,9 @@ function newConnection(socket) {
     console.log('new connection: ' + socket.id);
     
     socket.on('button-clicked', () => {
-        const timestamp = Date.now(); // save current time
+        // const timestamp = Date.now(); // save current time
         // insert string whenever a button is clicked
-        database.insert({content: "a button has been clicked", timestamp: timestamp}); // testing nedb
+        // database.insert({content: "a button has been clicked", timestamp: timestamp}); // testing nedb
         socket.broadcast.emit('button-clicked', {id: socket.id, msg: "button-clicked"}); // save unique socket id
         console.log('button clicked!');
     });
@@ -83,12 +83,16 @@ function newConnection(socket) {
     
     socket.on('name-sent', (arg) => {
         console.log(arg);
-        socket.broadcast.emit('name-sent', (arg));
-      });
+        socket.broadcast.emit('name-sent', arg);
+    });
     
-      socket.on('number-exceeded', (arg) => {
+    socket.on('number-exceeded', (arg) => {
         socket.broadcast.to(arg.id).emit('number-exceeded');
         console.log('oops! too many objects on the screen!');
+    });
+
+    socket.on('move-fish-group', (arg) => {
+        socket.broadcast.emit('move-fish-group', arg);
     });
 }
 //////////////////////////////////////////////////

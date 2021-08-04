@@ -7,7 +7,7 @@ let displayRipple;
 let rippleRadius;
 let username;
 
-let tempMsg;
+let titleNickname;
 
 function preload() {
     // load the necessary sound files
@@ -38,7 +38,7 @@ function setup() {
 
     // temporary variable for displaying username
     // chosen by the cat
-    tempMsg = "";
+    titleNickname = "";
 
     // socket connection
     socket = io();
@@ -56,11 +56,19 @@ function draw() {
     textAlign(CENTER, CENTER);
     fill(0);
     noStroke();
-    text(tempMsg, width/2, 100);
+    text(titleNickname, width/2, 100);
 
     for (var i = 0; i < fishGroup.length; i++){
         fishGroup[i].show();
     }
+
+    // tell viewer UI where the fish is positioned at what angle
+    // also send fish nickname information
+    let data = { fish_positions: [
+        {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername()},
+        {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername()},
+        {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername()} ]};
+    socket.emit('move-fish-group', data);
 
     if (mouseIsPressed) {
         strokeWeight(6);
@@ -91,8 +99,8 @@ function drawFish (data) {
     for (var i = 0; i < fishGroup.length; i++){
         if (fishGroup[i].getPositionX() > windowWidth || fishGroup[i].getPositionX() < 0) {
             fishGroup[i].setUsername(username);
-            fishGroup[i].setId(data.id);
-            fishGroup[i].setNewPosition();
+            fishGroup[i].setId(data.id); // the socket id of the fish
+            fishGroup[i].setToNewPosition();
             bubbleSound.setVolume(0.4);
             bubbleSound.play();
             return;
@@ -111,11 +119,14 @@ function touchEnded () {
             if (this.voiceSound.isPlaying())
                 this.voiceSound.stop();    
             this.voiceSound.play();
-            tempMsg = fishGroup[i].username;
+            titleNickname = fishGroup[i].username;
+            setTimeout(resetTitleText, 5000);
         }
     }
+}
 
-
+function resetTitleText () {
+    titleNickname = "";
 }
 
 // delete later ///////////
@@ -150,7 +161,7 @@ class Fish {
         this.id="";
     }
 
-    setNewPosition() {
+    setToNewPosition() {
         this.px = random(10,windowWidth+10);
         this.py = random(10,windowHeight-100);
         this.position = createVector(this.px, this.py);
@@ -196,11 +207,11 @@ class Fish {
             rotate(this.angle);
 
             image(this.fish_gif, 0,0, width/4,width/4);
-            textSize(width/20);
+            textSize(width/25);
             textAlign(CENTER, CENTER);
             fill(0);
             noStroke();
-            text(this.username, this.fish_gif.width/10, this.fish_gif.height/10);
+            text(this.username, this.fish_gif.width/9, this.fish_gif.height/9);
             
             // setting collider boundaries
             this.v1 = createVector(0,0);
@@ -219,7 +230,7 @@ class Fish {
     checkHit() {
         this.hit = collidePointPoly(pmouseX, pmouseY, this.poly);
         //console.log(poly[0]);
-        //console.log(hit);
+        console.log(this.hit);
         if (this.hit) {
             this.px = -500;
             this.py = -500; // put it somewhere invisible
@@ -241,5 +252,17 @@ class Fish {
 
     getPositionX() {
         return this.position.x;
+    }
+
+    getPositionY() {
+        return this.position.y;
+    }
+
+    getAngle() {
+        return this.angle;
+    }
+
+    getUsername() {
+        return this.username;
     }
 }
