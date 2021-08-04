@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { css } from '@emotion/css';
 
 import { CommonBox } from './Common';
-import { createSketch } from '../sketch/P5Manager';
+import { createSketch } from '../core/P5Manager';
 import * as FishSketch from '../sketch/FishSketch';
 
 export const CatScreen = () => {
