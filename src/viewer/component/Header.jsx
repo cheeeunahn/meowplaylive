@@ -1,31 +1,49 @@
 import React from 'react';
 import { css } from '@emotion/css';
-import { commonColorMap } from './Common';
+
+import { CommonButton, CommonBox, commonColors, commonSizes } from './Common';
 
 const Title = () => (
     <div className={css({
-        fontSize: '2rem',
-        marginBottom: '0.5rem'
+        fontSize: '2rem'
     })}>
         MeowPlayLive
     </div>
 );
 
 const Subtitle = () => (
-    <div>
+    <div className={css({
+        display: 'flex',
+        width: commonSizes.appWidth,
+        maxWidth: '100%',
+        flexDirection: 'row',
+        alignItems: 'center'
+    })}>
         Play with a cat and win a chance to get heard!
+        <CommonButton
+            className={css({
+                marginLeft: 'auto', // Align right.
+            })}
+            buttonColor={commonColors.brown}
+            onClick={() => {
+                location.href = '../index.html';
+            }}
+        >
+            ⬅️ Exit
+        </CommonButton>
     </div>
 );
 
 export const Header = () => (
-    <div className={css({
+    <CommonBox className={css({
         boxSizing: 'border-box',
         width: '100%',
-        padding: '2rem 2rem 1rem 2rem',
-        color: commonColorMap.white,
-        backgroundColor: commonColorMap.black
+        paddingBottom: '1rem',
+        borderRadius: 0,
+        color: commonColors.white,
+        backgroundColor: commonColors.black
     })}>
         <Title />
         <Subtitle />
-    </div>
+    </CommonBox>
 );

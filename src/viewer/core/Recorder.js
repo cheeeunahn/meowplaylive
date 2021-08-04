@@ -58,7 +58,9 @@ export function startRecording(recorder) {
 }
 
 export function stopRecording(recorder) {
-    recorder.stop();
+    if (recorder.state !== 'inactive') {
+        recorder.stop();
+    }
 }
 
 export function playAudioBlob(blob) {

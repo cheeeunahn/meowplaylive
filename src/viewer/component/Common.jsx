@@ -1,16 +1,22 @@
 import React from 'react';
-import ThemeProvider from '@material-ui/styles/ThemeProvider';
-import createTheme from '@material-ui/core/styles/createTheme';
-import Card from '@material-ui/core/Card';
+import { darken } from '@material-ui/core/styles/colorManipulator';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Slider from '@material-ui/core/Slider';
 import Input from '@material-ui/core/Input';
+import Dialog from '@material-ui/core/Dialog';
 import { css } from '@emotion/css';
+
+export const commonSizes = {
+    // Our guess of proper content width.
+    appWidth: '600px'
+};
 
 /**
  * Color palette for the whole application.
  */
-export const commonColorMap = {
+export const commonColors = {
     black: '#3c4449',
     brown: '#824a48',
     blue: '#2e588e',
@@ -19,86 +25,116 @@ export const commonColorMap = {
     white: '#e5e5e5'
 };
 
-const brightTheme = createTheme({
-    palette: {
-        type: 'light'
-    }
-});
-
-const darkTheme = createTheme({
-    palette: {
-        type: 'dark'
-    }
-});
-
-/**
- * Wrap the components with this to set their theme easily.
- *
- * @param isBright Set the childs bright/dark.
- */
-export const CommonTheme = ({ isBright = true, children }) => (
-    <ThemeProvider theme={isBright ? brightTheme : darkTheme}>
-        {children}
-    </ThemeProvider>
-);
-
 /**
  * Simple 'box'.
  *
  * @param fillWidth Fill the parent's width or not
  * @param className Style to override
+ * @param children Child component
  */
-export const CommonCard = ({
-    fillWidth = true,
-    className = '',
+export const CommonBox = ({
+    className,
     children
 }) => {
     const defaultStyle = css({
-        width: fillWidth ? '100%' : 'auto',
         boxSizing: 'border-box',
         padding: '2rem'
     });
 
     return (
-        <Card className={css([defaultStyle, className])}>
+        <Box
+            className={css([defaultStyle, className])}
+            boxShadow={3}
+        >
             {children}
-        </Card>
+        </Box>
     );
 };
 
 /**
  * Button component.
  *
- * @param fillWidth Fill the parent's width or not
+ * @param buttonColor Color of the button
  * @param isDisabled Disable the button or not
  * @param onClick The function to run when the button is clicked
  * @param className Style to override
+ * @param children Child component
  */
 export const CommonButton = ({
-    fillWidth = false,
+    buttonColor = commonColors.blue,
     isDisabled = false,
-    onClick = () => { },
-    className = '',
+    onClick,
+    className,
     children
 }) => {
     const defaultStyle = css({
-        width: fillWidth ? '100%' : 'auto',
         fontFamily: 'inherit',
-        // Stop Material from changing the text to uppercase.
-        textTransform: 'none !important',
-        fontSize: 'inherit !important'
+        fontSize: 'inherit',
+        color: '#ffffff',
+        backgroundColor: buttonColor,
+        '&:hover': {
+            backgroundColor: darken(buttonColor, 0.2)
+        },
+        '&:disabled': {
+            color: '#ffffff',
+            backgroundColor: commonColors.white
+        }
     });
 
     return (
         <Button
             className={css([defaultStyle, className])}
-            color={'primary'}
             variant={'contained'}
             onClick={onClick}
             disabled={isDisabled}
         >
             {children}
         </Button>
+    );
+};
+
+/**
+ * 'Icon button' (Circular button) component.
+ *
+ * @param buttonColor Color of the button
+ * @param isDisabled Disable the button or not
+ * @param onClick The function to run when the button is clicked
+ * @param className Style to override
+ * @param children Child component
+ */
+export const CommonIconButton = ({
+    buttonColor = null,
+    isDisabled = false,
+    onClick,
+    className,
+    children
+}) => {
+    const defaultStyle = css([
+        {
+            fontFamily: 'inherit',
+            fontSize: 'inherit'
+        },
+        buttonColor && {
+            color: '#ffffff',
+            backgroundColor: buttonColor,
+            '&:hover': {
+                backgroundColor: darken(buttonColor, 0.2)
+            },
+            '&:disabled': {
+                color: '#ffffff',
+                backgroundColor: commonColors.white
+            }
+        }
+    ]);
+
+    return (
+        <IconButton
+            className={css([defaultStyle, className])}
+            onClick={onClick}
+            disabled={isDisabled}
+        >
+            {children}
+        </IconButton>
     );
 };
 
@@ -112,7 +148,7 @@ export const CommonButton = ({
 export const CommonInput = ({
     value,
     onChange,
-    className = ''
+    className
 }) => {
     const defaultStyle = css({
         fontFamily: 'inherit',
@@ -131,6 +167,10 @@ export const CommonInput = ({
 /**
  * Slider component.
  *
+ * @param sliderColor Color of the slider.
+ * @param showMark Show the marks or not.
+ * @param showThumb Show the thumb or not.
+ * @param isReadonly Allow or disallow the user to move the thumb.
  * @param min First value of the slider.
  * @param max Last value of the slider.
  * @param step Distance between the marks.
@@ -139,20 +179,91 @@ export const CommonInput = ({
  * @param className Style to override
  */
 export const CommonSlider = ({
+    sliderColor = commonColors.blue,
+    showMark = true,
+    showThumb = true,
+    isReadonly = false,
     min,
     max,
     step,
     value,
     onChange,
-    className = ''
+    className
+}) => {
+    const defaultStyle = css([
+        {
+            '& .MuiSlider-track': {
+                backgroundColor: sliderColor
+            },
+            '& .MuiSlider-thumb': {
+                backgroundColor: sliderColor
+            }
+        },
+        !showThumb && {
+            '& .MuiSlider-thumb': {
+                display: 'none'
+            }
+        },
+        isReadonly && {
+            cursor: 'default'
+        }
+    ]);
+
+    return (
+        <Slider
+            className={css([defaultStyle, className])}
+            min={min}
+            max={max}
+            value={value}
+            step={step}
+            marks={showMark}
+            onChange={(event, value) => {
+                onChange(value);
+            }}
+        />
+    );
+};
+
+/**
+ * Component which is overlapped on the page.
+ * (ex. Dialog)
+ *
+ * @param isOpen Show or hide the component
+ * @param onClose Called when the component is hidden
+ * @param children Child component
+ */
+export const CommonModal = ({
+    isOpen,
+    onClose,
+    children
 }) => (
-    <Slider
-        className={className}
-        min={min}
-        max={max}
-        value={value}
-        step={step}
-        marks={true}
-        onChange={onChange}
-    />
+    <Dialog
+        className={css({
+            '& .MuiDialog-paper': {
+                borderRadius: 0
+            }
+        })}
+        open={isOpen}
+        onClose={onClose}
+    >
+        {children}
+    </Dialog>
+);
+
+/**
+ * 'X' button which can be used for the dialogs.
+ *
+ * @param onClick Called when the button is clicked
+ */
+export const CommonCloseButton = ({ onClick }) => (
+    <CommonIconButton
+        className={css({
+            fontSize: '1.5rem',
+            width: '3rem',
+            height: '3rem'
+        })}
+        onClick={onClick}
+    >
+        X
+    </CommonIconButton>
 );
