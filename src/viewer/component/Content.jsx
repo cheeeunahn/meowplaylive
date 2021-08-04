@@ -55,8 +55,7 @@ export const Content = () => {
             display: 'flex',
             flexDirection: 'column',
             width: commonSizes.appWidth,
-            maxWidth: '100%',
-            height: '100%'
+            maxWidth: '100%'
         })}>
             <PointStatus currentPoint={500000} />
             <CatScreen />
