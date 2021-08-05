@@ -35,12 +35,18 @@ function setup() {
     msg = "success!";
     setTimeout(resetText, 3000);
   });
+
+  socket.on('cat-tap-fail', () => {
+    msg = "oh no!";
+    setTimeout(resetText, 3000);
+  });
   
   socket.on('number-exceeded', () => {
     msg = "click slower!";
     setTimeout(resetText, 3000);
   });
   
+
   // this is for receiving position data from cat UI
   ///////////////////////////////////////////
   socket.on('move-fish-group', (arg) => {

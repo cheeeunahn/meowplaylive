@@ -17,6 +17,9 @@ function preload() {
     splashSound = loadSound('./assets/splash.mp3');
     bubbleSound = loadSound('./assets/bubble.mp3');
 
+    // load font file
+
+    //set angle mode
     angleMode(RADIANS);
 }
 
@@ -51,7 +54,7 @@ function setup() {
 }
 
 function draw() {
-    background(226,237,238);
+    background(222,243,246); // background color of canvas
     textSize(width/10);
     textAlign(CENTER, CENTER);
     fill(0);
@@ -60,6 +63,12 @@ function draw() {
 
     for (var i = 0; i < fishGroup.length; i++){
         fishGroup[i].show();
+        if (!fishGroup[i].isShowing()){
+            //if isShowing() value change occurs from true to false, trigger emit event
+            if (fishGroup[i].getPrevState()==true)
+                socket.emit('cat-tap-fail', fishGroup[i].getId());
+        }
+        fishGroup[i].setPrevState(fishGroup[i].isShowing()); // save previous isShowing() value
     }
 
     // tell viewer UI where the fish is positioned at what angle
@@ -83,7 +92,7 @@ function draw() {
 
     if (displayRipple) {
         noFill();
-        strokeWeight(6);
+        strokeWeight(8);
         stroke(255);
         circle(pmouseX, pmouseY, rippleRadius);
         rippleRadius +=100;
@@ -102,6 +111,8 @@ function drawFish (data) {
             fishGroup[i].setId(data.id); // the socket id of the fish
             fishGroup[i].setToNewPosition();
             bubbleSound.setVolume(0.4);
+            if (bubbleSound.isPlaying())
+                bubbleSound.stop();
             bubbleSound.play();
             return;
         }
@@ -114,6 +125,8 @@ function touchEnded () {
     for (var i = 0; i < fishGroup.length; i++){
         if (fishGroup[i].checkHit()) {
             this.splashSound.setVolume(0.7);
+            if (this.splashSound.isPlaying())
+                this.splashSound.stop();
             this.splashSound.play();
             this.voiceSound.setVolume(2.0);
             if (this.voiceSound.isPlaying())
@@ -142,8 +155,8 @@ class Fish {
         this.fish_gif = loadImage('./assets/fish_blue.gif');
         this.fish_gif.play();
 
-        this.px = -500;
-        this.py = -500; // put it somewhere invisible
+        this.px = -1000;
+        this.py = -1000; // put it somewhere invisible
         this.position = createVector(this.px, this.py);
         this.velocity = createVector(0,0);
 
@@ -159,6 +172,8 @@ class Fish {
 
         this.username="";
         this.id="";
+
+        this.showPrevState = false;
     }
 
     setToNewPosition() {
@@ -180,7 +195,6 @@ class Fish {
             this.vy = -this.vy;
     
         this.velocity = createVector (this.vx, this.vy);
-
     }
 
     show() {
@@ -206,6 +220,7 @@ class Fish {
             }
             rotate(this.angle);
 
+            tint(6,85,103);
             image(this.fish_gif, 0,0, width/4,width/4);
             textSize(width/25);
             textAlign(CENTER, CENTER);
@@ -225,7 +240,9 @@ class Fish {
 
             pop();
         }
+ 
     }
+
 
     checkHit() {
         this.hit = collidePointPoly(pmouseX, pmouseY, this.poly);
@@ -250,6 +267,19 @@ class Fish {
         this.id = id;
     }
 
+    setPrevState (showPrevState) {
+        this.showPrevState = showPrevState;
+    }
+
+    getPrevState () {
+        return this.showPrevState;
+    }
+
+    isShowing() {
+        // return true when showing in screen or was successfully tapped by the cat
+        return !(this.position.x < -100 || this.position.x > windowWidth +100||this.position.y < -100 || this.position.y > windowHeight+100)||this.hit;
+    }
+
     getPositionX() {
         return this.position.x;
     }
@@ -264,5 +294,9 @@ class Fish {
 
     getUsername() {
         return this.username;
+    }
+
+    getId() {
+        return this.id;
     }
 }

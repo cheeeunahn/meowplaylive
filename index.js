@@ -80,6 +80,11 @@ function newConnection(socket) {
         socket.broadcast.to(socketid).emit('cat-tap-success');
         console.log('cat tap success!');
     });
+
+    socket.on('cat-tap-fail', (socketid) => {
+        socket.broadcast.to(socketid).emit('cat-tap-fail');
+        console.log('cat tap fail');
+    });
     
     socket.on('name-sent', (arg) => {
         console.log(arg);
