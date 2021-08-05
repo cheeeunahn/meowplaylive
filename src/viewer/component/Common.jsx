@@ -4,13 +4,13 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Slider from '@material-ui/core/Slider';
-import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import { css } from '@emotion/css';
 
 export const commonSizes = {
     // Our guess of proper content width.
-    appWidth: '600px'
+    appWidth: '720px'
 };
 
 /**
@@ -141,12 +141,20 @@ export const CommonIconButton = ({
 /**
  * Text input component.
  *
+ * @param size Size of the input. (ex. 'small')
+ * @param label Label of the input.
+ * @param placeholder Placeholder of the input.
  * @param value Current text.
+ * @param isReadonly Readonly or not.
  * @param onChange The function to run when the text is changed.
  * @param className Style to override
  */
 export const CommonInput = ({
+    size = 'small',
+    label,
+    placeholder,
     value,
+    isReadonly,
     onChange,
     className
 }) => {
@@ -156,10 +164,19 @@ export const CommonInput = ({
     });
 
     return (
-        <Input
+        <TextField
             className={css([defaultStyle, className])}
+            size={size}
+            variant={'outlined'}
+            label={label}
+            placeholder={placeholder}
             value={value}
-            onChange={onChange}
+            InputProps={{
+                readOnly: isReadonly
+            }}
+            onChange={event => {
+                onChange(event.target.value);
+            }}
         />
     );
 };
