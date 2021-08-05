@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 
 import { CommonBox, commonSizes, commonColors, CommonButton } from './Common';
 import { CatScreen } from './CatScreen';
@@ -22,13 +22,16 @@ const PointStatus = ({ currentPoint }) => (
 const RecordButton = ({ onClick }) => (
     <CommonButton
         className={css({
+            display: 'flex',
             flex: '0.5',
+            alignItems: 'baseline',
             marginRight: '2rem'
         })}
         buttonColor={commonColors.blue}
         onClick={onClick}
     >
-        ⏺️ Record new message
+        <i className='fa fa-circle' />
+        &nbsp;Record new message
     </CommonButton>
 );
 

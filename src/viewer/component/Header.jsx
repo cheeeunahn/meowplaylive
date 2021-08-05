@@ -22,14 +22,15 @@ const Subtitle = () => (
         Play with a cat and win a chance to get heard!
         <CommonButton
             className={css({
-                marginLeft: 'auto', // Align right.
+                alignItems: 'baseline',
+                marginLeft: 'auto' // Align right.
             })}
             buttonColor={commonColors.brown}
             onClick={() => {
                 location.href = '../index.html';
             }}
         >
-            ⬅️ Exit
+            <i className="fa fa-arrow-left" />&nbsp;Exit
         </CommonButton>
     </div>
 );

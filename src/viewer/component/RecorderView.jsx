@@ -22,7 +22,7 @@ const PlayButton = ({ onClick }) => (
         buttonColor={commonColors.green}
         onClick={onClick}
     >
-        ▶
+        <i className="fa fa-play" />
     </CommonIconButton>
 );
 
