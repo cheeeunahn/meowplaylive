@@ -6,6 +6,11 @@ let rectWidth;
 let rectHeight;
 let rectPosX;
 let rectPosY;
+let fontRegular;
+
+function preload() {
+  fontRegular = loadFont('./assets/NanumSquareR.ttf');
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -93,6 +98,7 @@ function drawCatUI() {
   pop();
 
   textSize (32);
+  textFont(fontRegular);
   fill(0);
   text(msg, 150,30);
 }

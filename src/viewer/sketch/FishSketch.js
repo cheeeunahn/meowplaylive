@@ -7,17 +7,35 @@
  * - Run canvas.parent() after running createCanvas()
  */
 
+/**
+ * Modified by Chee Eun
+ * - Use Nanum Square font to cat UI text
+ * - Minor color changes
+ * - Added success icon image (need to add on to it after implementing "click me" function on viewer-screen.html)
+ */
+
 import io from 'socket.io-client';
 
-let msg;
-let successCount;
+let msg; // to delete later
+let successImg;
+let displaySuccessImg; // boolean for displaying success icon
+//let successCount;
 let fishGroup;
 let rectWidth;
 let rectHeight;
 let rectPosX;
 let rectPosY;
+let nanumFontRegular;
+let nanumFontBold;
 
 export function setup(Container) {
+    // load font files - Nanum Square
+    nanumFontRegular = loadFont('./assets/NanumSquareR.ttf');
+    nanumFontBold = loadFont('./assets/NanumSquareEB.ttf');
+    //load success image
+    successImg = loadImage('./assets/success-image.png');
+    displaySuccessImg = false;
+
     rectWidth = 1366 / 2;
     rectHeight = 1024 / 2; // following ipad pro screen ratio 1366px x 1024px
     rectPosX = 0; // the x position of the cat UI screen
@@ -28,12 +46,19 @@ export function setup(Container) {
 
     const socket = io(); // make connection to socket
 
+    // when success event happens
     socket.on('cat-tap-success', () => {
-        successCount++;
+        //successCount++;
         msg = "success!";
-        setTimeout(resetText, 3000);
+        displaySuccessImg = true;
+        // show success icon for 5 seconds and reset
+        setTimeout(resetToDefaultScreen, 5000);
     });
 
+    // when fail event happens
+    /*TO DO*/
+
+    // preventing user from clicking too fast
     socket.on('number-exceeded', () => {
         msg = "click slower!";
         setTimeout(resetText, 3000);
@@ -50,7 +75,7 @@ export function setup(Container) {
     });
     ///////////////////////////////////////////
     msg = "";
-    successCount = 0;
+    //successCount = 0;
 
     // a group of cloned fish from cat UI
     fishGroup = [new CloneFish(), new CloneFish(), new CloneFish()];
@@ -62,13 +87,11 @@ export function draw() {
 }
 
 // this funciton has the code for drawing the cat UI
-//////////////////////////////////////////
 function drawCatUI() {
     rectMode(CORNER);
     noStroke();
-    fill(100);
+    fill(222,243,246); // background color of canvas
     rect(rectPosX, rectPosY, rectWidth, rectHeight);
-
 
     for (var i = 0; i < fishGroup.length; i++) {
         fishGroup[i].draw();
@@ -86,23 +109,33 @@ function drawCatUI() {
     fill(255); // fill with background color of website (white)
 
     beginContour();
-    vertex(-rectWidth / 2 + 10, -rectHeight / 2 + 10);
-    vertex(rectWidth / 2 - 10, -rectHeight / 2 + 10);
-    vertex(rectWidth / 2 - 10, rectHeight / 2 - 10);
-    vertex(-rectWidth / 2 + 10, rectHeight / 2 - 10);
+    vertex(-rectWidth / 2 + 5, -rectHeight / 2 + 5);
+    vertex(rectWidth / 2 - 5, -rectHeight / 2 + 5);
+    vertex(rectWidth / 2 - 5, rectHeight / 2 - 5);
+    vertex(-rectWidth / 2 + 5, rectHeight / 2 - 5);
     endContour();
     endShape(CLOSE);
 
     pop();
 
-    textSize(32);
-    fill(0);
-    text(msg, 150, 30);
-}
-//////////////////////////////////////////
+    // for displaying success icon
+    if (displaySuccessImg) {
+        imageMode(CENTER);
+        image(successImg, rectWidth/2, rectHeight/2, rectWidth/3, rectHeight/3);
+    }
 
-function resetText() {
+    // for displaying success text (delete later)
+    /////////////////////////
+    fill(15);
+    textFont(nanumFontBold);
+    textSize(32);
+    text(msg, 150, 10);
+    /////////////////////////
+}
+
+function resetToDefaultScreen() {
     msg = "";
+    displaySucessImg = false;
 }
 
 class CloneFish {
@@ -131,14 +164,20 @@ class CloneFish {
 
     draw() {
         push();
+        
         translate(this.px, this.py);
         rotate(this.angle);
-        image(this.fish_gif, 0, 0, 200, 200);
-        textSize(rectWidth / 25);
+        tint(6,85,103);
+        //tint(21,38,54);
+        image(this.fish_gif, 0, 0, 180, 180);
+
+        textFont(nanumFontBold);
+        textSize(rectWidth/32);
         textAlign(CENTER, CENTER);
-        fill(0);
+        fill(10);
         noStroke();
-        text(this.username, this.fish_gif.width / 9, this.fish_gif.height / 9);
+        text(this.username, this.fish_gif.width/9, this.fish_gif.height/12);
+        
         pop();
     }
 }
