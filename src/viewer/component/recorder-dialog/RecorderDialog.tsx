@@ -1,16 +1,15 @@
 import React from 'react';
 import { css } from '@emotion/css';
 
-import { CommonBox, CommonCloseButton, CommonModal } from './Common';
-import { RecorderView } from './RecorderView';
+import { CommonModal, CommonBox, CommonCloseButton } from 'component/Common';
+import { RecorderView } from 'component/recorder-dialog/RecorderView';
 
 interface RecorderDialogProps {
     isOpen: boolean;
     onClose: () => void;
-    setAudioBlob: (blob: Blob) => void;
 }
 
-export const RecorderDialog = ({ isOpen, onClose, setAudioBlob }: RecorderDialogProps) => (
+export const RecorderDialog = ({ isOpen, onClose }: RecorderDialogProps) => (
     <CommonModal
         isOpen={isOpen}
         onClose={onClose}
@@ -33,8 +32,7 @@ export const RecorderDialog = ({ isOpen, onClose, setAudioBlob }: RecorderDialog
                 </span>
                 <CommonCloseButton onClick={onClose} />
             </div>
-            <RecorderView onSave={blob => {
-                setAudioBlob(blob);
+            <RecorderView onSave={() => {
                 onClose();
             }} />
         </CommonBox>

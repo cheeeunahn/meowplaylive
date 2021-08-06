@@ -3,12 +3,16 @@ let currentSketch: any = null; // ex. FishSketch.
 let isCurrentSketchSetup = false; // true if the current sketch's setup() (ex. setupFishSketch()) is called.
 let CurrentSketchContainer: Element | undefined = undefined; // Parent element of the canvas.
 
-(window as any).setup = () => {
+function defineGlobalVariable<T>(name: string, value: T) {
+    (window as any)[name] = value;
+}
+
+defineGlobalVariable('setup', () => {
     console.log('[p5] Called setup()!');
     isP5Setup = true;
-};
+});
 
-(window as any).draw = () => {
+defineGlobalVariable('draw', () => {
     if (currentSketch === null) {
         return;
     }
@@ -20,7 +24,7 @@ let CurrentSketchContainer: Element | undefined = undefined; // Parent element o
     } else {
         currentSketch.draw();
     }
-};
+});
 
 export function createSketch<T>(Container: Element, sketch: T) {
     // Clear the current sketch.

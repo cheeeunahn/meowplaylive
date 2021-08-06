@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { css } from '@emotion/css';
 
-import { CommonModal, CommonBox, CommonCloseButton, CommonSlider, commonColors, CommonButton } from './Common';
-import { playAudioBlob } from '../core/Recorder';
+import { CommonModal, CommonBox, CommonCloseButton, CommonSlider, commonColors, CommonButton } from 'component/Common';
+import { StoreContext } from 'component/Store';
 
 const moneyList = [
     1000,
@@ -19,12 +19,12 @@ const moneyList = [
 ];
 
 interface DonationDialogProps {
-    audioBlob: Blob;
     isOpen: boolean;
     onClose: () => void;
 }
 
-export const DonationDialog = ({ audioBlob, isOpen, onClose }: DonationDialogProps) => {
+export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
+    const { voiceBlob } = useContext(StoreContext);
     const [moneyLevel, setMoneyLevel] = useState(0);
     const money = moneyList[moneyLevel];
 
@@ -78,7 +78,6 @@ export const DonationDialog = ({ audioBlob, isOpen, onClose }: DonationDialogPro
                         marginTop: '0.5rem'
                     })}
                     onClick={() => {
-                        playAudioBlob(audioBlob);
                     }}
                 >
                     Send!

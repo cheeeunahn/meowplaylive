@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { css } from '@emotion/css';
 
-import { CommonBox } from './Common';
-import { createSketch } from '../core/P5Manager';
-import * as FishSketch from '../sketch/FishSketch';
+import { createSketch } from 'util/P5Utils';
+import { CommonBox } from 'component/Common';
+import * as FishSketch from 'sketch/FishSketch';
 
 export const CatScreen = () => {
     const ref = useRef(null);

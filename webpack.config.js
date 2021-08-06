@@ -22,6 +22,7 @@ module.exports = (env, argv) => {
             filename: 'viewer.min.js'
         },
         resolve: {
+            modules: ['node_modules', srcPath],
             extensions: ['.ts', '.tsx', '.js']
         },
         module: {
