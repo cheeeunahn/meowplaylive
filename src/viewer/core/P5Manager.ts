@@ -1,14 +1,14 @@
 let isP5Setup = false; // true if P5 started and global setup() (= window.setup()) is called.
-let currentSketch = null; // ex. FishSketch.
+let currentSketch: any = null; // ex. FishSketch.
 let isCurrentSketchSetup = false; // true if the current sketch's setup() (ex. setupFishSketch()) is called.
-let CurrentSketchContainer = undefined; // Parent element of the canvas.
+let CurrentSketchContainer: Element | undefined = undefined; // Parent element of the canvas.
 
-window.setup = () => {
+(window as any).setup = () => {
     console.log('[p5] Called setup()!');
     isP5Setup = true;
 };
 
-window.draw = () => {
+(window as any).draw = () => {
     if (currentSketch === null) {
         return;
     }
@@ -22,7 +22,7 @@ window.draw = () => {
     }
 };
 
-export function createSketch(Container, sketch) {
+export function createSketch<T>(Container: Element, sketch: T) {
     // Clear the current sketch.
     currentSketch = null;
     isCurrentSketchSetup = false;

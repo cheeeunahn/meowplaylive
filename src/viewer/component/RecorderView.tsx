@@ -10,7 +10,11 @@ const buttonStyle = css({
     marginTop: '0.5rem'
 });
 
-const PlayButton = ({ onClick }) => (
+interface PlayButtonProps {
+    onClick: () => void;
+}
+
+const PlayButton = ({ onClick }: PlayButtonProps) => (
     <CommonIconButton
         className={css({
             width: '3rem',
@@ -26,7 +30,11 @@ const PlayButton = ({ onClick }) => (
     </CommonIconButton>
 );
 
-const Clock = ({ time }) => {
+interface ClockProps {
+    time: number;
+}
+
+const Clock = ({ time }: ClockProps) => {
     const seconds = Math.floor(time);
     const minuteString = `${Math.floor(seconds / 60)}`;
     const secondString = `${seconds % 60}`.padStart(2, '0');
@@ -43,11 +51,15 @@ const Clock = ({ time }) => {
     );
 };
 
-export const RecorderView = ({ onSave }) => {
-    const [voiceRecorder, setVoiceRecorder] = useState(null);
+interface RecorderViewProps {
+    onSave: (blob: Blob) => void;
+}
+
+export const RecorderView = ({ onSave }: RecorderViewProps) => {
+    const [voiceRecorder, setVoiceRecorder] = useState<MediaRecorder | null>(null);
     const [isRecording, setRecording] = useState(false);
     const [elapsedTime, setElapsedTime] = useState(0);
-    const [currentAudioBlob, setCurrentAudioBlob] = useState(null);
+    const [currentAudioBlob, setCurrentAudioBlob] = useState<Blob | null>(null);
 
     // Called at the first render.
     useEffect(() => {
@@ -74,7 +86,7 @@ export const RecorderView = ({ onSave }) => {
                 setElapsedTime(elapsedTime + 0.1);
             } else {
                 clearInterval(timer);
-                stopRecording(voiceRecorder);
+                stopRecording(voiceRecorder!!);
                 setRecording(false);
             }
         }, 100);
@@ -97,7 +109,7 @@ export const RecorderView = ({ onSave }) => {
                 visibility: (currentAudioBlob || isRecording) ? 'visible' : 'hidden'
             })}>
                 {isRecording ? <Clock time={elapsedTime} /> : <PlayButton onClick={() => {
-                    playAudioBlob(currentAudioBlob);
+                    playAudioBlob(currentAudioBlob!!);
                 }} />}
                 <CommonSlider
                     sliderColor={commonColors.green}
@@ -132,7 +144,7 @@ export const RecorderView = ({ onSave }) => {
                 className={buttonStyle}
                 isDisabled={!currentAudioBlob}
                 onClick={() => {
-                    onSave(currentAudioBlob);
+                    onSave(currentAudioBlob!!);
                 }}
             >
                 Save recording

@@ -14,9 +14,11 @@
  *     }
  * });
  */
-export function createRecorder({ onLoad, onStop }) {
+export function createRecorder(args: { onLoad: (recorder: MediaRecorder) => void, onStop: (blob: Blob) => void }) {
+    const { onLoad, onStop } = args;
+
     // Recorder will append the data on this array.
-    let chunks = [];
+    let chunks: Blob[] = [];
 
     // This code is based on the following guide:
     // https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API/Using_the_MediaStream_Recording_API
@@ -52,18 +54,18 @@ export function createRecorder({ onLoad, onStop }) {
     });
 };
 
-export function startRecording(recorder) {
+export function startRecording(recorder: MediaRecorder) {
     recorder.start();
     console.log('[Recorder] Started recording!');
 }
 
-export function stopRecording(recorder) {
+export function stopRecording(recorder: MediaRecorder) {
     if (recorder.state !== 'inactive') {
         recorder.stop();
     }
 }
 
-export function playAudioBlob(blob) {
+export function playAudioBlob(blob: Blob) {
     const voiceURL = URL.createObjectURL(blob);
     const audio = new Audio(voiceURL);
     console.log('[Recorder] Playing the audio...');

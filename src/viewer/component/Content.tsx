@@ -6,7 +6,11 @@ import { CatScreen } from './CatScreen';
 import { RecorderDialog } from './RecorderDialog';
 import { DonationDialog } from './DonationDialog';
 
-const PointStatus = ({ currentPoint }) => (
+interface PointStatusProps {
+    currentPoint: number;
+}
+
+const PointStatus = ({ currentPoint }: PointStatusProps) => (
     <div className={css({
         marginBottom: '1rem'
     })}>
@@ -19,7 +23,11 @@ const PointStatus = ({ currentPoint }) => (
     </div>
 );
 
-const RecordButton = ({ onClick }) => (
+interface RecordButtonProps {
+    onClick: () => void;
+}
+
+const RecordButton = ({ onClick }: RecordButtonProps) => (
     <CommonButton
         className={css({
             display: 'flex',
@@ -35,7 +43,12 @@ const RecordButton = ({ onClick }) => (
     </CommonButton>
 );
 
-const SendButton = ({ isDisabled, onClick }) => (
+interface SendButtonProps {
+    isDisabled: boolean;
+    onClick: () => void;
+}
+
+const SendButton = ({ isDisabled, onClick }: SendButtonProps) => (
     <CommonButton
         className={css({
             flex: '0.5'
@@ -51,7 +64,7 @@ const SendButton = ({ isDisabled, onClick }) => (
 export const Content = () => {
     const [isRecorderDialogOpen, setRecorderDialogOpen] = useState(false);
     const [isDonationDialogOpen, setDonationDialogOpen] = useState(false);
-    const [audioBlob, setAudioBlob] = useState(null);
+    const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
 
     return (
         <CommonBox className={css({
@@ -82,7 +95,7 @@ export const Content = () => {
                 setAudioBlob={setAudioBlob}
             />
             <DonationDialog
-                audioBlob={audioBlob}
+                audioBlob={audioBlob!!}
                 isOpen={isDonationDialogOpen}
                 onClose={() => {
                     setDonationDialogOpen(false);

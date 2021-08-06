@@ -14,7 +14,7 @@ module.exports = (env, argv) => {
 
     return {
         mode: 'development',
-        entry: path.join(srcPath, 'Main.jsx'),
+        entry: path.join(srcPath, 'Main.tsx'),
         devtool: isDebugMode ? 'inline-source-map' : false,
         target: ['web', 'es3'],
         output: {
@@ -22,14 +22,11 @@ module.exports = (env, argv) => {
             filename: 'viewer.min.js'
         },
         resolve: {
-            extensions: ['.js', '.jsx']
+            extensions: ['.ts', '.tsx', '.js']
         },
         module: {
             rules: [
-                {
-                    test: /\.jsx?$/,
-                    use: { loader: 'babel-loader', options: { presets: ['@babel/preset-env', '@babel/preset-react'] } }
-                }
+                { test: /\.tsx?$/, use: 'ts-loader' }
             ]
         }
     };

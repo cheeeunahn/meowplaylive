@@ -18,7 +18,13 @@ const moneyList = [
     500000
 ];
 
-export const DonationDialog = ({ audioBlob, isOpen, onClose }) => {
+interface DonationDialogProps {
+    audioBlob: Blob;
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+export const DonationDialog = ({ audioBlob, isOpen, onClose }: DonationDialogProps) => {
     const [moneyLevel, setMoneyLevel] = useState(0);
     const money = moneyList[moneyLevel];
 

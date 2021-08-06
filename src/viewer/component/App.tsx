@@ -1,5 +1,5 @@
 import React from 'react';
-import { StylesProvider } from '@material-ui/core';
+import { StylesProvider } from '@material-ui/core/styles';
 import { css } from '@emotion/css';
 
 import { commonColors } from './Common';

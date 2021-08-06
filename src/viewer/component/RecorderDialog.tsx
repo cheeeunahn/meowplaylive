@@ -4,7 +4,13 @@ import { css } from '@emotion/css';
 import { CommonBox, CommonCloseButton, CommonModal } from './Common';
 import { RecorderView } from './RecorderView';
 
-export const RecorderDialog = ({ isOpen, onClose, setAudioBlob }) => (
+interface RecorderDialogProps {
+    isOpen: boolean;
+    onClose: () => void;
+    setAudioBlob: (blob: Blob) => void;
+}
+
+export const RecorderDialog = ({ isOpen, onClose, setAudioBlob }: RecorderDialogProps) => (
     <CommonModal
         isOpen={isOpen}
         onClose={onClose}

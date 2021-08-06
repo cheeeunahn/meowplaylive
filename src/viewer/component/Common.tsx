@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -13,9 +13,6 @@ export const commonSizes = {
     appWidth: '720px'
 };
 
-/**
- * Color palette for the whole application.
- */
 export const commonColors = {
     black: '#3c4449',
     brown: '#824a48',
@@ -25,17 +22,12 @@ export const commonColors = {
     white: '#e5e5e5'
 };
 
-/**
- * Simple 'box'.
- *
- * @param fillWidth Fill the parent's width or not
- * @param className Style to override
- * @param children Child component
- */
-export const CommonBox = ({
-    className,
-    children
-}) => {
+interface CommonBoxProps {
+    className?: string;
+    children: ReactNode;
+}
+
+export const CommonBox = ({ className, children }: CommonBoxProps) => {
     const defaultStyle = css({
         boxSizing: 'border-box',
         padding: '2rem'
@@ -51,22 +43,21 @@ export const CommonBox = ({
     );
 };
 
-/**
- * Button component.
- *
- * @param buttonColor Color of the button
- * @param isDisabled Disable the button or not
- * @param onClick The function to run when the button is clicked
- * @param className Style to override
- * @param children Child component
- */
+interface CommonButtonProps {
+    buttonColor?: string;
+    isDisabled?: boolean;
+    onClick?: () => void;
+    className?: string;
+    children: ReactNode;
+}
+
 export const CommonButton = ({
     buttonColor = commonColors.blue,
     isDisabled = false,
     onClick,
     className,
     children
-}) => {
+}: CommonButtonProps) => {
     const defaultStyle = css({
         fontFamily: 'inherit',
         fontSize: 'inherit',
@@ -93,22 +84,21 @@ export const CommonButton = ({
     );
 };
 
-/**
- * 'Icon button' (Circular button) component.
- *
- * @param buttonColor Color of the button
- * @param isDisabled Disable the button or not
- * @param onClick The function to run when the button is clicked
- * @param className Style to override
- * @param children Child component
- */
+interface CommonIconButtonProps {
+    buttonColor?: string;
+    isDisabled?: boolean;
+    onClick?: () => void;
+    className?: string;
+    children: ReactNode;
+}
+
 export const CommonIconButton = ({
-    buttonColor = null,
+    buttonColor,
     isDisabled = false,
     onClick,
     className,
     children
-}) => {
+}: CommonIconButtonProps) => {
     const defaultStyle = css([
         {
             fontFamily: 'inherit',
@@ -138,17 +128,16 @@ export const CommonIconButton = ({
     );
 };
 
-/**
- * Text input component.
- *
- * @param size Size of the input. (ex. 'small')
- * @param label Label of the input.
- * @param placeholder Placeholder of the input.
- * @param value Current text.
- * @param isReadonly Readonly or not.
- * @param onChange The function to run when the text is changed.
- * @param className Style to override
- */
+interface CommonInputProps {
+    size?: 'small' | 'medium';
+    label?: string;
+    placeholder?: string;
+    value?: string;
+    isReadonly?: boolean;
+    onChange?: (value: string) => void;
+    className?: string;
+}
+
 export const CommonInput = ({
     size = 'small',
     label,
@@ -157,7 +146,7 @@ export const CommonInput = ({
     isReadonly,
     onChange,
     className
-}) => {
+}: CommonInputProps) => {
     const defaultStyle = css({
         fontFamily: 'inherit',
         fontSize: 'inherit !important'
@@ -175,26 +164,25 @@ export const CommonInput = ({
                 readOnly: isReadonly
             }}
             onChange={event => {
-                onChange(event.target.value);
+                onChange && onChange(event.target.value);
             }}
         />
     );
 };
 
-/**
- * Slider component.
- *
- * @param sliderColor Color of the slider.
- * @param showMark Show the marks or not.
- * @param showThumb Show the thumb or not.
- * @param isReadonly Allow or disallow the user to move the thumb.
- * @param min First value of the slider.
- * @param max Last value of the slider.
- * @param step Distance between the marks.
- * @param value Current value.
- * @param onChange The function to run when the slider is moved.
- * @param className Style to override
- */
+interface CommonSliderProps {
+    sliderColor?: string;
+    showMark?: boolean;
+    showThumb?: boolean;
+    isReadonly?: boolean;
+    min?: number;
+    max?: number;
+    step?: number;
+    value?: number;
+    onChange?: (value: number) => void;
+    className?: string;
+}
+
 export const CommonSlider = ({
     sliderColor = commonColors.blue,
     showMark = true,
@@ -206,7 +194,7 @@ export const CommonSlider = ({
     value,
     onChange,
     className
-}) => {
+}: CommonSliderProps) => {
     const defaultStyle = css([
         {
             '& .MuiSlider-track': {
@@ -235,25 +223,23 @@ export const CommonSlider = ({
             step={step}
             marks={showMark}
             onChange={(event, value) => {
-                onChange(value);
+                onChange && onChange(value as number);
             }}
         />
     );
 };
 
-/**
- * Component which is overlapped on the page.
- * (ex. Dialog)
- *
- * @param isOpen Show or hide the component
- * @param onClose Called when the component is hidden
- * @param children Child component
- */
+interface CommonModalProps {
+    isOpen: boolean;
+    onClose?: () => void;
+    children: ReactNode;
+}
+
 export const CommonModal = ({
     isOpen,
     onClose,
     children
-}) => (
+}: CommonModalProps) => (
     <Dialog
         className={css({
             '& .MuiDialog-paper': {
@@ -267,12 +253,11 @@ export const CommonModal = ({
     </Dialog>
 );
 
-/**
- * 'X' button which can be used for the dialogs.
- *
- * @param onClick Called when the button is clicked
- */
-export const CommonCloseButton = ({ onClick }) => (
+interface CommonCloseButtonProps {
+    onClick?: () => void;
+}
+
+export const CommonCloseButton = ({ onClick }: CommonCloseButtonProps) => (
     <CommonIconButton
         className={css({
             fontSize: '1.5rem',
