@@ -1,15 +1,18 @@
-import React, { createContext, ReactNode, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useState } from 'react';
 
 /**
  * States of the app & setter functions.
  */
 interface Store {
+    // Recorded voice data. (mp3 format)
     voiceBlob: Blob | null,
     setVoiceBlob: (value: Blob) => void,
 
+    // User's nickname.
     nickname: string,
     setNickname: (value: string) => void,
 
+    // Available points to use.
     point: number,
     setPoint: (value: number) => void
 }

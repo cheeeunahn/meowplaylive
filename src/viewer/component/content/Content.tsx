@@ -10,7 +10,7 @@ import { RecorderDialog } from 'component/recorder-dialog/RecorderDialog';
 import { isRecorderLoaded } from 'common/AudioRecorder';
 
 export const Content = () => {
-    const { voiceBlob } = useContext(StoreContext);
+    const { voiceBlob, nickname } = useContext(StoreContext);
 
     const [isRecorderDialogOpen, setRecorderDialogOpen] = useState(false);
     const [isDonationDialogOpen, setDonationDialogOpen] = useState(false);
@@ -38,10 +38,12 @@ export const Content = () => {
                     })}
                     buttonColor={commonColors.blue}
                     onClick={() => {
-                        if (isRecorderLoaded()) {
-                            setRecorderDialogOpen(true);
-                        } else {
+                        if (!isRecorderLoaded()) {
                             alert('Recorder is not loaded yet! Please wait a second.');
+                        } else if (nickname.length === 0) {
+                            alert('Please set your nickname.');
+                        } else {
+                            setRecorderDialogOpen(true);
                         }
                     }}
                 >
