@@ -6,6 +6,7 @@ import { StoreProvider } from 'component/Store';
 import { commonColors } from 'component/Common';
 import { Content } from 'component/content/Content';
 import { Header } from 'component/header/Header';
+import { LevelView } from 'component/level-view/LevelView';
 
 export const App = () => {
     return (
@@ -20,12 +21,22 @@ export const App = () => {
                 })}>
                     <Header />
                     <div className={css({
+                        display: 'flex',
+                        flexDirection: 'row',
                         boxSizing: 'border-box',
                         width: '100%',
                         padding: '2rem',
                         flex: 1
                     })}>
                         <Content />
+                        <div className={css({
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: '300px',
+                            marginLeft: '1rem'
+                        })}>
+                            <LevelView />
+                        </div>
                     </div>
                 </div>
             </StylesProvider>
