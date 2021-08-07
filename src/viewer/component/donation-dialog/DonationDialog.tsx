@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { css } from '@emotion/css';
 
 import { CommonModal, CommonBox, CommonCloseButton, CommonSlider, commonColors, CommonButton } from 'component/Common';
@@ -28,7 +28,7 @@ interface DonationDialogProps {
 export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
     const { voiceBlob, nickname, availablePoint, setAvailablePoint } = useContext(StoreContext);
 
-    const [currentPointLevel, setCurrentPointLevel] = useState(0);
+    const [currentPointLevel, setCurrentPointLevel] = useState<number>(0);
     const currentPoint = pointList[currentPointLevel];
 
     return (
@@ -92,7 +92,7 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                         socket.emit('upload-audio', {
                             nickname: nickname,
                             audio: voiceBlob!!,
-                            donation: 1000,
+                            donation: currentPoint,
                             socketid: socket.id,
                             timestamp: Date.now()
                         });

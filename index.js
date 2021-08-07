@@ -44,6 +44,24 @@ app.get('/test', (req, res) => {
     });
 });
 
+function computeAndBroadcastDonationSumMap(socket) {
+    database.find({}, {nickname: 1, donation: 1}, (err, docs) => {
+        // Map of key: string, value: number;
+        const donationSumMap = {};
+
+        docs.forEach(({nickname}) => {
+            donationSumMap[nickname] = 0;
+        });
+
+        docs.forEach(({nickname, donation}) => {
+            donationSumMap[nickname] += donation;
+        });
+
+        console.log(`Sum of donation of each user: ${JSON.stringify(donationSumMap)}`);
+        socket.broadcast.emit('donation-sum-map', donationSumMap);
+    });
+}
+
 // Handle sockets for testing purposes//////
 // a nice cheat sheet from stackoverflow: https://stackoverflow.com/questions/10058226/send-response-to-all-clients-except-sender
 function newConnection(socket) {
@@ -75,6 +93,7 @@ function newConnection(socket) {
     socket.on('upload-audio', (arg) => {
         console.log(`Received an audio file from ${arg.nickname} (Socket id: ${arg.socketid})`)
         database.insert(arg);
+        computeAndBroadcastDonationSumMap(socket);
     });
     
     socket.on('number-exceeded', (arg) => {
@@ -84,6 +103,10 @@ function newConnection(socket) {
 
     socket.on('move-fish-group', (arg) => {
         socket.broadcast.emit('move-fish-group', arg);
+    });
+
+    socket.on('donation-sum-map', () => {
+        computeAndBroadcastDonationSumMap(socket);
     });
 }
 //////////////////////////////////////////////////
