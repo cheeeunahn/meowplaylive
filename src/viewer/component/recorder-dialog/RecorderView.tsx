@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { css } from '@emotion/css';
 
-import { stopRecording, startRecording, playAudioBlob } from 'util/RecorderUtils';
+import { stopRecording, startRecording, startPlaying, stopPlaying } from 'util/RecorderUtils';
 import { StoreContext } from 'component/Store';
 import { commonColors, CommonSlider, CommonButton } from 'component/Common';
 import { Clock } from 'component/recorder-dialog/Clock';
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export const RecorderView = ({ onSave }: Props) => {
-    const { voiceRecorder, setVoiceBlob } = useContext(StoreContext);
+    const { voiceRecorder, voicePlayer, setVoiceBlob } = useContext(StoreContext);
 
     const [mode, setMode] = useState<'Stop' | 'Record' | 'Play'>('Stop');
     const [time, setTime] = useState<number>(0);
@@ -110,9 +110,10 @@ export const RecorderView = ({ onSave }: Props) => {
                         : <PlayButton mode={(mode === 'Play') ? 'Stop' : 'Play'} onClick={() => {
                             if (mode === 'Stop') {
                                 setMode('Play');
-                                playAudioBlob(currentVoiceBlob!!);
+                                startPlaying(voicePlayer, currentVoiceBlob!!);
                             } else {
                                 setMode('Stop');
+                                stopPlaying(voicePlayer);
                             }
                         }} />
                 }

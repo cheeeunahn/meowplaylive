@@ -25,9 +25,19 @@ export function stopRecording(recorder: MediaRecorder) {
     }
 }
 
-export function playAudioBlob(blob: Blob) {
-    const voiceURL = URL.createObjectURL(blob);
-    const audio = new Audio(voiceURL);
-    console.log('[Recorder] Playing the audio...');
-    audio.play();
+export function createPlayer() {
+    const audio = new Audio();
+    audio.autoplay = true;
+    return audio;
+}
+
+export function startPlaying(audio: HTMLAudioElement, blob: Blob) {
+    const blobURL = URL.createObjectURL(blob);
+    audio.src = blobURL;
+    console.log('[Recorder] Started playing!');
+}
+
+export function stopPlaying(audio: HTMLAudioElement) {
+    audio.src = '';
+    console.log('[Recorder] Stopped playing!');
 }

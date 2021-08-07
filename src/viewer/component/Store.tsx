@@ -1,12 +1,13 @@
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
 
-import { createRecorder } from 'util/RecorderUtils';
+import { createPlayer, createRecorder } from 'util/RecorderUtils';
 
 /**
  * States of the app & setter functions.
  */
 interface Store {
     voiceRecorder: MediaRecorder | null,
+    voicePlayer: HTMLAudioElement,
 
     voiceBlob: Blob | null,
     setVoiceBlob: (value: Blob) => void,
@@ -47,6 +48,7 @@ interface Props {
  */
 export const StoreProvider = ({ children }: Props) => {
     const [voiceRecorder, setVoiceRecorder] = useState<MediaRecorder | null>(null);
+    const [voicePlayer, setVoicePlayer] = useState<HTMLAudioElement>(createPlayer());
     const [voiceBlob, setVoiceBlob] = useState<Blob | null>(null);
     const [nickname, setNickname] = useState<string>('');
     const [point, setPoint] = useState<number>(500000);
@@ -60,6 +62,7 @@ export const StoreProvider = ({ children }: Props) => {
 
     const store: Store = {
         voiceRecorder,
+        voicePlayer,
 
         voiceBlob,
         setVoiceBlob,
