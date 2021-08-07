@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { css } from '@emotion/css';
 
 import { StoreContext } from 'component/Store';
-import { CommonBox, commonSizes, CommonButton, commonColors } from 'component/Common';
+import { CommonBox, CommonButton, commonColors } from 'component/Common';
 import { CatScreen } from 'component/content/CatScreen';
 import { PointView } from 'component/content/PointView';
 import { DonationDialog } from 'component/donation-dialog/DonationDialog';
@@ -19,7 +19,7 @@ export const Content = () => {
         <CommonBox className={css({
             display: 'flex',
             flexDirection: 'column',
-            width: commonSizes.appWidth,
+            width: '720px',
             maxWidth: '100%'
         })}>
             <PointView />

@@ -6,10 +6,10 @@ import { CommonButton, commonColors } from 'component/Common';
 export const ExitButton = () => (
     <CommonButton
         className={css({
-            display: 'flex',
+            display: 'inline-flex',
             alignItems: 'baseline',
             width: '6rem',
-            marginLeft: 'auto' // Align right.
+            marginLeft: '1rem'
         })}
         buttonColor={commonColors.brown}
         onClick={() => {

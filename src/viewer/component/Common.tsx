@@ -8,11 +8,6 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import { css } from '@emotion/css';
 
-export const commonSizes = {
-    // Our guess of proper content width.
-    appWidth: '720px'
-};
-
 // Basic colors.
 export const commonColors = {
     black: '#3c4449',

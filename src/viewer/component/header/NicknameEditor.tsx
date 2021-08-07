@@ -11,7 +11,7 @@ export const NicknameEditor = () => {
     const [isEditing, setEditing] = useState<boolean>(true);
 
     return (
-        <div className={css({
+        <span className={css({
             marginBottom: '0.5rem'
         })}>
             <CommonInput
@@ -55,6 +55,6 @@ export const NicknameEditor = () => {
             >
                 {isEditing ? 'Save' : 'Edit'}
             </CommonButton>
-        </div>
+        </span>
     );
 };
