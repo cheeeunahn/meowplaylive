@@ -7,6 +7,7 @@ import { CommonBox, commonColors } from 'component/Common';
 import { Content } from 'component/content/Content';
 import { Header } from 'component/header/Header';
 import { LevelView } from 'component/level-view/LevelView';
+import { RankView } from 'component/rank-view/RankView';
 
 export const App = () => {
     return (
@@ -49,6 +50,7 @@ export const App = () => {
                                 marginLeft: '1rem'
                             })}>
                                 <LevelView />
+                                <RankView />
                             </div>
                         </div>
                     </div>
