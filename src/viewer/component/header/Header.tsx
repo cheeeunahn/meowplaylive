@@ -10,7 +10,7 @@ export const Header = () => (
         zIndex: 3,
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-end',
         boxSizing: 'border-box',
         width: '100%',
         padding: '2rem 2rem 1em 2rem',
