@@ -3,6 +3,7 @@ import { css } from '@emotion/css';
 
 import { CommonModal, CommonBox, CommonCloseButton, CommonSlider, commonColors, CommonButton } from 'component/Common';
 import { StoreContext } from 'component/Store';
+import { numberToFormattedString } from 'util/StringUtils';
 
 const moneyList = [
     1000,
@@ -60,7 +61,7 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                     fontWeight: 'bold',
                     marginBottom: '1rem'
                 })}>
-                    {money.toLocaleString('en', { useGrouping: true })}
+                    {numberToFormattedString(money)}
                 </div>
                 <CommonSlider
                     sliderColor={commonColors.green}

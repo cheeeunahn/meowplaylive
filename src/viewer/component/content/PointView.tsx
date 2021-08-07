@@ -3,6 +3,7 @@ import { css } from '@emotion/css';
 
 import { commonColors } from 'component/Common';
 import { StoreContext } from 'component/Store';
+import { numberToFormattedString } from 'util/StringUtils';
 
 export const PointView = () => {
     const { point } = useContext(StoreContext);
@@ -15,7 +16,7 @@ export const PointView = () => {
             <span className={css({
                 color: commonColors.green
             })}>
-                {point.toLocaleString('en', { useGrouping: true })} Points
+                {numberToFormattedString(point)} Points
             </span>
         </div>
     );
