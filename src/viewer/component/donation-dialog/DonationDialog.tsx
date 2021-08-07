@@ -26,6 +26,7 @@ interface DonationDialogProps {
 
 export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
     const { voiceBlob } = useContext(StoreContext);
+
     const [moneyLevel, setMoneyLevel] = useState(0);
     const money = moneyList[moneyLevel];
 

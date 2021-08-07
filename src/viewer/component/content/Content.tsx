@@ -7,9 +7,11 @@ import { CatScreen } from 'component/content/CatScreen';
 import { PointView } from 'component/content/PointView';
 import { DonationDialog } from 'component/donation-dialog/DonationDialog';
 import { RecorderDialog } from 'component/recorder-dialog/RecorderDialog';
+import { isRecorderLoaded } from 'util/RecorderUtils';
 
 export const Content = () => {
-    const { voiceRecorder, voiceBlob } = useContext(StoreContext);
+    const { voiceBlob } = useContext(StoreContext);
+
     const [isRecorderDialogOpen, setRecorderDialogOpen] = useState(false);
     const [isDonationDialogOpen, setDonationDialogOpen] = useState(false);
 
@@ -35,14 +37,15 @@ export const Content = () => {
                         marginRight: '2rem'
                     })}
                     buttonColor={commonColors.blue}
-                    isDisabled={!voiceRecorder}
                     onClick={() => {
-                        setRecorderDialogOpen(true);
+                        if (isRecorderLoaded()) {
+                            setRecorderDialogOpen(true);
+                        } else {
+                            alert('Recorder is not loaded yet! Please wait a second.');
+                        }
                     }}
                 >
-                    <i className='fa fa-circle' />
-                    &nbsp;
-                    {voiceRecorder ? 'Record new message' : 'Loading the recorder...'}
+                    <i className='fa fa-circle' />&nbsp;Record new message
                 </CommonButton>
                 <CommonButton
                     className={css({

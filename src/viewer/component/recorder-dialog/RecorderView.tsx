@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { css } from '@emotion/css';
 
-import { stopRecording, startRecording, startPlaying, stopPlaying } from 'util/RecorderUtils';
 import { StoreContext } from 'component/Store';
 import { commonColors, CommonSlider, CommonButton } from 'component/Common';
 import { Clock } from 'component/recorder-dialog/Clock';
 import { PlayButton } from 'component/recorder-dialog/PlayButton';
+import { stopRecording, startRecording, addRecorderStopListener, removeRecorderStopListener } from 'util/RecorderUtils';
+import { startPlaying, stopPlaying } from 'util/PlayerUtils';
 
 const buttonStyle = css({
     display: 'block',
@@ -18,7 +19,7 @@ interface Props {
 }
 
 export const RecorderView = ({ onSave }: Props) => {
-    const { voiceRecorder, voicePlayer, setVoiceBlob } = useContext(StoreContext);
+    const { setVoiceBlob } = useContext(StoreContext);
 
     const [mode, setMode] = useState<'Stop' | 'Record' | 'Play'>('Stop');
     const [time, setTime] = useState<number>(0);
@@ -30,26 +31,15 @@ export const RecorderView = ({ onSave }: Props) => {
 
     // When this component is rendered...
     useEffect(() => {
-        let chunks: Blob[] = [];
-
-        const onRecord = (event: BlobEvent) => {
-            chunks.push(event.data);
+        const onStop = (blob: Blob) => {
+            setCurrentVoiceBlob(blob);
         };
 
-        const onStop = () => {
-            setCurrentVoiceBlob(new Blob(chunks, { 'type': 'audio/mp3' }));
-
-            // Clear the current data.
-            chunks = [];
-        };
-
-        voiceRecorder!!.addEventListener('dataavailable', onRecord);
-        voiceRecorder!!.addEventListener('stop', onStop);
+        addRecorderStopListener(onStop);
 
         // When this component is removed... remove the listeners.
         return () => {
-            voiceRecorder!!.removeEventListener('dataavailable', onRecord);
-            voiceRecorder!!.removeEventListener('stop', onStop);
+            removeRecorderStopListener(onStop);
         };
     }, []);
 
@@ -69,7 +59,7 @@ export const RecorderView = ({ onSave }: Props) => {
                     setTime(newTime);
                     setCurrentVoiceLength(newTime);
                 } else {
-                    stopRecording(voiceRecorder!!);
+                    stopRecording();
 
                     // Stop recording when the time is over.
                     setMode('Stop');
@@ -110,10 +100,10 @@ export const RecorderView = ({ onSave }: Props) => {
                         : <PlayButton mode={(mode === 'Play') ? 'Stop' : 'Play'} onClick={() => {
                             if (mode === 'Stop') {
                                 setMode('Play');
-                                startPlaying(voicePlayer, currentVoiceBlob!!);
+                                startPlaying(currentVoiceBlob!!);
                             } else {
                                 setMode('Stop');
-                                stopPlaying(voicePlayer);
+                                stopPlaying();
                             }
                         }} />
                 }
@@ -128,14 +118,13 @@ export const RecorderView = ({ onSave }: Props) => {
             </div>
             <CommonButton
                 className={buttonStyle}
-                isDisabled={!voiceRecorder}
                 buttonColor={(mode === 'Record') ? commonColors.brown : commonColors.blue}
                 onClick={() => {
                     if (mode === 'Stop') {
-                        startRecording(voiceRecorder!!);
+                        startRecording();
                         setMode('Record');
                     } else {
-                        stopRecording(voiceRecorder!!);
+                        stopRecording();
                         setMode('Stop');
                     }
                 }}

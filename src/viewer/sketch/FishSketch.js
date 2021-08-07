@@ -14,7 +14,7 @@
  * - Added success icon image (need to add on to it after implementing "click me" function on viewer-screen.html)
  */
 
-import io from 'socket.io-client';
+import { socket } from 'util/SocketUtils';
 
 let msg; // to delete later
 let successImg;
@@ -43,8 +43,6 @@ export function setup(Container) {
 
     const canvas = createCanvas(rectWidth, rectHeight);
     canvas.parent(Container);
-
-    const socket = io(); // make connection to socket
 
     // when success event happens
     socket.on('cat-tap-success', () => {
