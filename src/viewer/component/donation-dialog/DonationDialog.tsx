@@ -4,6 +4,7 @@ import { css } from '@emotion/css';
 import { CommonModal, CommonBox, CommonCloseButton, CommonSlider, commonColors, CommonButton } from 'component/Common';
 import { StoreContext } from 'component/Store';
 import { numberToFormattedString } from 'common/StringUtils';
+import { socket } from 'common/Connection';
 
 const moneyList = [
     1000,
@@ -25,7 +26,7 @@ interface DonationDialogProps {
 }
 
 export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
-    const { voiceBlob } = useContext(StoreContext);
+    const { voiceBlob, nickname } = useContext(StoreContext);
 
     const [moneyLevel, setMoneyLevel] = useState(0);
     const money = moneyList[moneyLevel];
@@ -80,6 +81,9 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                         marginTop: '0.5rem'
                     })}
                     onClick={() => {
+                        socket.emit('name-sent', nickname);
+                        socket.emit('button-clicked');
+                        onClose();
                     }}
                 >
                     Send!
