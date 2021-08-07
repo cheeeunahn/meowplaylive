@@ -13,6 +13,7 @@ export const commonSizes = {
     appWidth: '720px'
 };
 
+// Basic colors.
 export const commonColors = {
     black: '#3c4449',
     brown: '#824a48',
@@ -20,6 +21,13 @@ export const commonColors = {
     pink: '#f48fb1',
     green: '#0a7073',
     white: '#e5e5e5'
+};
+
+// Additional colors.
+export const moreCommonColors = {
+    yellow: '#ffd700',
+    gray: '#c0c0c0',
+    lightBrown: '#cd7f32'
 };
 
 interface CommonBoxProps {

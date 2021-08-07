@@ -14,7 +14,10 @@ interface Store {
 
     // Available points to use.
     availablePoint: number,
-    setAvailablePoint: (value: number) => void
+    setAvailablePoint: (value: number) => void,
+
+    // Used points.
+    usedPoint: number
 }
 
 /**
@@ -45,9 +48,11 @@ interface Props {
  * };
  */
 export const StoreProvider = ({ children }: Props) => {
+    const maxPoint = 500000;
+
     const [voiceBlob, setVoiceBlob] = useState<Blob | null>(null);
     const [nickname, setNickname] = useState<string>('');
-    const [point, setPoint] = useState<number>(500000);
+    const [availablePoint, setAvailablePoint] = useState<number>(maxPoint);
 
     const store: Store = {
         voiceBlob,
@@ -56,8 +61,10 @@ export const StoreProvider = ({ children }: Props) => {
         nickname,
         setNickname,
 
-        availablePoint: point,
-        setAvailablePoint: setPoint
+        availablePoint,
+        setAvailablePoint,
+
+        usedPoint: maxPoint - availablePoint
     };
 
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>;
