@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 
 import { CommonModal, CommonBox, CommonCloseButton, CommonSlider, commonColors, CommonButton } from 'component/Common';
 import { StoreContext } from 'component/Store';
-import { numberToFormattedString } from 'util/StringUtils';
+import { numberToFormattedString } from 'common/StringUtils';
 
 const moneyList = [
     1000,

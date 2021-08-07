@@ -26,7 +26,7 @@ defineGlobalVariable('draw', () => {
     }
 });
 
-export function createSketch<T>(Container: Element, sketch: T) {
+export function setSketch<T>(Container: Element, sketch: T) {
     // Clear the current sketch.
     currentSketch = null;
     isCurrentSketchSetup = false;

@@ -5,8 +5,8 @@ import { StoreContext } from 'component/Store';
 import { commonColors, CommonSlider, CommonButton } from 'component/Common';
 import { Clock } from 'component/recorder-dialog/Clock';
 import { PlayButton } from 'component/recorder-dialog/PlayButton';
-import { stopRecording, startRecording, addRecorderStopListener, removeRecorderStopListener } from 'util/RecorderUtils';
-import { startPlaying, stopPlaying } from 'util/PlayerUtils';
+import { stopRecording, startRecording, addRecorderStopListener, removeRecorderStopListener } from 'common/AudioRecorder';
+import { startPlaying, stopPlaying } from 'common/AudioPlayer';
 
 const buttonStyle = css({
     display: 'block',

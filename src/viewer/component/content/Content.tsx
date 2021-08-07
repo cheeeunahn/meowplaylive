@@ -7,7 +7,7 @@ import { CatScreen } from 'component/content/CatScreen';
 import { PointView } from 'component/content/PointView';
 import { DonationDialog } from 'component/donation-dialog/DonationDialog';
 import { RecorderDialog } from 'component/recorder-dialog/RecorderDialog';
-import { isRecorderLoaded } from 'util/RecorderUtils';
+import { isRecorderLoaded } from 'common/AudioRecorder';
 
 export const Content = () => {
     const { voiceBlob } = useContext(StoreContext);

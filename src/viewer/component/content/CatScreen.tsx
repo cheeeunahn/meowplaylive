@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { css } from '@emotion/css';
 
-import { createSketch } from 'util/P5Utils';
+import { setSketch } from 'common/Sketch';
 import { CommonBox } from 'component/Common';
 import * as FishSketch from 'sketch/FishSketch';
 
@@ -12,7 +12,7 @@ export const CatScreen = () => {
         const Container = ref.current;
 
         if (Container !== null) {
-            createSketch(Container, FishSketch);
+            setSketch(Container, FishSketch);
         }
     }, []);
 

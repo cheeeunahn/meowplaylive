@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 
 import { commonColors } from 'component/Common';
 import { StoreContext } from 'component/Store';
-import { numberToFormattedString } from 'util/StringUtils';
+import { numberToFormattedString } from 'common/StringUtils';
 
 export const PointView = () => {
     const { point } = useContext(StoreContext);

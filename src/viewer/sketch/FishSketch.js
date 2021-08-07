@@ -14,7 +14,7 @@
  * - Added success icon image (need to add on to it after implementing "click me" function on viewer-screen.html)
  */
 
-import { socket } from 'util/SocketUtils';
+import { socket } from 'common/Socket';
 
 let msg; // to delete later
 let successImg;
