@@ -13,8 +13,8 @@ interface Store {
     setNickname: (value: string) => void,
 
     // Available points to use.
-    point: number,
-    setPoint: (value: number) => void
+    availablePoint: number,
+    setAvailablePoint: (value: number) => void
 }
 
 /**
@@ -56,8 +56,8 @@ export const StoreProvider = ({ children }: Props) => {
         nickname,
         setNickname,
 
-        point,
-        setPoint
+        availablePoint: point,
+        setAvailablePoint: setPoint
     };
 
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>;

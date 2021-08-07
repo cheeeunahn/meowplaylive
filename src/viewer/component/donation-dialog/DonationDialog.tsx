@@ -6,7 +6,7 @@ import { StoreContext } from 'component/Store';
 import { numberToFormattedString } from 'common/StringUtils';
 import { socket } from 'common/Connection';
 
-const moneyList = [
+const pointList = [
     1000,
     2000,
     5000,
@@ -26,10 +26,10 @@ interface DonationDialogProps {
 }
 
 export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
-    const { voiceBlob, nickname } = useContext(StoreContext);
+    const { voiceBlob, nickname, availablePoint, setAvailablePoint } = useContext(StoreContext);
 
-    const [moneyLevel, setMoneyLevel] = useState(0);
-    const money = moneyList[moneyLevel];
+    const [currentPointLevel, setCurrentPointLevel] = useState(0);
+    const currentPoint = pointList[currentPointLevel];
 
     return (
         <CommonModal
@@ -63,15 +63,15 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                     fontWeight: 'bold',
                     marginBottom: '1rem'
                 })}>
-                    {numberToFormattedString(money)}
+                    {numberToFormattedString(currentPoint)}
                 </div>
                 <CommonSlider
                     sliderColor={commonColors.green}
                     showMark={false}
-                    value={moneyLevel}
+                    value={currentPointLevel}
                     max={10}
                     onChange={value => {
-                        setMoneyLevel(value);
+                        setCurrentPointLevel(value);
                     }}
                 />
                 <CommonButton
@@ -81,8 +81,23 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                         marginTop: '0.5rem'
                     })}
                     onClick={() => {
+                        if (currentPoint > availablePoint) {
+                            alert(`You can't donate ${numberToFormattedString(currentPoint)} points since you have ${numberToFormattedString(availablePoint)} points left.`);
+                            return;
+                        }
+
                         socket.emit('name-sent', nickname);
                         socket.emit('button-clicked');
+
+                        socket.emit('upload-audio', {
+                            nickname: nickname,
+                            audio: voiceBlob!!,
+                            donation: 1000,
+                            socketid: socket.id,
+                            timestamp: Date.now()
+                        });
+
+                        setAvailablePoint(availablePoint - currentPoint);
                         onClose();
                     }}
                 >

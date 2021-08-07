@@ -6,7 +6,7 @@ import { StoreContext } from 'component/Store';
 import { numberToFormattedString } from 'common/StringUtils';
 
 export const PointView = () => {
-    const { point } = useContext(StoreContext);
+    const { availablePoint } = useContext(StoreContext);
 
     return (
         <div className={css({
@@ -16,7 +16,7 @@ export const PointView = () => {
             <span className={css({
                 color: commonColors.green
             })}>
-                {numberToFormattedString(point)} Points
+                {numberToFormattedString(availablePoint)} Points
             </span>
         </div>
     );
