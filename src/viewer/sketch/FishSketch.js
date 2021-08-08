@@ -121,6 +121,7 @@ function drawCatUI() {
     pop();
 
     // for displaying success icon
+    /*
     if (displaySuccessImg) {
         imageMode(CENTER);
         image(successImg, rectWidth/2, rectHeight/2, rectWidth/3, rectHeight/3);
@@ -133,6 +134,7 @@ function drawCatUI() {
     textSize(32);
     text(msg, 150, 10);
     /////////////////////////
+    */
 }
 
 function resetToDefaultScreen() {

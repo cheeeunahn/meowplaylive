@@ -4,6 +4,7 @@ import { css } from '@emotion/css';
 import { setSketch } from 'common/Sketch';
 import { CommonBox } from 'component/Common';
 import * as FishSketch from 'sketch/FishSketch';
+import { CatResultView } from 'component/content/CatResultView';
 
 export const CatScreen = () => {
     const ref = useRef(null);
@@ -18,6 +19,7 @@ export const CatScreen = () => {
 
     return (
         <CommonBox className={css({
+            position: 'relative',
             flex: 1,
             padding: 0,
             marginBottom: '1rem'
@@ -36,6 +38,7 @@ export const CatScreen = () => {
                 })}
                 ref={ref}
             />
+            <CatResultView />
         </CommonBox>
     );
 };
