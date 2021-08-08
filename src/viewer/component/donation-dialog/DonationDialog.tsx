@@ -90,7 +90,8 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
 
                         socket.emit('button-clicked', {
                             socketid: socket.id,
-                            audio: voiceBlob!!
+                            audio: voiceBlob!!,
+                            donation: currentPoint
                         });
 
                         socket.emit('upload-audio', {
