@@ -55,6 +55,10 @@ export function setup(Container) {
 
     // when fail event happens
     /*TO DO*/
+    /*socket.on('cat-tap-fail', () => {
+        displayFailImg = true;
+        setTimeout(resetToDefaultScreen, 5000);
+    });*/
 
     // preventing user from clicking too fast
     socket.on('number-exceeded', () => {
