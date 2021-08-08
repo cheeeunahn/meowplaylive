@@ -9,6 +9,9 @@ let username;
 
 let titleNickname;
 
+//this is a test
+//let fishTest;
+
 function preload() {
     // load the necessary sound files
     soundFormats('mp3');
@@ -16,6 +19,9 @@ function preload() {
     voiceSound = loadSound('./uploads/test-recording.m4a');
     splashSound = loadSound('./assets/splash.mp3');
     bubbleSound = loadSound('./assets/bubble.mp3');
+
+    // this is a test
+    //fishTest = loadGif('./assets/fish_white.gif');
 
     // load font file
 
@@ -55,6 +61,13 @@ function setup() {
 
 function draw() {
     background(222,243,246); // background color of canvas
+
+    // this is a test
+    //if (fishTest.loaded()) {
+    //    tint(255,0,0);
+    //    image(fishTest, 0, 0);
+    //  }
+
     textSize(width/10);
     textAlign(CENTER, CENTER);
     fill(0);
@@ -155,9 +168,12 @@ function mousePressed() {
 // A class for drawing fish
 class Fish {
     constructor() {
-        this.fish_gif = loadImage('./assets/fish_blue.gif');
-        this.fish_gif.play();
+        this.fish_gif = loadGif('./assets/fish_white.gif')
+        //this.fish_gif = loadImage('./assets/fish_blue.gif');
+        if(this.fish_gif.loaded())
+            this.fish_gif.play();
 
+        
         this.colorPalette = [color(31, 135, 74), color(16, 99, 71), color(10, 99, 84),
             color(1, 96, 102), color(27, 79, 95), color(22, 77, 119), color(19, 59, 107), color(17, 55, 98),
             color(12, 43, 85), color(17, 31, 84), color(23, 6, 65)];
@@ -184,6 +200,7 @@ class Fish {
 
         // default donation amount from user
         this.donation = -1;
+        this.fishColor = color(255,0,0);
 
         // Audio blob object. (Recorded by the user.)
         this.voiceBlob = null;
@@ -233,50 +250,62 @@ class Fish {
             }
             rotate(this.angle);
 
+            blendMode(MULTIPLY);
             switch (this.donation){
                 case 1000:
                     this.fishColor = this.colorPalette[0];
                     this.fishSize = width/5;
+                    tint(0,100);
                     break;
                 case 2000:
                     this.fishColor = this.colorPalette[1];
-                    this.fishSize = width/5;
+                    this.fishSize = width/4.5;
+                    tint(0,120);
                     break;
                 case 5000:
                     this.fishColor = this.colorPalette[2];
-                    this.fishSize = width/5;
+                    this.fishSize = width/4.5;
+                    tint(0,130);
                     break;
                 case 10000:
                     this.fishColor = this.colorPalette[3];
                     this.fishSize = width/4;
+                    tint(0,140);
                     break;
                 case 20000:
                     this.fishColor = this.colorPalette[4];
                     this.fishSize = width/4;
+                    tint(0,150);
                     break;
                 case 50000:
                     this.fishColor = this.colorPalette[5];
-                    this.fishSize = width/4;
+                    this.fishSize = width/3.5;
+                    tint(0,160);
                     break;
                 case 100000:
                     this.fishColor = this.colorPalette[6];
-                    this.fishSize = width/3.5;
+                    this.fishSize = width/3;
+                    tint(0,170);
                     break;
                 case 200000:
                     this.fishColor = this.colorPalette[7];
-                    this.fishSize = width/3.5;
+                    this.fishSize = width/3;
+                    tint(0,180);
                     break;
                 case 300000:
                     this.fishColor = this.colorPalette[8];
-                    this.fishSize = width/3.5;
+                    this.fishSize = width/3;
+                    tint(0,190);
                     break;
                 case 400000:
                     this.fishColor = this.colorPalette[9];
-                    this.fishSize = width/3.5;
+                    this.fishSize = width/3;
+                    tint(0,200);
                     break;
                 case 500000:
                     this.fishColor = this.colorPalette[10];
-                    this.fishSize = width/3.5;
+                    this.fishSize = width/2.5;
+                    tint(0,255);
                     break;
                 default:
                     console.log("error retrieving donation amount from viewer");
@@ -284,12 +313,10 @@ class Fish {
 
             if (this.fishSize != null){
 
-                if (this.fishColor != null)
-                    tint(this.fishColor);
-                else
-                    tint(0); // if some error occurs when receiving donation, just make the fish black
-
+                tint(this.fishColor,255);
+                //tint(color(255,0,0),50);
                 image(this.fish_gif, 0, 0, this.fishSize,this.fishSize);
+                
                 textSize(width/25);
                 textAlign(CENTER, CENTER);
                 fill(0);
