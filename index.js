@@ -67,11 +67,9 @@ function computeAndBroadcastDonationSumMap(socket) {
 function newConnection(socket) {
     console.log('new connection: ' + socket.id);
     
-    socket.on('button-clicked', () => {
-        // const timestamp = Date.now(); // save current time
-        // insert string whenever a button is clicked
-        // database.insert({content: "a button has been clicked", timestamp: timestamp}); // testing nedb
-        socket.broadcast.emit('button-clicked', {id: socket.id, msg: "button-clicked"}); // save unique socket id
+    // data: {socketid: ..., audio: ... (Blob object)}.
+    socket.on('button-clicked', data => {
+        socket.broadcast.emit('button-clicked', data); // save unique socket id
         console.log('button clicked!');
     });
     

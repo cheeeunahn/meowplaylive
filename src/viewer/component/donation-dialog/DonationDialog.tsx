@@ -87,7 +87,11 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                         }
 
                         socket.emit('name-sent', nickname);
-                        socket.emit('button-clicked');
+
+                        socket.emit('button-clicked', {
+                            socketid: socket.id,
+                            audio: voiceBlob!!
+                        });
 
                         socket.emit('upload-audio', {
                             nickname: nickname,

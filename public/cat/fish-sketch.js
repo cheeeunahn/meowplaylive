@@ -108,7 +108,8 @@ function drawFish (data) {
     for (var i = 0; i < fishGroup.length; i++){
         if (fishGroup[i].getPositionX() > windowWidth || fishGroup[i].getPositionX() < 0) {
             fishGroup[i].setUsername(username);
-            fishGroup[i].setId(data.id); // the socket id of the fish
+            fishGroup[i].setId(data.socketid); // the socket id of the fish
+            fishGroup[i].setVoiceBlob(new Blob([data.audio], { type: 'audio/mp3' })); // audio recorded by the user
             fishGroup[i].setToNewPosition();
             bubbleSound.setVolume(0.4);
             if (bubbleSound.isPlaying())
@@ -128,10 +129,11 @@ function touchEnded () {
             if (this.splashSound.isPlaying())
                 this.splashSound.stop();
             this.splashSound.play();
-            this.voiceSound.setVolume(2.0);
-            if (this.voiceSound.isPlaying())
-                this.voiceSound.stop();    
-            this.voiceSound.play();
+            //this.voiceSound.setVolume(2.0);
+            //if (this.voiceSound.isPlaying())
+            //    this.voiceSound.stop();    
+            //this.voiceSound.play();
+            fishGroup[i].playVoice(); // Play the voice recorded by the user.
             titleNickname = fishGroup[i].username;
             setTimeout(resetTitleText, 5000);
         }
@@ -174,6 +176,9 @@ class Fish {
         this.id="";
 
         this.showPrevState = false;
+
+        // Audio blob object. (Recorded by the user.)
+        this.voiceBlob = null;
     }
 
     setToNewPosition() {
@@ -298,5 +303,19 @@ class Fish {
 
     getId() {
         return this.id;
+    }
+
+    setVoiceBlob(blob) {
+        this.voiceBlob = blob;
+    }
+
+    playVoice() {
+        if (this.voiceBlob === null) {
+            return;
+        }
+
+        const blobURL = URL.createObjectURL(this.voiceBlob);
+        const audio = new Audio(blobURL);
+        audio.play();
     }
 }
