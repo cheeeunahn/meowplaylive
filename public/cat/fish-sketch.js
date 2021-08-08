@@ -282,12 +282,13 @@ class Fish {
                     console.log("error retrieving donation amount from viewer");
             }
 
-            if (this.fishColor != null)
-                tint(this.fishColor);
-            else
-                tint(0); // if some error occurs when receiving donation, just make the fish black
-
             if (this.fishSize != null){
+
+                if (this.fishColor != null)
+                    tint(this.fishColor);
+                else
+                    tint(0); // if some error occurs when receiving donation, just make the fish black
+
                 image(this.fish_gif, 0, 0, this.fishSize,this.fishSize);
                 textSize(width/25);
                 textAlign(CENTER, CENTER);
