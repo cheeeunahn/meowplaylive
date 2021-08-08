@@ -110,6 +110,7 @@ function drawFish (data) {
             fishGroup[i].setUsername(username);
             fishGroup[i].setId(data.socketid); // the socket id of the fish
             fishGroup[i].setVoiceBlob(new Blob([data.audio], { type: 'audio/mp3' })); // audio recorded by the user
+            fishGroup[i].setDonation(data.donation);
             fishGroup[i].setToNewPosition();
             bubbleSound.setVolume(0.4);
             if (bubbleSound.isPlaying())
@@ -157,6 +158,10 @@ class Fish {
         this.fish_gif = loadImage('./assets/fish_blue.gif');
         this.fish_gif.play();
 
+        this.colorPalette = [color(31, 135, 74), color(16, 99, 71), color(10, 99, 84),
+            color(1, 96, 102), color(27, 79, 95), color(22, 77, 119), color(19, 59, 107), color(17, 55, 98),
+            color(12, 43, 85), color(17, 31, 84), color(23, 6, 65)];
+
         this.px = -1000;
         this.py = -1000; // put it somewhere invisible
         this.position = createVector(this.px, this.py);
@@ -176,6 +181,9 @@ class Fish {
         this.id="";
 
         this.showPrevState = false;
+
+        // default donation amount from user
+        this.donation = -1;
 
         // Audio blob object. (Recorded by the user.)
         this.voiceBlob = null;
@@ -225,13 +233,71 @@ class Fish {
             }
             rotate(this.angle);
 
-            tint(6,85,103);
-            image(this.fish_gif, 0,0, width/4,width/4);
-            textSize(width/25);
-            textAlign(CENTER, CENTER);
-            fill(0);
-            noStroke();
-            text(this.username, this.fish_gif.width/9, this.fish_gif.height/9);
+            switch (this.donation){
+                case 1000:
+                    this.fishColor = this.colorPalette[0];
+                    this.fishSize = width/5;
+                    break;
+                case 2000:
+                    this.fishColor = this.colorPalette[1];
+                    this.fishSize = width/5;
+                    break;
+                case 5000:
+                    this.fishColor = this.colorPalette[2];
+                    this.fishSize = width/5;
+                    break;
+                case 10000:
+                    this.fishColor = this.colorPalette[3];
+                    this.fishSize = width/4;
+                    break;
+                case 20000:
+                    this.fishColor = this.colorPalette[4];
+                    this.fishSize = width/4;
+                    break;
+                case 50000:
+                    this.fishColor = this.colorPalette[5];
+                    this.fishSize = width/4;
+                    break;
+                case 100000:
+                    this.fishColor = this.colorPalette[6];
+                    this.fishSize = width/3.5;
+                    break;
+                case 200000:
+                    this.fishColor = this.colorPalette[7];
+                    this.fishSize = width/3.5;
+                    break;
+                case 300000:
+                    this.fishColor = this.colorPalette[8];
+                    this.fishSize = width/3.5;
+                    break;
+                case 400000:
+                    this.fishColor = this.colorPalette[9];
+                    this.fishSize = width/3.5;
+                    break;
+                case 500000:
+                    this.fishColor = this.colorPalette[10];
+                    this.fishSize = width/3.5;
+                    break;
+                default:
+                    console.log("error retrieving donation amount from viewer");
+            }
+
+            if (this.fishColor != null)
+                tint(this.fishColor);
+            else
+                tint(0); // if some error occurs when receiving donation, just make the fish black
+
+            if (this.fishSize != null){
+                image(this.fish_gif, 0, 0, this.fishSize,this.fishSize);
+                textSize(width/25);
+                textAlign(CENTER, CENTER);
+                fill(0);
+                noStroke();
+                text(this.username, this.fish_gif.width/9, this.fish_gif.height/9);
+            }
+            else
+               console.log("error retrieving donation amount from viewer");
+
             
             // setting collider boundaries
             this.v1 = createVector(0,0);
@@ -270,6 +336,10 @@ class Fish {
 
     setId(id) {
         this.id = id;
+    }
+
+    setDonation(donation) {
+        this.donation = donation;
     }
 
     setPrevState (showPrevState) {
