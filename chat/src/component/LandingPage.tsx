@@ -25,7 +25,7 @@ const labelStyle = css({
 });
 
 export const LandingPage = () => {
-    const { videoID, setVideoID, nickname, setNickname } = useContext(StoreContext);
+    const { setVideoID, setNickname, setPage } = useContext(StoreContext);
 
     const [currentVideoURL, setCurrentVideoURL] = useState<string>('');
     const [currentNickname, setCurrentNickname] = useState<string>('');
@@ -76,6 +76,7 @@ export const LandingPage = () => {
 
                     setVideoID(currentVideoID);
                     setNickname(currentNickname);
+                    setPage('VideoPage');
                 }}
             >
                 Submit

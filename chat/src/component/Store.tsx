@@ -1,5 +1,7 @@
 import React, { createContext, ReactNode, useState } from 'react';
 
+type PageType = 'LandingPage' | 'VideoPage';
+
 /**
  * States of the app & setter functions.
  */
@@ -11,6 +13,9 @@ interface Store {
     // Nickname.
     nickname: string;
     setNickname: (value: string) => void;
+
+    page: PageType;
+    setPage: (value: PageType) => void;
 }
 
 /**
@@ -28,13 +33,17 @@ interface Props {
 export const StoreProvider = ({ children }: Props) => {
     const [videoID, setVideoID] = useState<string>('');
     const [nickname, setNickname] = useState<string>('');
+    const [page, setPage] = useState<PageType>('LandingPage');
 
     const store: Store = {
         videoID,
         setVideoID,
 
         nickname,
-        setNickname
+        setNickname,
+
+        page,
+        setPage
     };
 
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>;

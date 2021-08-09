@@ -1,10 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { css } from '@emotion/css';
 import { StylesProvider } from '@material-ui/core/styles';
 
-import { StoreProvider } from 'component/Store';
+import { StoreContext, StoreProvider } from 'component/Store';
 import { Header } from 'component/Header';
 import { LandingPage } from 'component/LandingPage';
+import { VideoPage } from 'component/VideoPage';
+
+const CurrentPage = () => {
+    const { page } = useContext(StoreContext);
+
+    switch (page) {
+        case 'LandingPage':
+            return <LandingPage />;
+        case 'VideoPage':
+            return <VideoPage />;
+    }
+};
 
 export const App = () => (
     <StoreProvider>
@@ -18,7 +30,7 @@ export const App = () => (
                 padding: '1rem'
             })}>
                 <Header />
-                <LandingPage />
+                <CurrentPage />
             </div>
         </StylesProvider>
     </StoreProvider>
