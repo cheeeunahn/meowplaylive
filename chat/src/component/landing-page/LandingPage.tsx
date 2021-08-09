@@ -1,10 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { css } from '@emotion/css';
-import TextField from '@material-ui/core/TextField/TextField';
-import Button from '@material-ui/core/Button/Button';
 
 import { StoreContext } from 'component/Store';
 import { Page } from 'component/Page';
+import { CommonButton, CommonInput } from 'component/Common';
 
 function parseVideoURL(url: string) {
     const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -41,27 +40,23 @@ export const LandingPage = () => {
         })}>
             <div className={formStyle}>
                 <span className={labelStyle}>YouTube URL:</span>
-                <TextField
-                    variant={'outlined'}
+                <CommonInput
                     value={currentVideoURL}
-                    onChange={event => {
-                        setCurrentVideoURL(event.target.value);
+                    onChange={value => {
+                        setCurrentVideoURL(value);
                     }}
                 />
             </div>
             <div className={formStyle}>
                 <span className={labelStyle}>Nickname:</span>
-                <TextField
-                    variant={'outlined'}
+                <CommonInput
                     value={currentNickname}
-                    onChange={event => {
-                        setCurrentNickname(event.target.value);
+                    onChange={value => {
+                        setCurrentNickname(value);
                     }}
                 />
             </div>
-            <Button
-                color={'primary'}
-                variant={'contained'}
+            <CommonButton
                 onClick={() => {
                     const currentVideoID = parseVideoURL(currentVideoURL);
 
@@ -80,7 +75,7 @@ export const LandingPage = () => {
                 }}
             >
                 Submit
-            </Button>
+            </CommonButton>
         </Page>
     );
 };

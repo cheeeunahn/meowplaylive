@@ -4,8 +4,8 @@ import { StylesProvider } from '@material-ui/core/styles';
 
 import { StoreContext, StoreProvider } from 'component/Store';
 import { Header } from 'component/Header';
-import { LandingPage } from 'component/LandingPage';
-import { VideoPage } from 'component/VideoPage';
+import { LandingPage } from 'component/landing-page/LandingPage';
+import { VideoPage } from 'component/video-page/VideoPage';
 
 const CurrentPage = () => {
     const { page } = useContext(StoreContext);

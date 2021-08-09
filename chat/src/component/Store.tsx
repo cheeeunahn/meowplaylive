@@ -1,11 +1,15 @@
 import React, { createContext, ReactNode, useState } from 'react';
 
+import { generateRandomColor } from 'common/ColorUtils';
+
 type PageType = 'LandingPage' | 'VideoPage';
 
 /**
  * States of the app & setter functions.
  */
 interface Store {
+    profileColor: string;
+
     // YouTube video id.
     videoID: string;
     setVideoID: (value: string) => void;
@@ -36,6 +40,8 @@ export const StoreProvider = ({ children }: Props) => {
     const [page, setPage] = useState<PageType>('LandingPage');
 
     const store: Store = {
+        profileColor: generateRandomColor(),
+
         videoID,
         setVideoID,
 
