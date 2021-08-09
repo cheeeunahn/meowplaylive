@@ -11,7 +11,7 @@ export const ChatViewer = () => {
             overflowY: 'auto',
             width: '100%',
             height: '100%',
-            padding: '0.5rem',
+            padding: '1.5rem',
             flex: 1
         })}>
             <ChatItem profileColor={generateRandomColor()} name={'Avant'} isSuperChat={false}>

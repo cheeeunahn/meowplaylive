@@ -133,6 +133,7 @@ export const CommonIconButton = ({
 
 interface CommonInputProps {
     size?: 'small' | 'medium';
+    variant?: 'standard' | 'outlined' | 'filled';
     label?: string;
     placeholder?: string;
     value?: string;
@@ -143,6 +144,7 @@ interface CommonInputProps {
 
 export const CommonInput = ({
     size = 'small',
+    variant = 'outlined',
     label,
     placeholder,
     value,
@@ -159,7 +161,7 @@ export const CommonInput = ({
         <TextField
             className={css([defaultStyle, className])}
             size={size}
-            variant={'outlined'}
+            variant={variant}
             label={label}
             placeholder={placeholder}
             value={value}
