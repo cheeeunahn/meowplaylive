@@ -2,6 +2,7 @@ import React from 'react';
 import { css } from '@emotion/css';
 
 import { CommonBox } from 'component/Common';
+import { ChatViewer } from 'component/video-page/ChatViewer';
 
 export const ChatWidget = () => {
     return (
@@ -10,7 +11,7 @@ export const ChatWidget = () => {
             width: '25rem',
             height: '30rem'
         })}>
-
+            <ChatViewer />
         </CommonBox>
     );
 };
