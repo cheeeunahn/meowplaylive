@@ -6,8 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "debug": "webpack --watch --mode=development",
-    "build": "webpack --mode=production"
+    "debug:viewer": "webpack --progress --watch --mode=development --config=viewer/webpack.config.js",
+    "debug:chat": "webpack --progress --watch --mode=development --config=chat/webpack.config.js",
+    "build:viewer": "webpack --progress --mode=production --config=viewer/webpack.config.js",
+    "build:chat": "webpack --progress --mode=production --config=chat/webpack.config.js",
+    "build": "npm run build:viewer && npm run build:chat"
   },
   "author": "chee eun",
   "license": "ISC",
