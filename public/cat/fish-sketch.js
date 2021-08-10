@@ -178,6 +178,7 @@ function touchEnded () {
 function playVoice (blob) {
     var source = webkitURL.createObjectURL(blob);
     audio.src = source;
+    audio.type = "audio/mp3";
     audio.load();
     audio.play();
 }
@@ -192,7 +193,7 @@ function mousePressed() {
         userStartAudio();
         audio.load();
         audio.play();
-        audio.pause();
+        //audio.pause();
         firstTouch = false;
     }
     //audio.load()
