@@ -45,7 +45,7 @@ function setup() {
     getAudioContext().suspend();
 
     audio = document.getElementById("audio_container");
-    audio.mute;
+    audio.mute = true;
 
     // create canvas
     createCanvas (windowWidth,windowHeight);
@@ -178,9 +178,7 @@ function playVoice (blob) {
     audio.load();
     audio.addEventListener("load", function() { 
         audio.play(); 
-        audio.pause();
     }, true);
-    audio.play();
 }
 
 function resetTitleText () {
