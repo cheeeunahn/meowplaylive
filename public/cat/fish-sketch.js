@@ -414,20 +414,20 @@ class Fish {
     }
 
     playVoice() {
-        if (this.voiceBlob === null) {
+        if (this.voiceBlob == null) {
             return;
         }
 
-        var audioElement = document.createElement('audio')
-        var sourceElement = document.createElement('source')
-        
-        audioElement.appendChild(sourceElement)
+        var audioElement = document.createElement('audio');
+        var sourceElement = document.createElement('source');
         
         sourceElement.src = URL.createObjectURL(this.voiceBlob);
         sourceElement.type = 'audio/mp3'
         
-        audioElement.load()
-        audioElement.play()
+        audioElement.appendChild(sourceElement);
+
+        audioElement.load();
+        audioElement.play();
 
         /*
         const blobURL = URL.createObjectURL(this.voiceBlob);
