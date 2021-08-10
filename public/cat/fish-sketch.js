@@ -46,7 +46,6 @@ function setup() {
     audio = new Audio();
     audio.crossorigin = "anonymous";
     audio.controls = true;
-    audio.source = "";
 
     let context = getAudioContext();
     // wire all media elements up to the p5.sound AudioContext
@@ -198,6 +197,9 @@ function resetTitleText () {
 // delete later ///////////
 function mousePressed() {
     userStartAudio();
+    if (audio.src == null) {
+        audio.play();
+    }
   }
 ///////////////////////////
 
