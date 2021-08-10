@@ -417,6 +417,8 @@ class Fish {
 
     setVoiceBlob(blob) {
         this.voiceBlob = blob;
+        const blobURL = webkitURL.createObjectURL(this.voiceBlob);
+        audio = loadSound(blobURL);
 
         /*audioElement = document.createElement('audio');
         var sourceElement = document.createElement('source');
@@ -437,8 +439,8 @@ class Fish {
         //audioElement.load();
         //audioElement.play();
 
-        const blobURL = webkitURL.createObjectURL(this.voiceBlob);
-        audio = new Audio(blobURL);
+
+        //audio = new Audio(blobURL);
         audio.play();
 
         /*
