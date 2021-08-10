@@ -190,27 +190,15 @@ function mousePressed() {
         userStartAudio();
         audio.load();
         audio.play();
-        //audio.pause();
+        audio.pause();
         firstTouch = false;
     }
 
     else if (successTouch) {
-        audio.load();
         audio.play();
         successTouch = false;
     }
-    //audio.load()
-    //audio.play();
-    //audio.pause();
-    /*
-    if (context == null){
-        context = getAudioContext();
-        // wire all media elements up to the p5.sound AudioContext
-        for (let elem of selectAll('audio')) {
-        let mediaSource = context.createMediaElementSource(elem.elt);
-        mediaSource.connect(p5.soundOut);
-        }
-    }*/
+
   }
 ///////////////////////////
 
@@ -459,12 +447,10 @@ class Fish {
 
     setVoiceBlob(blob) {
         this.voiceBlob = blob;
-        var source = window.URL.createObjectURL(blob);
+        var source = URL.createObjectURL(blob);
         audio.src = source;
         //sourceElement.src = webkitURL.createObjectURL(this.voiceBlob);
         //sourceElement.type = 'audio/mp3';
-
-
     }
 
     playVoice() {
@@ -476,7 +462,7 @@ class Fish {
 
         /*
         // the original code
-        const blobURL = webkitURL.createObjectURL(this.voiceBlob);
+        const blobURL = URL.createObjectURL(this.voiceBlob);
         const audio = new Audio(blobURL);
         audio.play();
         */
