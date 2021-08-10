@@ -16,7 +16,7 @@ let username;
 
 let titleNickname;
 
-var audio;
+//var audio;
 let context;
 
 
@@ -44,11 +44,11 @@ function preload() {
 function setup() {
     getAudioContext().suspend();
 
-    audio = new Audio();
+    audio = document.getElementById("audio_container");
     audio.crossorigin = "anonymous";
     audio.controls = true;
+    audio.mute = false;
     context = null;
-
 
     // create canvas
     createCanvas (windowWidth,windowHeight);

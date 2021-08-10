@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <script src="./fish-sketch.js"></script>
     <div id="slider-container" style="width: 100%; z-index: 9; position: absolute;">
         <p style="font-family: 'Noto Sans KR', sans-serif; margin-left: 1%; margin-bottom: -0.2%;">
             Slide all the way to quit!
@@ -27,6 +26,22 @@
         </p>
         <input class="mdl-slider mdl-js-slider" id="slider" style="width: 25%; margin-left: 1%;" type="range" min="0" max="100" value="0" tabindex="0">
     </div>
+    <audio id="audio_container" controls src=""></audio>
+    <script>
+    let that = this;
+    document.body.addEventListener('touchstart', function(evt) //First touch event on the screen will trigger this
+        { 
+            console.log("Audio Setup for iOS:", that.state.allow_sound);
+            if(!that.state.allow_sound) //False on initial load
+            {
+                var audio1 = document.getElementById("audio_container");
+                audio1.load();  
+                audio1.play();                             
+
+                that.setState({allow_sound : true})
+            }
+    });
+    </script>
     <script>
         let sliderInput = document.getElementById("slider");
         if (sliderInput.addEventListener) {
@@ -44,7 +59,7 @@
             }
         }
     </script>
-
+    <script src="./fish-sketch.js"></script>
     <!--This is a test for nedb testing-->
     <script>
         getData();
@@ -55,5 +70,6 @@
         }
     </script>
     <!---------------------------------->
+
 </body>
 </html>
