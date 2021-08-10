@@ -414,10 +414,11 @@ class Fish {
     }
 
     playVoice() {
-        if (this.voiceBlob == null) {
+        if (this.voiceBlob === null) {
             return;
         }
 
+        /*
         var audioElement = document.createElement('audio');
         var sourceElement = document.createElement('source');
         
@@ -427,11 +428,11 @@ class Fish {
         audioElement.appendChild(sourceElement);
 
         audioElement.load();
-        audioElement.play();
+        audioElement.play();*/
 
-        /*
-        const blobURL = URL.createObjectURL(this.voiceBlob);
+        
+        const blobURL = webkitURL.createObjectURL(this.voiceBlob);
         const audio = new Audio(blobURL);
-        audio.play();*/
+        audio.play();
     }
 }
