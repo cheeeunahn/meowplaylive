@@ -1,10 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/css';
 
-import { generateRandomColor } from 'common/ColorUtils';
+import { socket } from 'common/Connection';
+import { Chat } from 'common/Chat';
 import { ChatItem } from 'component/video-page/ChatItem';
 
 export const ChatViewer = () => {
+    const [chats, setChats] = useState<Chat[]>([]);
+
+    useEffect(() => {
+        let currentChats: Chat[] = [];
+
+        const onNewChat = (chat: Chat) => {
+            if (currentChats.length === 0) {
+                currentChats = [chat];
+            } else {
+                let index = 0;
+
+                for (let i = currentChats.length - 1; i >= 0; i--) {
+                    if (chat.timestamp >= currentChats[i].timestamp) {
+                        index = i + 1;
+                        break;
+                    }
+                }
+
+                currentChats = [...currentChats.slice(0, index), chat, ...currentChats.slice(index)];
+            }
+
+            setChats(currentChats);
+        };
+
+        socket.on('upload-chat', onNewChat);
+
+        return () => {
+            socket.off('upload-chat', onNewChat)
+        };
+    }, []);
+
     return (
         <div className={css({
             boxSizing: 'border-box',
@@ -14,18 +46,7 @@ export const ChatViewer = () => {
             padding: '1.5rem',
             flex: 1
         })}>
-            <ChatItem profileColor={generateRandomColor()} name={'Avant'} isSuperChat={false}>
-                Hello, world!
-            </ChatItem>
-            <ChatItem profileColor={generateRandomColor()} name={'Avant'} isSuperChat={false}>
-                Hello, world!
-            </ChatItem>
-            <ChatItem profileColor={generateRandomColor()} name={'Avant'} isSuperChat={true}>
-                Hello, world!
-            </ChatItem>
-            <ChatItem profileColor={generateRandomColor()} name={'Avant'} isSuperChat={false}>
-                Hello, world!
-            </ChatItem>
+            {chats.map((chat, index) => <ChatItem key={`${index}-${chat.timestamp}`} chat={chat} />)}
         </div>
     );
 };

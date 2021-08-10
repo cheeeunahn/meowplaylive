@@ -1,13 +1,25 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { css, cx } from '@emotion/css';
 
 import { CommonInput, moreCommonColors } from 'component/Common';
 import { StoreContext } from 'component/Store';
+import { socket } from 'common/Connection';
+import { Chat } from 'common/Chat';
 
 const iconColor = moreCommonColors.gray;
 
 export const ChatSender = () => {
     const { profileColor, nickname } = useContext(StoreContext);
+
+    const [content, setContent] = useState<string>('');
+
+    const chat: Chat = {
+        profileColor: profileColor,
+        nickname: nickname,
+        content: content,
+        donation: 0,
+        timestamp: Date.now()
+    };
 
     return (
         <div className={css({
@@ -48,6 +60,15 @@ export const ChatSender = () => {
                     <CommonInput
                         variant={'standard'}
                         placeholder={'Say something'}
+                        value={content}
+                        onChange={value => {
+                            setContent(value);
+                        }}
+                        onKeyPress={key => {
+                            if (key === 'Enter') {
+                                socket.emit('upload-chat', chat);
+                            }
+                        }}
                     />
                 </div>
             </div>

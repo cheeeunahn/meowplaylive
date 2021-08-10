@@ -139,6 +139,7 @@ interface CommonInputProps {
     value?: string;
     isReadonly?: boolean;
     onChange?: (value: string) => void;
+    onKeyPress?: (key: string) => void;
     className?: string;
 }
 
@@ -150,6 +151,7 @@ export const CommonInput = ({
     value,
     isReadonly,
     onChange,
+    onKeyPress,
     className
 }: CommonInputProps) => {
     const defaultStyle = css({
@@ -170,6 +172,9 @@ export const CommonInput = ({
             }}
             onChange={event => {
                 onChange && onChange(event.target.value);
+            }}
+            onKeyPress={event => {
+                onKeyPress && onKeyPress(event.key);
             }}
         />
     );

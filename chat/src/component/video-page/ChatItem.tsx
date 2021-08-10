@@ -2,15 +2,13 @@ import React, { ReactNode } from 'react';
 import { css, cx } from '@emotion/css';
 
 import { CommonBox } from 'component/Common';
+import { Chat } from 'common/Chat';
 
 interface Props {
-    profileColor: string;
-    name: string;
-    isSuperChat: boolean;
-    children: ReactNode;
+    chat: Chat;
 }
 
-export const ChatItem = ({ profileColor, name, isSuperChat, children }: Props) => (
+export const ChatItem = ({ chat }: Props) => (
     <CommonBox className={css([
         {
             display: 'flex',
@@ -18,11 +16,10 @@ export const ChatItem = ({ profileColor, name, isSuperChat, children }: Props) =
             alignItems: 'center',
             marginBottom: '0.5rem'
         },
-        isSuperChat && {
+        (chat.donation > 0) ? {
             padding: '0.5rem',
             backgroundColor: '#c9e9f6'
-        },
-        !isSuperChat && {
+        } : {
             padding: 0,
             boxShadow: 'none'
         }
@@ -34,7 +31,7 @@ export const ChatItem = ({ profileColor, name, isSuperChat, children }: Props) =
                     width: '1rem',
                     height: '1rem',
                     textAlign: 'center',
-                    color: profileColor,
+                    color: chat.profileColor,
                     border: '1px solid #000000',
                     borderRadius: '50%'
                 })
@@ -45,12 +42,12 @@ export const ChatItem = ({ profileColor, name, isSuperChat, children }: Props) =
             marginLeft: '0.5rem',
             fontWeight: 'bold'
         })}>
-            {name}
+            {chat.nickname}
         </span>
         <span className={css({
             marginLeft: '0.5rem'
         })}>
-            {children}
+            {chat.content}
         </span>
     </CommonBox>
 );
