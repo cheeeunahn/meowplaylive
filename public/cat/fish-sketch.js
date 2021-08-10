@@ -146,6 +146,8 @@ function drawFish (data) {
 }
 
 function touchEnded () {
+    if (audio == null)
+        audio.play();
     for (var i = 0; i < fishGroup.length; i++){
         if (fishGroup[i].checkHit()) {
             this.splashSound.setVolume(0.7);
@@ -168,10 +170,8 @@ function resetTitleText () {
 }
 
 // delete later ///////////
-function mouseClicked() {
+function mousePressed() {
     userStartAudio();
-    audio.play();
-    
     //audioElement.play();
   }
 ///////////////////////////
