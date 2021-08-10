@@ -16,8 +16,6 @@ let username;
 
 let titleNickname;
 
-let audio = null;
-//let audioElement
 
 //this is a test
 //let fishTest;
@@ -27,7 +25,7 @@ function preload() {
     // load the necessary sound files
     soundFormats('mp3');
     waterSound = loadSound('./assets/waterstream.mp3');
-    voiceSound = loadSound('./uploads/test-recording.m4a');
+    //voiceSound = loadSound('./uploads/test-recording.m4a');
     splashSound = loadSound('./assets/splash.mp3');
     bubbleSound = loadSound('./assets/bubble.mp3');
 
@@ -55,15 +53,6 @@ function setup() {
 
     // a group of fish, max size is 3
     fishGroup = [new Fish(), new Fish(), new Fish()];
-
-    let testButton = createButton('click me');
-    testButton.position(500,0);
-    testButton.mousePressed(()=>{
-        audio = new Audio();
-        audio.autoplay = true;
-        audio.src = "data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
-        audio.play();
-    });
 
     // temporary variable for displaying username
     // chosen by the cat
@@ -182,11 +171,7 @@ function resetTitleText () {
 // delete later ///////////
 function mousePressed() {
     userStartAudio();
-    if (audio == null) {
-        audio = new Audio();
-        audio.autoplay = true;
-        audio.src = "data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
-    }//audio.play();
+
   }
 ///////////////////////////
 
@@ -431,31 +416,34 @@ class Fish {
 
     setVoiceBlob(blob) {
         this.voiceBlob = blob;
-        //const blobURL = webkitURL.createObjectURL(this.voiceBlob);
-        //audio = new Audio(blobURL);
+        //sourceElement.src = webkitURL.createObjectURL(this.voiceBlob);
+        //sourceElement.type = 'audio/mp3';
 
-        /*audioElement = document.createElement('audio');
+
+    }
+
+    playVoice() {
+        var audioElement = document.createElement('audio');
         var sourceElement = document.createElement('source');
         audioElement.appendChild(sourceElement);
         sourceElement.src = webkitURL.createObjectURL(this.voiceBlob);
         sourceElement.type = 'audio/mp3'
-        document.body.appendChild(audioElement);*/
-
-        //audioElement.load();
+        document.body.appendChild(audioElement);
+        audioElement.autoplay = true;
+        audioElement.controls = true;
+        audioElement.load();
+        audioElement.addEventListener("load", function() { 
+            audioElement.play(); 
+        }, true);
         //audioElement.play();
-    }
-
-    playVoice() {
         /*
+        // the original code
         if (this.voiceBlob === null) {
             return;
         }*/
 
-        const blobURL = webkitURL.createObjectURL(this.voiceBlob);
-        audio.src = blobURL;
-        audio.play();
-
         /*
+        // the original code
         const blobURL = webkitURL.createObjectURL(this.voiceBlob);
         const audio = new Audio(blobURL);
         audio.play();
