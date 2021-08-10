@@ -169,6 +169,7 @@ function resetTitleText () {
 // delete later ///////////
 function mousePressed() {
     userStartAudio();
+    audioElement.play();
   }
 ///////////////////////////
 
