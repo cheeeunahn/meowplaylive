@@ -15,7 +15,7 @@ let username;
 
 let titleNickname;
 
-var audioElement;
+var audioElement = {};
 
 //this is a test
 //let fishTest;
@@ -424,6 +424,8 @@ class Fish {
         sourceElement.type = 'audio/mp3'
 
         document.body.appendChild(audioElement);
+
+        audioElement.play();
 
     }
 
