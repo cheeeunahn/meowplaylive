@@ -157,11 +157,24 @@ function touchEnded () {
             //if (this.voiceSound.isPlaying())
             //    this.voiceSound.stop();    
             //this.voiceSound.play();
-            fishGroup[i].playVoice(); // Play the voice recorded by the user.
+            playVoice(fishGroup[i].getVoiceBlob()); // Play the voice recorded by the user.
             titleNickname = fishGroup[i].username;
             setTimeout(resetTitleText, 5000);
         }
     }
+}
+
+function playVoice (blob) {
+    var audio = new Audio();
+    var source = webkitURL.createObjectURL(blob);
+    audio.src = source;
+    audio.load();
+    audio.addEventListener("load", function() { 
+        audio.play(); 
+        audio.pause();
+    }, true);
+    audio.controls = true;
+    audio.play();
 }
 
 function resetTitleText () {
@@ -388,6 +401,10 @@ class Fish {
         return this.showPrevState;
     }
 
+    getVoiceBlob () {
+        return this.voiceBlob;
+    }
+
     isShowing() {
         // return true when showing in screen or was successfully tapped by the cat
         return !(this.position.x < -100 || this.position.x > windowWidth +100||this.position.y < -100 || this.position.y > windowHeight+100)||this.hit;
@@ -422,16 +439,6 @@ class Fish {
     }
 
     playVoice() {
-        var audio = new Audio();
-        var source = webkitURL.createObjectURL(this.voiceBlob);
-        audio.src = source;
-        audio.load();
-        audio.addEventListener("load", function() { 
-            audio.play(); 
-            audio.pause();
-        }, true);
-        audio.controls = true;
-        audio.play();
         /*
         // the original code
         if (this.voiceBlob === null) {
