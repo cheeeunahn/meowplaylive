@@ -156,19 +156,21 @@ function drawFish (data) {
 
 
 function touchEnded () {
-    for (var i = 0; i < fishGroup.length; i++){
-        if (fishGroup[i].checkHit()) {
-            this.splashSound.setVolume(0.7);
-            if (this.splashSound.isPlaying())
-                this.splashSound.stop();
-            this.splashSound.play();
-            //this.voiceSound.setVolume(2.0);
-            //if (this.voiceSound.isPlaying())
-            //    this.voiceSound.stop();    
-            //this.voiceSound.play();
-            playVoice(fishGroup[i].getVoiceBlob()); // Play the voice recorded by the user.
-            titleNickname = fishGroup[i].username;
-            setTimeout(resetTitleText, 5000);
+    if (!firstTouch){
+        for (var i = 0; i < fishGroup.length; i++){
+            if (fishGroup[i].checkHit()) {
+                this.splashSound.setVolume(0.7);
+                if (this.splashSound.isPlaying())
+                    this.splashSound.stop();
+                this.splashSound.play();
+                //this.voiceSound.setVolume(2.0);
+                //if (this.voiceSound.isPlaying())
+                //    this.voiceSound.stop();    
+                //this.voiceSound.play();
+                playVoice(fishGroup[i].getVoiceBlob()); // Play the voice recorded by the user.
+                titleNickname = fishGroup[i].username;
+                setTimeout(resetTitleText, 5000);
+            }
         }
     }
 }
