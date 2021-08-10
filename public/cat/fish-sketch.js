@@ -17,6 +17,7 @@ let username;
 let titleNickname;
 
 var audio;
+let context;
 
 
 //this is a test
@@ -46,13 +47,8 @@ function setup() {
     audio = new Audio();
     audio.crossorigin = "anonymous";
     audio.controls = true;
+    context = null;
 
-    let context = getAudioContext();
-    // wire all media elements up to the p5.sound AudioContext
-    for (let elem of selectAll('audio')) {
-      let mediaSource = context.createMediaElementSource(elem.elt);
-      mediaSource.connect(p5.soundOut);
-    }
 
     // create canvas
     createCanvas (windowWidth,windowHeight);
@@ -197,7 +193,16 @@ function resetTitleText () {
 // delete later ///////////
 function mousePressed() {
     userStartAudio();
+    if (context == null){
+        context = getAudioContext();
+        // wire all media elements up to the p5.sound AudioContext
+        for (let elem of selectAll('audio')) {
+        let mediaSource = context.createMediaElementSource(elem.elt);
+        mediaSource.connect(p5.soundOut);
+        }
+    }
     if (audio.src == null) {
+        audio.load();
         audio.play();
     }
   }
