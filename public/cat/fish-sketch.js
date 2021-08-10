@@ -19,6 +19,7 @@ let titleNickname;
 //var audio;
 //let context;
 let firstTouch;
+let successTouch;
 
 
 //this is a test
@@ -179,8 +180,7 @@ function playVoice (blob) {
     var source = webkitURL.createObjectURL(blob);
     audio.src = source;
     audio.type = "audio/mp3";
-    audio.load();
-    audio.play();
+    successTouch = true;
 }
 
 function resetTitleText () {
@@ -195,6 +195,12 @@ function mousePressed() {
         audio.play();
         //audio.pause();
         firstTouch = false;
+    }
+
+    else if (successTouch) {
+        audio.load();
+        audio.play();
+        successTouch = false;
     }
     //audio.load()
     //audio.play();
