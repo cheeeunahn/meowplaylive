@@ -15,7 +15,8 @@ let username;
 
 let titleNickname;
 
-var audioElement = {};
+let audio = null;
+//var audioElement = {};
 
 //this is a test
 //let fishTest;
@@ -169,7 +170,9 @@ function resetTitleText () {
 // delete later ///////////
 function mousePressed() {
     userStartAudio();
-    audioElement.play();
+    audio.play();
+    
+    //audioElement.play();
   }
 ///////////////////////////
 
@@ -415,18 +418,14 @@ class Fish {
     setVoiceBlob(blob) {
         this.voiceBlob = blob;
 
-        audioElement = document.createElement('audio');
+        /*audioElement = document.createElement('audio');
         var sourceElement = document.createElement('source');
-        
-
         audioElement.appendChild(sourceElement);
-
         sourceElement.src = webkitURL.createObjectURL(this.voiceBlob);
         sourceElement.type = 'audio/mp3'
+        document.body.appendChild(audioElement);*/
 
-        document.body.appendChild(audioElement);
-
-        audioElement.play();
+        //audioElement.play();
 
     }
 
@@ -435,8 +434,12 @@ class Fish {
         if (this.voiceBlob === null) {
             return;
         }*/
-        audioElement.load();
-        audioElement.play();
+        //audioElement.load();
+        //audioElement.play();
+
+        const blobURL = webkitURL.createObjectURL(this.voiceBlob);
+        audio = new Audio(blobURL);
+        audio.play();
 
         /*
         const blobURL = webkitURL.createObjectURL(this.voiceBlob);
