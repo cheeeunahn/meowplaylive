@@ -171,7 +171,6 @@ function resetTitleText () {
 // delete later ///////////
 function mousePressed() {
     userStartAudio();
-
   }
 ///////////////////////////
 
@@ -423,19 +422,16 @@ class Fish {
     }
 
     playVoice() {
-        var audioElement = document.createElement('audio');
-        var sourceElement = document.createElement('source');
-        audioElement.appendChild(sourceElement);
-        sourceElement.src = webkitURL.createObjectURL(this.voiceBlob);
-        sourceElement.type = 'audio/mp3'
-        document.body.appendChild(audioElement);
-        audioElement.autoplay = true;
-        audioElement.controls = true;
-        audioElement.load();
-        audioElement.addEventListener("load", function() { 
-            audioElement.play(); 
+        var audio = new Audio();
+        var source = webkitURL.createObjectURL(this.voiceBlob);
+        audio.src = source;
+        audio.load();
+        audio.addEventListener("load", function() { 
+            audio.play(); 
+            audio.pause();
         }, true);
-        //audioElement.play();
+        audio.controls = true;
+        audio.play();
         /*
         // the original code
         if (this.voiceBlob === null) {
