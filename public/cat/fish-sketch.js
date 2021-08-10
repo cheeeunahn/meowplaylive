@@ -16,6 +16,8 @@ let username;
 
 let titleNickname;
 
+var audio;
+
 
 //this is a test
 //let fishTest;
@@ -39,6 +41,20 @@ function preload() {
 }
 
 function setup() {
+    getAudioContext().suspend();
+
+    audio = new Audio();
+    audio.crossorigin = "anonymous";
+    audio.controls = true;
+    audio.source = "";
+
+    let context = getAudioContext();
+    // wire all media elements up to the p5.sound AudioContext
+    for (let elem of selectAll('audio')) {
+      let mediaSource = context.createMediaElementSource(elem.elt);
+      mediaSource.connect(p5.soundOut);
+    }
+
     // create canvas
     createCanvas (windowWidth,windowHeight);
     // add screen pointer
@@ -165,7 +181,6 @@ function touchEnded () {
 }
 
 function playVoice (blob) {
-    var audio = new Audio();
     var source = webkitURL.createObjectURL(blob);
     audio.src = source;
     audio.load();
@@ -173,7 +188,6 @@ function playVoice (blob) {
         audio.play(); 
         audio.pause();
     }, true);
-    audio.controls = true;
     audio.play();
 }
 
