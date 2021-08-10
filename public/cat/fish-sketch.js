@@ -414,25 +414,26 @@ class Fish {
     }
 
     playVoice() {
+        /*
         if (this.voiceBlob === null) {
             return;
-        }
+        }*/
 
-        /*
         var audioElement = document.createElement('audio');
         var sourceElement = document.createElement('source');
         
-        sourceElement.src = URL.createObjectURL(this.voiceBlob);
+        sourceElement.src = webkitURL.createObjectURL(this.voiceBlob);
         sourceElement.type = 'audio/mp3'
         
         audioElement.appendChild(sourceElement);
 
         audioElement.load();
-        audioElement.play();*/
+        audioElement.play();
 
-        
+        /*
         const blobURL = webkitURL.createObjectURL(this.voiceBlob);
         const audio = new Audio(blobURL);
         audio.play();
+        */
     }
 }
