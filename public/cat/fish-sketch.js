@@ -168,7 +168,7 @@ function resetTitleText () {
 }
 
 // delete later ///////////
-function mousePressed() {
+function mouseClicked() {
     userStartAudio();
     audio.play();
     
@@ -418,7 +418,7 @@ class Fish {
     setVoiceBlob(blob) {
         this.voiceBlob = blob;
         const blobURL = webkitURL.createObjectURL(this.voiceBlob);
-        audio = loadSound(blobURL);
+        audio = new Audio(blobURL);
 
         /*audioElement = document.createElement('audio');
         var sourceElement = document.createElement('source');
@@ -439,8 +439,6 @@ class Fish {
         //audioElement.load();
         //audioElement.play();
 
-
-        //audio = new Audio(blobURL);
         audio.play();
 
         /*
