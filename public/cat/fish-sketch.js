@@ -45,7 +45,6 @@ function setup() {
     getAudioContext().suspend();
 
     audio = document.getElementById("audio_container");
-    audio.mute = true;
 
     // create canvas
     createCanvas (windowWidth,windowHeight);
@@ -188,14 +187,11 @@ function resetTitleText () {
 // delete later ///////////
 function mousePressed() {
     userStartAudio();
-    if (audio.mute) {
-        audio.mute = false;
-        audio.load()
-        audio.addEventListener("load", function() { 
-            audio.play(); 
-            audio.pause();
-        }, true);
-    }
+    audio.load()
+    audio.addEventListener("load", function() { 
+        audio.play(); 
+        audio.pause();
+    }, true);
     /*
     if (context == null){
         context = getAudioContext();
