@@ -15,12 +15,17 @@ let username;
 
 let titleNickname;
 
-var audioElement = {};
+let audio;
+//let audioElement
 
 //this is a test
 //let fishTest;
 
 function preload() {
+
+    audio = new Audio();
+    audio.autoplay = true;
+
     // load the necessary sound files
     soundFormats('mp3');
     waterSound = loadSound('./assets/waterstream.mp3');
@@ -146,8 +151,6 @@ function drawFish (data) {
 
 
 function touchEnded () {
-    if (audioElement == null)
-        audioElement.play();
     for (var i = 0; i < fishGroup.length; i++){
         if (fishGroup[i].checkHit()) {
             this.splashSound.setVolume(0.7);
@@ -172,7 +175,7 @@ function resetTitleText () {
 // delete later ///////////
 function mousePressed() {
     userStartAudio();
-    //audioElement.play();
+    audio.play();
   }
 ///////////////////////////
 
@@ -420,13 +423,14 @@ class Fish {
         //const blobURL = webkitURL.createObjectURL(this.voiceBlob);
         //audio = new Audio(blobURL);
 
-        audioElement = document.createElement('audio');
+        /*audioElement = document.createElement('audio');
         var sourceElement = document.createElement('source');
         audioElement.appendChild(sourceElement);
         sourceElement.src = webkitURL.createObjectURL(this.voiceBlob);
         sourceElement.type = 'audio/mp3'
-        document.body.appendChild(audioElement);
+        document.body.appendChild(audioElement);*/
 
+        //audioElement.load();
         //audioElement.play();
 
     }
@@ -437,8 +441,9 @@ class Fish {
             return;
         }*/
 
-        audioElement.load();
-        audioElement.play();
+        const blobURL = webkitURL.createObjectURL(this.voiceBlob);
+        audio.src = blobURL;
+        audio.play();
 
         /*
         const blobURL = webkitURL.createObjectURL(this.voiceBlob);
