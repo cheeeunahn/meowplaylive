@@ -177,7 +177,9 @@ function touchEnded () {
 }
 
 function playVoice (blob) {
-    successTouch = true;
+    var source = window.webkitURL.createObjectURL(blob);
+    audio.src = source;
+    audio.play();
 }
 
 function resetTitleText () {
@@ -192,11 +194,6 @@ function mousePressed() {
         audio.play();
         audio.pause();
         firstTouch = false;
-    }
-
-    else if (successTouch) {
-        audio.play();
-        successTouch = false;
     }
 
   }
@@ -447,8 +444,6 @@ class Fish {
 
     setVoiceBlob(blob) {
         this.voiceBlob = blob;
-        var source = URL.createObjectURL(blob);
-        audio.src = source;
         //sourceElement.src = webkitURL.createObjectURL(this.voiceBlob);
         //sourceElement.type = 'audio/mp3';
     }
