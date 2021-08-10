@@ -1,3 +1,9 @@
+/**
+ * Sketch for drawing fish on cat UI
+ * Using p5.gif.js from https://github.com/ridmitri/p5gif
+ * p5.js screen X screen Y functions from https://github.com/bohnacker/p5js-screenPosition
+ */
+
 let waterSound;
 let bubbleSound;
 
@@ -412,8 +418,20 @@ class Fish {
             return;
         }
 
+        var audioElement = document.createElement('audio')
+        var sourceElement = document.createElement('source')
+        
+        audioElement.appendChild(sourceElement)
+        
+        sourceElement.src = URL.createObjectURL(this.voiceBlob);
+        sourceElement.type = 'audio/mp3'
+        
+        audioElement.load()
+        audioElement.play()
+
+        /*
         const blobURL = URL.createObjectURL(this.voiceBlob);
         const audio = new Audio(blobURL);
-        audio.play();
+        audio.play();*/
     }
 }
