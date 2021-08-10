@@ -16,7 +16,7 @@ navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
 
     recorder.addEventListener('stop', () => {
         // Create the result.
-        const resultBlob = new Blob(chunks, { 'type': 'audio/mp3' });
+        const resultBlob = new Blob(chunks, { 'type': 'audio/wav; codecs=0' });
 
         // Clear the current data.
         chunks = [];

@@ -124,7 +124,7 @@ function drawFish (data) {
         if (fishGroup[i].getPositionX() > windowWidth || fishGroup[i].getPositionX() < 0) {
             fishGroup[i].setUsername(username);
             fishGroup[i].setId(data.socketid); // the socket id of the fish
-            fishGroup[i].setVoiceBlob(new Blob([data.audio], { type: 'audio/mp3' })); // audio recorded by the user
+            fishGroup[i].setVoiceBuffer(data.audio); // audio recorded by the user
             fishGroup[i].setDonation(data.donation);
             fishGroup[i].setToNewPosition();
             bubbleSound.setVolume(0.4);
@@ -138,6 +138,26 @@ function drawFish (data) {
     console.log(data);
 }
 
+document.body.addEventListener('click', () => {
+    if (!firstTouch){
+        for (var i = 0; i < fishGroup.length; i++){
+            if (fishGroup[i].checkHit()) {
+                this.splashSound.setVolume(0.7);
+                if (this.splashSound.isPlaying())
+                    this.splashSound.stop();
+                this.splashSound.play();
+                //this.voiceSound.setVolume(2.0);
+                //if (this.voiceSound.isPlaying())
+                //    this.voiceSound.stop();    
+                //this.voiceSound.play();
+                fishGroup[i].playVoice(); // Play the voice recorded by the user.
+                successTouch = true;
+                titleNickname = fishGroup[i].username;
+                setTimeout(resetTitleText, 5000);
+            }
+        }
+    }
+});
 
 function touchEnded () {
     //if (!firstTouch){
@@ -379,10 +399,6 @@ class Fish {
 
     getPrevState () {
         return this.showPrevState;
-    }
-
-    getVoiceBlob () {
-        return this.voiceBlob;
     }
 
     isShowing() {
