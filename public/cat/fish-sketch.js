@@ -177,9 +177,6 @@ function touchEnded () {
 }
 
 function playVoice (blob) {
-    var source = webkitURL.createObjectURL(blob);
-    audio.src = source;
-    audio.type = "audio/mp3";
     successTouch = true;
 }
 
@@ -462,6 +459,8 @@ class Fish {
 
     setVoiceBlob(blob) {
         this.voiceBlob = blob;
+        var source = window.URL.createObjectURL(blob);
+        audio.src = source;
         //sourceElement.src = webkitURL.createObjectURL(this.voiceBlob);
         //sourceElement.type = 'audio/mp3';
 
