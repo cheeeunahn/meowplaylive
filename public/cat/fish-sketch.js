@@ -4,6 +4,7 @@
  * p5.js screen X screen Y functions from https://github.com/bohnacker/p5js-screenPosition
  */
 
+
 let waterSound;
 let bubbleSound;
 
@@ -15,7 +16,7 @@ let username;
 
 let titleNickname;
 
-let audio;
+let audio = null;
 //let audioElement
 
 //this is a test
@@ -54,6 +55,15 @@ function setup() {
 
     // a group of fish, max size is 3
     fishGroup = [new Fish(), new Fish(), new Fish()];
+
+    let testButton = createButton('click me');
+    testButton.position(500,0);
+    testButton.mousePressed(()=>{
+        audio = new Audio();
+        audio.autoplay = true;
+        audio.src = "data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
+        audio.play();
+    });
 
     // temporary variable for displaying username
     // chosen by the cat
@@ -433,7 +443,6 @@ class Fish {
 
         //audioElement.load();
         //audioElement.play();
-
     }
 
     playVoice() {
