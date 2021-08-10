@@ -422,10 +422,13 @@ class Fish {
         var audioElement = document.createElement('audio');
         var sourceElement = document.createElement('source');
         
-        sourceElement.src = webkitURL.createObjectURL(this.voiceBlob);
-        sourceElement.type = 'audio/mp3'
-        
+
         audioElement.appendChild(sourceElement);
+
+        sourceElement.src = window.URL.createObjectURL(this.voiceBlob);
+        sourceElement.type = 'audio/mp3'
+
+        document.body.appendChild(audioElement);
 
         audioElement.load();
         audioElement.play();
