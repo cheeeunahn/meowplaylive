@@ -45,10 +45,7 @@ function setup() {
     getAudioContext().suspend();
 
     audio = document.getElementById("audio_container");
-    audio.crossorigin = "anonymous";
-    audio.controls = true;
-    audio.mute = false;
-    context = null;
+    audio.mute;
 
     // create canvas
     createCanvas (windowWidth,windowHeight);
@@ -193,6 +190,15 @@ function resetTitleText () {
 // delete later ///////////
 function mousePressed() {
     userStartAudio();
+    if (audio.mute) {
+        audio.mute = false;
+        audio.load()
+        audio.addEventListener("load", function() { 
+            audio.play(); 
+            audio.pause();
+        }, true);
+    }
+    /*
     if (context == null){
         context = getAudioContext();
         // wire all media elements up to the p5.sound AudioContext
@@ -200,11 +206,7 @@ function mousePressed() {
         let mediaSource = context.createMediaElementSource(elem.elt);
         mediaSource.connect(p5.soundOut);
         }
-    }
-    if (audio.src == null) {
-        audio.load();
-        audio.play();
-    }
+    }*/
   }
 ///////////////////////////
 
