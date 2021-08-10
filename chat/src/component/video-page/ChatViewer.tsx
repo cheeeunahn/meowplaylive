@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/css';
 
 import { socket } from 'common/Connection';
@@ -7,6 +7,7 @@ import { ChatItem } from 'component/video-page/ChatItem';
 
 export const ChatViewer = () => {
     const [chats, setChats] = useState<Chat[]>([]);
+    const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         let currentChats: Chat[] = [];
@@ -37,16 +38,31 @@ export const ChatViewer = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (ref.current) {
+            ref.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [chats]);
+
     return (
-        <div className={css({
-            boxSizing: 'border-box',
-            overflowY: 'auto',
-            width: '100%',
-            height: '100%',
-            padding: '1.5rem',
-            flex: 1
-        })}>
-            {chats.map((chat, index) => <ChatItem key={`${index}-${chat.timestamp}`} chat={chat} />)}
+        <div
+            className={css({
+                boxSizing: 'border-box',
+                overflowY: 'auto',
+                width: '100%',
+                height: '100%',
+                padding: '1.5rem',
+                flex: 1
+            })}
+        >
+            {chats.map((chat, index) => (
+                <div {...((index === chats.length - 1) ? { ref: ref } : {})}>
+                    <ChatItem
+                        key={`${index}-${chat.timestamp}`}
+                        chat={chat}
+                    />
+                </div>
+            ))}
         </div>
     );
 };

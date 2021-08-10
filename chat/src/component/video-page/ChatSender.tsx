@@ -21,6 +21,15 @@ export const ChatSender = () => {
         timestamp: Date.now()
     };
 
+    const sendChat = () => {
+        if (content.length === 0) {
+            return;
+        }
+
+        socket.emit('upload-chat', chat);
+        setContent('');
+    };
+
     return (
         <div className={css({
             boxSizing: 'border-box',
@@ -66,7 +75,7 @@ export const ChatSender = () => {
                         }}
                         onKeyPress={key => {
                             if (key === 'Enter') {
-                                socket.emit('upload-chat', chat);
+                                sendChat();
                             }
                         }}
                     />
