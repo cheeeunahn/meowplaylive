@@ -17,7 +17,8 @@ let username;
 let titleNickname;
 
 //var audio;
-let context;
+//let context;
+let firstTouch;
 
 
 //this is a test
@@ -44,6 +45,7 @@ function preload() {
 function setup() {
     getAudioContext().suspend();
 
+    firstTouch = true;
     audio = document.getElementById("audio_container");
 
     // create canvas
@@ -175,9 +177,7 @@ function playVoice (blob) {
     var source = webkitURL.createObjectURL(blob);
     audio.src = source;
     audio.load();
-    audio.addEventListener("load", function() { 
-        audio.play(); 
-    }, true);
+    audio.play();
 }
 
 function resetTitleText () {
@@ -186,12 +186,16 @@ function resetTitleText () {
 
 // delete later ///////////
 function mousePressed() {
-    userStartAudio();
-    audio.load()
-    audio.addEventListener("load", function() { 
-        audio.play(); 
+    if (firstTouch){
+        userStartAudio();
+        audio.load();
+        audio.play();
         audio.pause();
-    }, true);
+        firstTouch = false;
+    }
+    //audio.load()
+    //audio.play();
+    //audio.pause();
     /*
     if (context == null){
         context = getAudioContext();
