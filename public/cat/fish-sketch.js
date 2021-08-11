@@ -18,9 +18,6 @@ let username;
 let titleNickname;
 
 
-//this is a test
-//let fishTest;
-
 function preload() {
 
     // load the necessary sound files
@@ -29,9 +26,6 @@ function preload() {
     //voiceSound = loadSound('./uploads/test-recording.m4a');
     splashSound = loadSound('./assets/splash.mp3');
     bubbleSound = loadSound('./assets/bubble.mp3');
-
-    // this is a test
-    //fishTest = loadGif('./assets/fish_white.gif');
 
     // load font file
 
@@ -73,12 +67,6 @@ function setup() {
 
 function draw() {
     background(222,243,246); // background color of canvas
-
-    // this is a test
-    //if (fishTest.loaded()) {
-    //    tint(255,0,0);
-    //    image(fishTest, 0, 0);
-    //  }
 
     textSize(width/10);
     textAlign(CENTER, CENTER);
@@ -161,30 +149,22 @@ function touchEnded () {
                 //if (this.voiceSound.isPlaying())
                 //    this.voiceSound.stop();    
                 //this.voiceSound.play();
-                //fishGroup[i].playVoice(); // Play the voice recorded by the user.
+                fishGroup[i].playVoice(); // Play the voice recorded by the user.
                 titleNickname = fishGroup[i].username;
-                setTimeout(resetTitleText, 5000);
+                //setTimeout(resetTitleText, 5000);
             }
         }
     //}
 }
 
-function resetTitleText () {
+/*function resetTitleText () {
     titleNickname = "";
-}
+}*/
 
-// delete later ///////////
+// this is a must for iOS - DO NOT DELETE
 function mousePressed() {
-    //if (firstTouch){
-        userStartAudio();
-       //audio.load();
-        //audio.play();
-       //audio.pause();
-        //firstTouch = false;
-    }
-  //}
-///////////////////////////
-
+    userStartAudio();
+}
 
 // A class for drawing fish
 class Fish {
@@ -193,7 +173,6 @@ class Fish {
         //this.fish_gif = loadImage('./assets/fish_blue.gif');
         if(this.fish_gif.loaded())
             this.fish_gif.play();
-
         
         this.colorPalette = [color(31, 135, 74), color(16, 99, 71), color(10, 99, 84),
             color(1, 96, 102), color(27, 79, 95), color(22, 77, 119), color(19, 59, 107), color(17, 55, 98),
@@ -226,12 +205,6 @@ class Fish {
         // Audio blob object. (Recorded by the user.)
         this.voiceBlob = null;
         this.voiceFile = null;
-
-        this.tempButton = createButton('');
-        this.tempButton.style('background-color', color(222,243,246, 0));
-        this.tempButton.mousePressed(() => {
-            this.playVoice();
-        });
     }
 
     setToNewPosition() {
@@ -259,10 +232,6 @@ class Fish {
         if (this.velocity != null) {
             
             this.position.add(this.velocity);
-            
-            this.tempButton.center();
-            this.tempButton.position(this.position.x, this.position.y);
-            this.tempButton.size(this.fishSize, this.fishSize);
 
             push();
 
@@ -369,10 +338,7 @@ class Fish {
 
             pop();
         }
-        
- 
     }
-
 
     checkHit() {
         this.hit = collidePointPoly(pmouseX, pmouseY, this.poly);
@@ -440,6 +406,7 @@ class Fish {
 
     setVoiceBlob(blob) {
         this.voiceBlob = blob;
+        // new p5.SoundFile with blob
         this.voiceFile = new p5.SoundFile(blob);
     }
 
@@ -447,14 +414,11 @@ class Fish {
         if (this.voiceFile.isLoaded()) {
             this.voiceFile.play();
         }
-        /*
-        // the original code
-        if (this.voiceBlob === null) {
+        
+        // the original code that was nice and clean
+        /*if (this.voiceBlob === null) {
             return;
-        }*/
-
-        /*
-        // the original code
+        }
         const blobURL = URL.createObjectURL(this.voiceBlob);
         const audio = new Audio(blobURL);
         audio.play();
