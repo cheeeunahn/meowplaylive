@@ -16,6 +16,7 @@ let username;
 
 let titleNickname;
 
+
 //var audio;
 //let context;
 //let firstTouch;
@@ -446,12 +447,10 @@ class Fish {
     setVoiceBlob(blob) {
         this.voiceBlob = blob;
         this.voiceFile = new p5.SoundFile(blob);
-        console.log("voiceblobhere");
-        //sourceElement.src = webkitURL.createObjectURL(this.voiceBlob);
-        //sourceElement.type = 'audio/mp3';
     }
 
     playVoice() {
+        userStartAudio(this.voiceFile);
         if (this.voiceFile.isLoaded()) {
             this.voiceFile.play();
         }
