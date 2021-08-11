@@ -34,7 +34,9 @@ function preload() {
 }
 
 function setup() {
-    getAudioContext().suspend();
+    // this was just for testing purposes
+    // simulating iOS mobile environment
+    //getAudioContext().suspend();
 
     // create canvas
     createCanvas (windowWidth,windowHeight);
@@ -161,7 +163,9 @@ function touchEnded () {
     titleNickname = "";
 }*/
 
-// this is a must for iOS - DO NOT DELETE
+// this is a must for iOS and Android
+// (optional for Desktop Chrome)
+// PLEASE DO NOT DELETE
 function mousePressed() {
     userStartAudio();
 }
