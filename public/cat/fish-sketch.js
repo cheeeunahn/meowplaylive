@@ -18,8 +18,8 @@ let titleNickname;
 
 //var audio;
 //let context;
-let firstTouch;
-let successTouch;
+//let firstTouch;
+//let successTouch;
 
 
 //this is a test
@@ -46,8 +46,8 @@ function preload() {
 function setup() {
     getAudioContext().suspend();
 
-    firstTouch = true;
-    audio = document.getElementById("audio_container");
+    //firstTouch = true;
+    //audio = document.getElementById("audio_container");
 
     // create canvas
     createCanvas (windowWidth,windowHeight);
@@ -157,7 +157,7 @@ function drawFish (data) {
 
 
 function touchEnded () {
-    if (!firstTouch){
+    //if (!firstTouch){
         for (var i = 0; i < fishGroup.length; i++){
             if (fishGroup[i].checkHit()) {
                 this.splashSound.setVolume(0.7);
@@ -168,19 +168,20 @@ function touchEnded () {
                 //if (this.voiceSound.isPlaying())
                 //    this.voiceSound.stop();    
                 //this.voiceSound.play();
-                playVoice(fishGroup[i].getVoiceBlob()); // Play the voice recorded by the user.
+                fishGroup[i].playVoice(); // Play the voice recorded by the user.
                 titleNickname = fishGroup[i].username;
                 setTimeout(resetTitleText, 5000);
             }
         }
-    }
+    //}
 }
 
+/*
 function playVoice (blob) {
     var source = window.webkitURL.createObjectURL(blob);
     audio.src = source;
     audio.play();
-}
+}*/
 
 function resetTitleText () {
     titleNickname = "";
@@ -188,15 +189,14 @@ function resetTitleText () {
 
 // delete later ///////////
 function mousePressed() {
-    if (firstTouch){
+    //if (firstTouch){
         userStartAudio();
-        audio.load();
-        audio.play();
-        audio.pause();
-        firstTouch = false;
+       //audio.load();
+        //audio.play();
+       //audio.pause();
+        //firstTouch = false;
     }
-
-  }
+  //}
 ///////////////////////////
 
 
@@ -239,6 +239,7 @@ class Fish {
 
         // Audio blob object. (Recorded by the user.)
         this.voiceBlob = null;
+        this.voiceFile = null;
     }
 
     setToNewPosition() {
@@ -444,11 +445,16 @@ class Fish {
 
     setVoiceBlob(blob) {
         this.voiceBlob = blob;
+        this.voiceFile = new p5.SoundFile(blob);
+        console.log("voiceblobhere");
         //sourceElement.src = webkitURL.createObjectURL(this.voiceBlob);
         //sourceElement.type = 'audio/mp3';
     }
 
     playVoice() {
+        if (this.voiceFile.isLoaded()) {
+            this.voiceFile.play();
+        }
         /*
         // the original code
         if (this.voiceBlob === null) {
