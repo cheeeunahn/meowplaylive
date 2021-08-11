@@ -204,6 +204,8 @@ class Fish {
 
         // Audio blob object. (Recorded by the user.)
         this.voiceBlob = null;
+
+        // The p5Sound file that will store the blob
         this.voiceFile = null;
     }
 
