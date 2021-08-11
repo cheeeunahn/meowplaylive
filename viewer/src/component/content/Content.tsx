@@ -7,7 +7,6 @@ import { CatScreen } from 'component/content/CatScreen';
 import { PointView } from 'component/content/PointView';
 import { DonationDialog } from 'component/donation-dialog/DonationDialog';
 import { RecorderDialog } from 'component/recorder-dialog/RecorderDialog';
-import { isRecorderLoaded } from 'common/AudioRecorder';
 
 export const Content = () => {
     const { voiceBlob, nickname } = useContext(StoreContext);
@@ -38,9 +37,7 @@ export const Content = () => {
                     })}
                     buttonColor={commonColors.blue}
                     onClick={() => {
-                        if (!isRecorderLoaded()) {
-                            alert('Recorder is not loaded yet! Please wait a second.');
-                        } else if (nickname.length === 0) {
+                        if (nickname.length === 0) {
                             alert('Please set your nickname.');
                         } else {
                             setRecorderDialogOpen(true);

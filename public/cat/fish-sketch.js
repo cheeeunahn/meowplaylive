@@ -124,7 +124,7 @@ function drawFish (data) {
         if (fishGroup[i].getPositionX() > windowWidth || fishGroup[i].getPositionX() < 0) {
             fishGroup[i].setUsername(username);
             fishGroup[i].setId(data.socketid); // the socket id of the fish
-            fishGroup[i].setVoiceBuffer(data.audio); // audio recorded by the user
+            fishGroup[i].setVoiceFileName(data.audioFileName); // audio recorded by the user
             fishGroup[i].setDonation(data.donation);
             fishGroup[i].setToNewPosition();
             bubbleSound.setVolume(0.4);
@@ -137,27 +137,6 @@ function drawFish (data) {
     socket.emit('number-exceeded', data);
     console.log(data);
 }
-
-document.body.addEventListener('click', () => {
-    if (!firstTouch){
-        for (var i = 0; i < fishGroup.length; i++){
-            if (fishGroup[i].checkHit()) {
-                this.splashSound.setVolume(0.7);
-                if (this.splashSound.isPlaying())
-                    this.splashSound.stop();
-                this.splashSound.play();
-                //this.voiceSound.setVolume(2.0);
-                //if (this.voiceSound.isPlaying())
-                //    this.voiceSound.stop();    
-                //this.voiceSound.play();
-                fishGroup[i].playVoice(); // Play the voice recorded by the user.
-                successTouch = true;
-                titleNickname = fishGroup[i].username;
-                setTimeout(resetTitleText, 5000);
-            }
-        }
-    }
-});
 
 function touchEnded () {
     //if (!firstTouch){
@@ -226,11 +205,8 @@ class Fish {
         this.donation = -1;
         this.fishColor = color(255,0,0);
 
-        // Audio blob object. (Recorded by the user.)
-        this.voiceBlob = null;
-
-        // The p5Sound file that will store the blob
-        this.voiceFile = null;
+        // Voice file name recorded by user.
+        this.voiceFileName = null;
     }
 
     setToNewPosition() {
@@ -426,24 +402,15 @@ class Fish {
         return this.id;
     }
 
-    setVoiceBlob(blob) {
-        this.voiceBlob = blob;
-        // new p5.SoundFile with blob
-        this.voiceFile = new p5.SoundFile(blob);
+    setVoiceFileName(audioFileName) {
+        this.voiceFileName = audioFileName;
     }
 
     playVoice() {
-        if (this.voiceFile.isLoaded()) {
-            this.voiceFile.play();
-        }
-        
-        // the original code that was nice and clean
-        /*if (this.voiceBlob === null) {
-            return;
-        }
-        const blobURL = URL.createObjectURL(this.voiceBlob);
-        const audio = new Audio(blobURL);
-        audio.play();
-        */
+        console.log(`Playing ${this.voiceFileName}...`);
+
+        const voiceSound = loadSound(`./uploads/${this.voiceFileName}`, () => {
+            voiceSound.play();
+        });
     }
 }

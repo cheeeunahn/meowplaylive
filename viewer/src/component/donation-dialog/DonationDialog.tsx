@@ -88,10 +88,14 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
 
                         socket.emit('name-sent', nickname);
 
+                        const timestamp = Date.now();
+
                         socket.emit('button-clicked', {
-                            socketid: socket.id,
+                            nickname: nickname,
                             audio: voiceBlob!!,
-                            donation: currentPoint
+                            donation: currentPoint,
+                            socketid: socket.id,
+                            timestamp: timestamp
                         });
 
                         socket.emit('upload-audio', {
@@ -99,7 +103,7 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                             audio: voiceBlob!!,
                             donation: currentPoint,
                             socketid: socket.id,
-                            timestamp: Date.now()
+                            timestamp: timestamp
                         });
 
                         setAvailablePoint(availablePoint - currentPoint);

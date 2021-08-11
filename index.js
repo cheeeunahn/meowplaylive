@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const path = require('path');
+const fs = require('fs');
 const cors = require('cors');
 
 const app = express(); // making an express application
@@ -58,7 +59,20 @@ function newConnection(socket) {
 
     // data: {socketid: ..., audio: ... (Blob object)}.
     socket.on('button-clicked', data => {
-        socket.broadcast.emit('button-clicked', data); // save unique socket id
+        const { nickname, audio, donation, socketid, timestamp } = data;
+        const audioFileName = `${nickname}-${timestamp}.mp3`;
+
+        fs.writeFileSync(`public/cat/uploads/${audioFileName}`, Buffer.from(audio));
+
+        const dataToCat = {
+            nickname,
+            donation,
+            socketid,
+            timestamp,
+            audioFileName
+        };
+
+        socket.broadcast.emit('button-clicked', dataToCat); // save unique socket id
         console.log('button clicked!');
     });
 

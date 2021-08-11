@@ -5,7 +5,7 @@ import { StoreContext } from 'component/Store';
 import { commonColors, CommonSlider, CommonButton } from 'component/Common';
 import { Clock } from 'component/recorder-dialog/Clock';
 import { PlayButton } from 'component/recorder-dialog/PlayButton';
-import { stopRecording, startRecording, addRecorderStopListener, removeRecorderStopListener } from 'common/AudioRecorder';
+import { stopRecording, startRecording } from 'common/AudioRecorder';
 import { startPlaying, stopPlaying } from 'common/AudioPlayer';
 
 const buttonStyle = css({
@@ -29,19 +29,14 @@ export const RecorderView = ({ onSave }: Props) => {
 
     const maxTime = 10;
 
-    // When this component is rendered...
-    useEffect(() => {
-        const onStop = (blob: Blob) => {
-            setCurrentVoiceBlob(blob);
-        };
+    const onStartRecording = () => {
+        setMode('Record');
+    };
 
-        addRecorderStopListener(onStop);
-
-        // When this component is removed... remove the listeners.
-        return () => {
-            removeRecorderStopListener(onStop);
-        };
-    }, []);
+    const onStopRecording = (blob: Blob) => {
+        setCurrentVoiceBlob(blob);
+        setMode('Stop');
+    };
 
     // Called when elapsedTime or isRecording are changed.
     useEffect(() => {
@@ -59,10 +54,9 @@ export const RecorderView = ({ onSave }: Props) => {
                     setTime(newTime);
                     setCurrentVoiceLength(newTime);
                 } else {
-                    stopRecording();
+                    stopRecording(onStopRecording);
 
                     // Stop recording when the time is over.
-                    setMode('Stop');
                 }
             }, 100));
         } else if (mode === 'Play') {
@@ -121,11 +115,9 @@ export const RecorderView = ({ onSave }: Props) => {
                 buttonColor={(mode === 'Record') ? commonColors.brown : commonColors.blue}
                 onClick={() => {
                     if (mode === 'Stop') {
-                        startRecording();
-                        setMode('Record');
+                        startRecording(onStartRecording);
                     } else {
-                        stopRecording();
-                        setMode('Stop');
+                        stopRecording(onStopRecording);
                     }
                 }}
             >

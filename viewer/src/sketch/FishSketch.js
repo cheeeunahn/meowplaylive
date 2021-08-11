@@ -139,7 +139,7 @@ function drawCatUI() {
 
 function resetToDefaultScreen() {
     msg = "";
-    displaySucessImg = false;
+    displaySuccessImg = false;
 }
 
 class CloneFish {

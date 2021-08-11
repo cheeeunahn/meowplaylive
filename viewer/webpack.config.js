@@ -19,7 +19,8 @@ module.exports = (env, argv) => {
         target: ['web', 'es3'],
         output: {
             path: outPath,
-            filename: 'viewer.min.js'
+            filename: 'viewer.min.js',
+            assetModuleFilename: '[name][ext]'
         },
         resolve: {
             modules: ['node_modules', srcPath],
@@ -27,7 +28,8 @@ module.exports = (env, argv) => {
         },
         module: {
             rules: [
-                { test: /\.tsx?$/, use: 'ts-loader' }
+                { test: /\.tsx?$/, use: 'ts-loader' },
+                { test: /\.wasm$/, type: 'asset/resource' }
             ]
         }
     };
