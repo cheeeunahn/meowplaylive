@@ -32,7 +32,6 @@ export const RankView = () => {
 
     // When this component is rendered...
     useEffect(() => {
-        /*
         // When the server sends the data...
         socket.on('donation-sum-map', (donationSumMap: Record<string, number>) => {
             console.log('[RankView] Updating the ranks...');
@@ -47,26 +46,6 @@ export const RankView = () => {
 
             setSortedDonationSums(sortedDonationSums);
         });
-        */
-
-        // ================================
-        // TODO: This is just for testing.
-        const donationSumMap: Record<string, number> = {};
-
-        for (let i = 0; i < 20; i++) {
-            donationSumMap[`Nickname ${i + 1}`] = 100 - i;
-        }
-
-        const sortedDonationSums = Object.keys(donationSumMap).map(nickname =>
-            ({ nickname: nickname, donation: donationSumMap[nickname] })
-        );
-
-        sortedDonationSums.sort((item1, item2) =>
-            (donationSumMap[item2.nickname] - donationSumMap[item1.nickname])
-        );
-
-        setSortedDonationSums(sortedDonationSums);
-        // ================================
 
         // At the first time...
         console.log('[RankView] Requesting the donation data...');
