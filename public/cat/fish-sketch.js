@@ -7,6 +7,7 @@
 
 let waterSound;
 let bubbleSound;
+//let voiceSound;
 
 let fishGroup;
 
@@ -15,12 +16,6 @@ let rippleRadius;
 let username;
 
 let titleNickname;
-
-
-//var audio;
-//let context;
-//let firstTouch;
-//let successTouch;
 
 
 //this is a test
@@ -46,9 +41,6 @@ function preload() {
 
 function setup() {
     getAudioContext().suspend();
-
-    //firstTouch = true;
-    //audio = document.getElementById("audio_container");
 
     // create canvas
     createCanvas (windowWidth,windowHeight);
@@ -169,21 +161,13 @@ function touchEnded () {
                 //if (this.voiceSound.isPlaying())
                 //    this.voiceSound.stop();    
                 //this.voiceSound.play();
-                userStartAudio(fishGroup[i]);
-                fishGroup[i].playVoice(); // Play the voice recorded by the user.
+                //fishGroup[i].playVoice(); // Play the voice recorded by the user.
                 titleNickname = fishGroup[i].username;
                 setTimeout(resetTitleText, 5000);
             }
         }
     //}
 }
-
-/*
-function playVoice (blob) {
-    var source = window.webkitURL.createObjectURL(blob);
-    audio.src = source;
-    audio.play();
-}*/
 
 function resetTitleText () {
     titleNickname = "";
@@ -242,6 +226,12 @@ class Fish {
         // Audio blob object. (Recorded by the user.)
         this.voiceBlob = null;
         this.voiceFile = null;
+
+        this.tempButton = createButton('');
+        this.tempButton.style('background-color', color(222,243,246, 0));
+        this.tempButton.mousePressed(() => {
+            this.playVoice();
+        });
     }
 
     setToNewPosition() {
@@ -270,6 +260,10 @@ class Fish {
             
             this.position.add(this.velocity);
             
+            this.tempButton.center();
+            this.tempButton.position(this.position.x, this.position.y);
+            this.tempButton.size(this.fishSize, this.fishSize);
+
             push();
 
             translate (this.position.x, this.position.y);
@@ -346,11 +340,11 @@ class Fish {
                     tint(0,255);
                     break;
                 default:
-                    console.log("error retrieving donation amount from viewer");
+                    break;
+                    //console.log("error retrieving donation amount from viewer");
             }
 
             if (this.fishSize != null){
-
                 tint(this.fishColor,255);
                 //tint(color(255,0,0),50);
                 image(this.fish_gif, 0, 0, this.fishSize,this.fishSize);
@@ -361,8 +355,6 @@ class Fish {
                 noStroke();
                 text(this.username, this.fish_gif.width/9, this.fish_gif.height/9);
             }
-            else
-               console.log("error retrieving donation amount from viewer");
 
             
             // setting collider boundaries
@@ -377,6 +369,7 @@ class Fish {
 
             pop();
         }
+        
  
     }
 
