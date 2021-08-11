@@ -169,7 +169,7 @@ function touchEnded () {
                 //if (this.voiceSound.isPlaying())
                 //    this.voiceSound.stop();    
                 //this.voiceSound.play();
-                userStartAudio();
+                userStartAudio(fishGroup[i]);
                 fishGroup[i].playVoice(); // Play the voice recorded by the user.
                 titleNickname = fishGroup[i].username;
                 setTimeout(resetTitleText, 5000);
