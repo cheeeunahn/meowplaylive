@@ -11,6 +11,9 @@ let bubbleSound;
 
 let fishGroup;
 let tempFish; // for making the cat feel as if it caught the fish
+let tempFishPosX;
+let tempFishPosY;
+let tempFishAngle;
 
 let displayRipple;
 let rippleRadius;
@@ -36,6 +39,10 @@ function setup() {
     // simulating iOS mobile environment
     //getAudioContext().suspend();
 
+    tempFish = loadGif('./assets/fish_white.gif');
+    tempFishPosX = -1000;
+    tempFishPosY = -1000;
+
     // load font files - Nanum Square
     nanumFontRegular = loadFont('./assets/NanumSquareR.ttf');
     nanumFontBold = loadFont('./assets/NanumSquareEB.ttf');
@@ -54,7 +61,6 @@ function setup() {
 
     // a group of fish, the maximum allowed size is 3
     fishGroup = [new Fish(), new Fish(), new Fish()];
-    tempFish = new Fish();
 
     // temporary variable for displaying username
     // chosen by the cat
@@ -93,7 +99,15 @@ function draw() {
         }
     }
 
-    tempFish.show();
+    if (tempFish != null && tempFishPosX >= 0) {
+        push();
+        translate(mouseX, mouseY)
+        rotate(tempFishAngle);
+        imageMode(CENTER);
+        tint(0);
+        image(tempFish, 0, 0, windowWidth/2.5, windowWidth/2.5);
+        pop();
+    }
 
     // tell viewer UI where the fish is positioned at what angle
     // also send fish nickname information
@@ -161,15 +175,18 @@ function touchEnded () {
             //this.voiceSound.play();
             fishGroup[i].playVoice(); // Play the voice recorded by the user.
             titleNickname = fishGroup[i].username;
-            push();
-            rotate(fishGroup[i].getAngle());
-            tempFish.fishSize = width/3.5;
-            tempFish.position = createVector(pmouseX, pmouseY);
-            tempFish.velocity = createVector(0,0);
-            pop();
-            titleNickname = "";
+            
+            tempFishPosX = mouseX;
+            tempFishPosY = mouseY;
+            tempFishAngle = fishGroup[i].getAngle();
+
             setTimeout(() => {
-                tempFish = new Fish();
+                tempFishPosX = -1000;
+                tempFishPosY = -1000;
+            }, 1500);
+
+            setTimeout(() => {
+                titleNickname = "";
             }, 5000);
         }
     }
@@ -195,7 +212,7 @@ class Fish {
         //this.fish_gif = loadImage('./assets/fish_blue.gif');
         if(this.fish_gif.loaded())
             this.fish_gif.play();
-        
+
         // fish colors
         this.colorPalette = [color(31, 135, 74), color(16, 99, 71), color(10, 99, 84),
             color(1, 96, 102), color(27, 79, 95), color(22, 77, 119), color(19, 59, 107), color(17, 55, 98),
@@ -398,7 +415,7 @@ class Fish {
 
     isShowing() {
         // return true when showing in screen
-        return !((this.position.x < -100 || this.position.x > windowWidth +100)&&(this.position.y < -100 || this.position.y > windowHeight+100));
+        return !((this.position.x < -50 || this.position.x > windowWidth +50)&&(this.position.y < -50 || this.position.y > windowHeight+50));
     }
 
     getPositionX() {
