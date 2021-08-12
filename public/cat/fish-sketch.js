@@ -151,7 +151,12 @@ function drawFish (data) {
             fishGroup[i].setVoiceFileName(data.audioFileName); // audio recorded by the user
             fishGroup[i].setDonation(data.donation);
             fishGroup[i].setToNewPosition();
-            bubbleSound.setVolume(0.4);
+            if (data.donation > 10000) {
+                bubbleSound.setVolume(1);
+            }
+            else {
+                bubbleSound.setVolume(0.4);
+            }
             if (bubbleSound.isPlaying())
                 bubbleSound.stop();
             bubbleSound.play();
@@ -165,7 +170,7 @@ function drawFish (data) {
 function touchEnded () {
     for (var i = 0; i < fishGroup.length; i++){
         if (fishGroup[i].checkHit()) {
-            this.splashSound.setVolume(0.7);
+            this.splashSound.setVolume(1);
             if (this.splashSound.isPlaying())
                 this.splashSound.stop();
             this.splashSound.play();
