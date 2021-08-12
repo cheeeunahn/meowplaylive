@@ -6,6 +6,14 @@ import { StoreContext } from 'component/Store';
 import { numberToFormattedString } from 'common/StringUtils';
 import { socket } from 'common/Connection';
 
+type LastResult =
+    // Fail after start or success.
+    'FailedFirst'
+    // Fail after fail.
+    | 'FailedAgain'
+    // Start or success.
+    | 'StartedOrSucceeded';
+
 const pointList = [
     1000,
     2000,
@@ -26,8 +34,9 @@ interface DonationDialogProps {
 }
 
 export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
-    const { voiceBlob, nickname, availablePoint, setAvailablePoint, chanceCount, setChanceCount } = useContext(StoreContext);
+    const { voiceBlob, nickname, availablePoint, setAvailablePoint } = useContext(StoreContext);
 
+    const [lastResult, setLastResult] = useState<LastResult>('StartedOrSucceeded');
     const [currentPointLevel, setCurrentPointLevel] = useState<number>(0);
     const currentPoint = pointList[currentPointLevel];
 
@@ -57,27 +66,7 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                     </span>
                     <CommonCloseButton onClick={onClose} />
                 </div>
-                {(chanceCount === 0) ? (
-                    <>
-                        <div className={css({
-                            height: '3rem',
-                            fontSize: '2rem',
-                            fontWeight: 'bold',
-                            marginBottom: '1rem'
-                        })}>
-                            {numberToFormattedString(currentPoint)}
-                        </div>
-                        <CommonSlider
-                            sliderColor={commonColors.green}
-                            showMark={false}
-                            value={currentPointLevel}
-                            max={10}
-                            onChange={value => {
-                                setCurrentPointLevel(value);
-                            }}
-                        />
-                    </>
-                ) : (
+                {(lastResult === 'FailedFirst') ? (
                     <>
                         <div className={css({
                             fontWeight: 'bold',
@@ -98,6 +87,26 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                             <br />
                             get chosen!
                         </div>
+                    </>
+                ) : (
+                    <>
+                        <div className={css({
+                            height: '3rem',
+                            fontSize: '2rem',
+                            fontWeight: 'bold',
+                            marginBottom: '1rem'
+                        })}>
+                            {numberToFormattedString(currentPoint)}
+                        </div>
+                        <CommonSlider
+                            sliderColor={commonColors.green}
+                            showMark={false}
+                            value={currentPointLevel}
+                            max={10}
+                            onChange={value => {
+                                setCurrentPointLevel(value);
+                            }}
+                        />
                     </>
                 )}
                 <CommonButton
@@ -136,11 +145,11 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
 
                         const onSuccess = () => {
                             if (!isDone) {
-                                if (chanceCount > 0) {
-                                    setChanceCount(0);
-                                } else {
+                                if (lastResult !== 'FailedFirst') {
                                     setAvailablePoint(availablePoint - currentPoint);
                                 }
+
+                                setLastResult('StartedOrSucceeded');
 
                                 isDone = true;
                             }
@@ -148,7 +157,7 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
 
                         const onFail = () => {
                             if (!isDone) {
-                                setChanceCount(1);
+                                setLastResult((lastResult === 'StartedOrSucceeded') ? 'FailedFirst' : 'FailedAgain');
                                 isDone = true;
                             }
                         };
