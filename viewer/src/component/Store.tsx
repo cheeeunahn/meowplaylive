@@ -17,7 +17,12 @@ interface Store {
     setAvailablePoint: (value: number) => void,
 
     // Used points.
-    usedPoint: number
+    usedPoint: number,
+
+    // If the user fails to be chosen by the cat,
+    // we give a chance to send the voice without spending the points.
+    chanceCount: number,
+    setChanceCount: (value: number) => void
 }
 
 /**
@@ -53,6 +58,7 @@ export const StoreProvider = ({ children }: Props) => {
     const [voiceBlob, setVoiceBlob] = useState<Blob | null>(null);
     const [nickname, setNickname] = useState<string>('');
     const [availablePoint, setAvailablePoint] = useState<number>(maxPoint);
+    const [chanceCount, setChanceCount] = useState<number>(0);
 
     const store: Store = {
         voiceBlob,
@@ -64,7 +70,10 @@ export const StoreProvider = ({ children }: Props) => {
         availablePoint,
         setAvailablePoint,
 
-        usedPoint: maxPoint - availablePoint
+        usedPoint: maxPoint - availablePoint,
+
+        chanceCount,
+        setChanceCount
     };
 
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>;

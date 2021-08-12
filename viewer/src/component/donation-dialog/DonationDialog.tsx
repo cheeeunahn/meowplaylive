@@ -26,7 +26,7 @@ interface DonationDialogProps {
 }
 
 export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
-    const { voiceBlob, nickname, availablePoint, setAvailablePoint } = useContext(StoreContext);
+    const { voiceBlob, nickname, availablePoint, setAvailablePoint, chanceCount, setChanceCount } = useContext(StoreContext);
 
     const [currentPointLevel, setCurrentPointLevel] = useState<number>(0);
     const currentPoint = pointList[currentPointLevel];
@@ -57,23 +57,49 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                     </span>
                     <CommonCloseButton onClick={onClose} />
                 </div>
-                <div className={css({
-                    height: '3rem',
-                    fontSize: '2rem',
-                    fontWeight: 'bold',
-                    marginBottom: '1rem'
-                })}>
-                    {numberToFormattedString(currentPoint)}
-                </div>
-                <CommonSlider
-                    sliderColor={commonColors.green}
-                    showMark={false}
-                    value={currentPointLevel}
-                    max={10}
-                    onChange={value => {
-                        setCurrentPointLevel(value);
-                    }}
-                />
+                {(chanceCount === 0) ? (
+                    <>
+                        <div className={css({
+                            height: '3rem',
+                            fontSize: '2rem',
+                            fontWeight: 'bold',
+                            marginBottom: '1rem'
+                        })}>
+                            {numberToFormattedString(currentPoint)}
+                        </div>
+                        <CommonSlider
+                            sliderColor={commonColors.green}
+                            showMark={false}
+                            value={currentPointLevel}
+                            max={10}
+                            onChange={value => {
+                                setCurrentPointLevel(value);
+                            }}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <div className={css({
+                            fontWeight: 'bold',
+                            fontSize: '1.2rem',
+                            marginBottom: '1rem',
+                            textTransform: 'uppercase'
+                        })}>
+                            This time it's free for you!
+                        </div>
+                        <div className={css({
+                            textAlign: 'center',
+                            textTransform: 'uppercase',
+                            marginBottom: '2rem'
+                        })}>
+                            Because you were not chosen before,
+                            <br />
+                            we are giving you another chance to
+                            <br />
+                            get chosen!
+                        </div>
+                    </>
+                )}
                 <CommonButton
                     className={css({
                         display: 'block',
@@ -110,13 +136,19 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
 
                         const onSuccess = () => {
                             if (!isDone) {
-                                setAvailablePoint(availablePoint - currentPoint);
+                                if (chanceCount > 0) {
+                                    setChanceCount(0);
+                                } else {
+                                    setAvailablePoint(availablePoint - currentPoint);
+                                }
+
                                 isDone = true;
                             }
                         };
 
                         const onFail = () => {
                             if (!isDone) {
+                                setChanceCount(1);
                                 isDone = true;
                             }
                         };
