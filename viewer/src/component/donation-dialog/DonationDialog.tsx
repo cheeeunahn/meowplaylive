@@ -154,13 +154,16 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                                 }
 
                                 setLastResult('StartedOrSucceeded');
-
                                 isDone = true;
                             }
                         };
 
                         const onFail = () => {
                             if (!isDone) {
+                                if (lastResult !== 'FailedFirst') {
+                                    setAvailablePoint(availablePoint - currentPoint);
+                                }
+
                                 setLastResult((lastResult === 'StartedOrSucceeded') ? 'FailedFirst' : 'FailedAgain');
                                 isDone = true;
                             }
