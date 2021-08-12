@@ -47,8 +47,7 @@ export function setup(Container) {
     // when success event happens
     socket.on('cat-tap-success', () => {
         //successCount++;
-        msg = "success!";
-        displaySuccessImg = true;
+        msg = "thank you for your message!";
         // show success icon for 5 seconds and reset
         setTimeout(resetToDefaultScreen, 5000);
     });
@@ -82,6 +81,12 @@ export function setup(Container) {
 export function draw() {
     background(255);
     drawCatUI();
+    textFont(nanumFontBold);
+    textSize(width/40);
+    textAlign(CENTER, CENTER);
+    fill(0);
+    noStroke();
+    text(msg, width/2, height/5);
 }
 
 // this funciton has the code for drawing the cat UI
@@ -120,7 +125,6 @@ function drawCatUI() {
 
 function resetToDefaultScreen() {
     msg = "";
-    displaySuccessImg = false;
 }
 
 class CloneFish {

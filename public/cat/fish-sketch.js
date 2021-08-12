@@ -179,7 +179,7 @@ function touchEnded () {
             //    this.voiceSound.stop();    
             //this.voiceSound.play();
             fishGroup[i].playVoice(); // Play the voice recorded by the user.
-            titleNickname = fishGroup[i].username;
+            titleNickname = "Thank you," + fishGroup[i].username;
             
             tempFishPosX = mouseX;
             tempFishPosY = mouseY;
@@ -247,8 +247,14 @@ class Fish {
     }
 
     setToNewPosition() {
-        this.px = random(10,windowWidth);
-        this.py = random(10,windowHeight);
+
+        this.locX_index = Math.floor(Math.random() * 2);
+        this.locY_index = Math.floor(Math.random() * 2);
+        this.location_x = [10, windowWidth-10];
+        this.location_y = [10, windowHeight-10];
+
+        this.px = this.location_x[this.locX_index];
+        this.py = this.location_y[this.locY_index];
 
         /*if (this.px > 50 && this.px <= windowWidth/2) {
             this.px = 50;
@@ -259,11 +265,14 @@ class Fish {
 
         this.position = createVector(this.px, this.py);
 
-        this.vx = random(-12,12);
-        this.vy = random(-12,12);
+        do {
+            this.vx = random(-12,12);
+            this.vy = random(-12,12);
+        }while(abs(this.vx)<5 || abs(this.vy)<5);
     
+        /*
         if (this.py >= windowHeight/2-50 && this.py <= windowHeight/2+50) {
-            while (abs(this.vx)>10 && abs(this.vy)>5) {
+            while (abs(this.vx)>10 && abs(this.vy)>7) {
                 this.vx = random(-12,12);
                 this.vy = random(-12,12);
             }
@@ -274,12 +283,13 @@ class Fish {
                 this.vx = random(-12,12);
                 this.vy = random(-12,12);
             }
-        }
+        }*/
 
-        if (this.vx > 0 && this.px > windowWidth/2){
+        if ((this.vx > 0 && this.px > windowWidth/2)||(this.vx < 0 && this.px < windowWidth/2)){
             this.vx = -this.vx;
         }
-        if (this.vy > 0 && this.py > windowHeight/2)
+        
+        if ((this.vy > 0 && this.py > windowHeight/2)||(this.vy < 0 && this.py < windowHeight/2))
             this.vy = -this.vy;
     
         this.velocity = createVector (this.vx, this.vy);
@@ -372,6 +382,7 @@ class Fish {
 
             if (this.fishSize != null){
                 tint(this.fishColor,255);
+                imageMode(CENTER);
                 image(this.fish_gif, 0, 0, this.fishSize,this.fishSize);
                 
                 textSize(width/25);
@@ -445,7 +456,7 @@ class Fish {
 
     isShowing() {
         // return true when showing in screen
-        return !((this.position.x < -50 || this.position.x > windowWidth +50)&&(this.position.y < -50 || this.position.y > windowHeight+50));
+        return !((this.position.x < 0 || this.position.x > windowWidth)&&(this.position.y < 0 || this.position.y > windowHeight));
     }
 
     getPositionX() {
