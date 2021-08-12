@@ -10,6 +10,7 @@ let bubbleSound;
 //let voiceSound;
 
 let fishGroup;
+let tempFish; // for making the cat feel as if it caught the fish
 
 let displayRipple;
 let rippleRadius;
@@ -19,15 +20,12 @@ let titleNickname;
 
 
 function preload() {
-
     // load the necessary sound files
     soundFormats('mp3');
     waterSound = loadSound('./assets/waterstream.mp3');
     //voiceSound = loadSound('./uploads/test-recording.m4a');
     splashSound = loadSound('./assets/splash.mp3');
     bubbleSound = loadSound('./assets/bubble.mp3');
-
-    // load font file
 
     //set angle mode
     angleMode(RADIANS);
@@ -37,6 +35,10 @@ function setup() {
     // this was just for testing purposes
     // simulating iOS mobile environment
     //getAudioContext().suspend();
+
+    // load font files - Nanum Square
+    nanumFontRegular = loadFont('./assets/NanumSquareR.ttf');
+    nanumFontBold = loadFont('./assets/NanumSquareEB.ttf');
 
     // create canvas
     createCanvas (windowWidth,windowHeight);
@@ -50,8 +52,9 @@ function setup() {
     rippleRadius = 1;
     displayRipple = false;
 
-    // a group of fish, max size is 3
+    // a group of fish, the maximum allowed size is 3
     fishGroup = [new Fish(), new Fish(), new Fish()];
+    tempFish = new Fish();
 
     // temporary variable for displaying username
     // chosen by the cat
@@ -70,21 +73,27 @@ function setup() {
 function draw() {
     background(222,243,246); // background color of canvas
 
-    textSize(width/10);
+    textFont(nanumFontBold);
+    textSize(width/12);
     textAlign(CENTER, CENTER);
     fill(0);
     noStroke();
-    text(titleNickname, width/2, 100);
+    text(titleNickname, width/2, 120);
 
-    for (var i = 0; i < fishGroup.length; i++){
-        fishGroup[i].show();
-        if (!fishGroup[i].isShowing()){
-            //if isShowing() value change occurs from true to false, trigger emit event
-            if (fishGroup[i].getPrevState()==true)
-                socket.emit('cat-tap-fail', fishGroup[i].getId());
+    if (fishGroup !== null || fishGroup.length != 0) {
+        for (var i = 0; i < fishGroup.length; i++){
+            fishGroup[i].show();
+            if (!fishGroup[i].isShowing()){
+                //if isShowing() value change occurs from true to false, trigger emit event
+                //fish x position is set to -1000 when it is hit
+                if (fishGroup[i].getPrevState()==true && fishGroup[i].getPositionX()!=-5000)
+                    socket.emit('cat-tap-fail', fishGroup[i].getId());
+            }
+            fishGroup[i].setPrevState(fishGroup[i].isShowing()); // save previous isShowing() value
         }
-        fishGroup[i].setPrevState(fishGroup[i].isShowing()); // save previous isShowing() value
     }
+
+    tempFish.show();
 
     // tell viewer UI where the fish is positioned at what angle
     // also send fish nickname information
@@ -121,7 +130,8 @@ function draw() {
 
 function drawFish (data) {
     for (var i = 0; i < fishGroup.length; i++){
-        if (fishGroup[i].getPositionX() > windowWidth || fishGroup[i].getPositionX() < 0) {
+        if ((fishGroup[i].getPositionX() > windowWidth || fishGroup[i].getPositionX() < 0)&&
+            (fishGroup[i].getPositionY() > windowHeight || fishGroup[i].getPositionY() < 0)) {
             fishGroup[i].setUsername(username);
             fishGroup[i].setId(data.socketid); // the socket id of the fish
             fishGroup[i].setVoiceFileName(data.audioFileName); // audio recorded by the user
@@ -139,32 +149,41 @@ function drawFish (data) {
 }
 
 function touchEnded () {
-    //if (!firstTouch){
-        for (var i = 0; i < fishGroup.length; i++){
-            if (fishGroup[i].checkHit()) {
-                this.splashSound.setVolume(0.7);
-                if (this.splashSound.isPlaying())
-                    this.splashSound.stop();
-                this.splashSound.play();
-                //this.voiceSound.setVolume(2.0);
-                //if (this.voiceSound.isPlaying())
-                //    this.voiceSound.stop();    
-                //this.voiceSound.play();
-                fishGroup[i].playVoice(); // Play the voice recorded by the user.
-                titleNickname = fishGroup[i].username;
-                //setTimeout(resetTitleText, 5000);
-            }
+    for (var i = 0; i < fishGroup.length; i++){
+        if (fishGroup[i].checkHit()) {
+            this.splashSound.setVolume(0.7);
+            if (this.splashSound.isPlaying())
+                this.splashSound.stop();
+            this.splashSound.play();
+            //this.voiceSound.setVolume(2.0);
+            //if (this.voiceSound.isPlaying())
+            //    this.voiceSound.stop();    
+            //this.voiceSound.play();
+            fishGroup[i].playVoice(); // Play the voice recorded by the user.
+            titleNickname = fishGroup[i].username;
+            push();
+            rotate(fishGroup[i].getAngle());
+            tempFish.fishSize = width/3.5;
+            tempFish.position = createVector(pmouseX, pmouseY);
+            tempFish.velocity = createVector(0,0);
+            pop();
+            titleNickname = "";
+            setTimeout(() => {
+                tempFish = new Fish();
+            }, 5000);
         }
-    //}
+    }
 }
 
-/*function resetTitleText () {
+/*
+function resetTitleText () {
     titleNickname = "";
 }*/
 
-// this is a must for iOS and Android
-// (optional for Desktop Chrome)
-// PLEASE DO NOT DELETE
+/**
+ * mousePressed() is a must for iOS and Android
+ * optional for Desktop Chrome, but do not delete
+ */
 function mousePressed() {
     userStartAudio();
 }
@@ -177,6 +196,7 @@ class Fish {
         if(this.fish_gif.loaded())
             this.fish_gif.play();
         
+        // fish colors
         this.colorPalette = [color(31, 135, 74), color(16, 99, 71), color(10, 99, 84),
             color(1, 96, 102), color(27, 79, 95), color(22, 77, 119), color(19, 59, 107), color(17, 55, 98),
             color(12, 43, 85), color(17, 31, 84), color(23, 6, 65)];
@@ -205,7 +225,7 @@ class Fish {
         this.donation = -1;
         this.fishColor = color(255,0,0);
 
-        // Voice file name recorded by user.
+        // voice file name recorded by user.
         this.voiceFileName = null;
     }
 
@@ -317,7 +337,6 @@ class Fish {
 
             if (this.fishSize != null){
                 tint(this.fishColor,255);
-                //tint(color(255,0,0),50);
                 image(this.fish_gif, 0, 0, this.fishSize,this.fishSize);
                 
                 textSize(width/25);
@@ -347,12 +366,12 @@ class Fish {
         //console.log(poly[0]);
         console.log(this.hit);
         if (this.hit) {
-            this.px = -500;
-            this.py = -500; // put it somewhere invisible
-            this.position = createVector(this.px, this.py);
-            this.velocity = createVector(0,0);
             displayRipple = true;
             socket.emit('cat-tap-success', this.id); // send the socket id of this fish object
+            this.px = -5000;
+            this.py = -5000; // put it somewhere invisible
+            this.velocity = createVector(0,0);
+            this.position = createVector(this.px, this.py);
         } 
         return this.hit;
     }
@@ -378,8 +397,8 @@ class Fish {
     }
 
     isShowing() {
-        // return true when showing in screen or was successfully tapped by the cat
-        return !(this.position.x < -100 || this.position.x > windowWidth +100||this.position.y < -100 || this.position.y > windowHeight+100)||this.hit;
+        // return true when showing in screen
+        return !((this.position.x < -100 || this.position.x > windowWidth +100)&&(this.position.y < -100 || this.position.y > windowHeight+100));
     }
 
     getPositionX() {
