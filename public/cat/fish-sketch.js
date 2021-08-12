@@ -112,9 +112,9 @@ function draw() {
     // tell viewer UI where the fish is positioned at what angle
     // also send fish nickname information
     let data = { fish_positions: [
-        {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername(), color: fishGroup[0].getColor()},
-        {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), color: fishGroup[1].getColor()},
-        {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), color: fishGroup[2].getColor()} ]};
+        {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername(), r: fishGroup[0].getRedColor(), g: fishGroup[0].getGreenColor(), b: fishGroup[0].getBlueColor()},
+        {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), r: fishGroup[1].getRedColor(), g: fishGroup[1].getGreenColor(), b: fishGroup[1].getBlueColor()},
+        {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), r: fishGroup[2].getRedColor(), g: fishGroup[2].getGreenColor(), b: fishGroup[2].getBlueColor()} ]};
     socket.emit('move-fish-group', data);
 
     if (mouseIsPressed) {
@@ -192,11 +192,6 @@ function touchEnded () {
     }
 }
 
-/*
-function resetTitleText () {
-    titleNickname = "";
-}*/
-
 /**
  * mousePressed() is a must for iOS and Android
  * optional for Desktop Chrome, but do not delete
@@ -247,20 +242,38 @@ class Fish {
     }
 
     setToNewPosition() {
-        this.px = random(10,windowWidth+10);
-        this.py = random(10,windowHeight-100);
+        this.px = random(10,windowWidth);
+        this.py = random(10,windowHeight);
+
+        /*if (this.px > 50 && this.px <= windowWidth/2) {
+            this.px = 50;
+        }
+        else if (this.px < windowWidth-50) {
+            this.px = windowWidth-50;
+        }*/
+
         this.position = createVector(this.px, this.py);
 
         this.vx = random(-12,12);
         this.vy = random(-12,12);
     
-        while (this.vx == this.vy || abs(this.vx) < 6) {
-            this.vx = random(-12,12);
-            this.vy = random(-12,12);
+        if (this.py >= windowHeight/2-50 && this.py <= windowHeight/2+50) {
+            while (abs(this.vx)>10 && abs(this.vy)>5) {
+                this.vx = random(-12,12);
+                this.vy = random(-12,12);
+            }
         }
-    
-        if (this.vx > 0 && this.px > windowWidth/2)
+
+        if (this.px >= windowWidth/2-50 && this.px <= windowWidth/2+50) {
+            while (abs(this.vx)>5 && abs(this.vy)<10) {
+                this.vx = random(-12,12);
+                this.vy = random(-12,12);
+            }
+        }
+
+        if (this.vx > 0 && this.px > windowWidth/2){
             this.vx = -this.vx;
+        }
         if (this.vy > 0 && this.py > windowHeight/2)
             this.vy = -this.vy;
     
@@ -415,6 +428,14 @@ class Fish {
 
     getRedColor () {
         return red(this.fishColor);
+    }
+
+    getGreenColor () {
+        return green(this.fishColor);
+    }
+
+    getBlueColor () {
+        return blue(this.fishColor);
     }
 
     isShowing() {

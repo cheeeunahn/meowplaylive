@@ -66,7 +66,7 @@ export function setup(Container) {
         for (var i = 0; i < fishGroup.length; i++) {
             fishGroup[i].updatePosition(arg.fish_positions[i].posX, arg.fish_positions[i].posY, arg.fish_positions[i].angle, rectWidth, rectHeight);
             fishGroup[i].updateUsername(arg.fish_positions[i].username);
-            fishGroup[i].updateColor(arg.fish_positions[i].color);
+            fishGroup[i].updateColor(arg.fish_positions[i].r, arg.fish_positions[i].g, arg.fish_positions[i].b);
         }
     });
     ///////////////////////////////////////////
@@ -147,8 +147,8 @@ class CloneFish {
         this.username = username;
     }
 
-    updateColor(color) {
-        this.fishColor = color;
+    updateColor(r,g,b) {
+        this.fishColor = color(r,g,b);
     }
 
     draw() {
