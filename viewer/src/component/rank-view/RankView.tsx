@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { css, cx } from '@emotion/css';
+import { css, cx, keyframes } from '@emotion/css';
 
 import { CommonBox, moreCommonColors } from 'component/Common';
 import { socket } from 'common/Connection';
+
+const rankerAnimation = keyframes({
+    '0%': {
+        opacity: 0
+    },
+    '100%': {
+        opacity: 1
+    }
+});
 
 const rankerStyle = css({
     display: 'flex',
@@ -10,7 +19,8 @@ const rankerStyle = css({
     boxSizing: 'border-box',
     marginBottom: '0.5rem',
     paddingLeft: '1rem',
-    paddingRight: '1rem'
+    paddingRight: '1rem',
+    animation: `${rankerAnimation} 1 1s`
 });
 
 const highRankerColors = [
@@ -67,7 +77,8 @@ export const RankView = () => {
                 DONATION LEADERBOARD
             </div>
             {sortedDonationSums.filter((item, index) => (index < 15)).map(({ nickname, donation }, index) => (
-                <div key={`index-${nickname}-${donation}`} className={css([
+                // If the ranking (= index) of the user is changed, draw this div again and show the simple animation.
+                <div key={`${index}-${nickname}`} className={css([
                     rankerStyle,
                     (index < highRankerColors.length) && highRankerStyle(index)
                 ])}>
