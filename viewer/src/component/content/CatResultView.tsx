@@ -37,11 +37,11 @@ export const CatResultView = () => {
 
     useEffect(() => {
         const onSuccess = () => {
-            setResult({ status: 'Success', count: result.count + 1 });
+            setResult(prevResult => ({ status: 'Success', count: prevResult.count + 1 }));
         };
 
         const onFail = () => {
-            setResult({ status: 'Fail', count: result.count + 1 });
+            setResult(prevResult => ({ status: 'Fail', count: prevResult.count + 1 }));
         };
 
         socket.on('cat-tap-success', onSuccess);
