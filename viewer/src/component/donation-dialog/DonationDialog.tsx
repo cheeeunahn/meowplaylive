@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { css } from '@emotion/css';
 
 import { CommonModal, CommonBox, CommonCloseButton, CommonSlider, commonColors, CommonButton } from 'component/Common';
@@ -32,6 +32,10 @@ interface DonationDialogProps {
     isOpen: boolean;
     onClose: () => void;
 }
+
+socket.on('number-exceeded', () => {
+    alert('Please wait until other people\'s fish are off the screen! 😿');
+});
 
 export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
     const { voiceBlob, nickname, availablePoint, setAvailablePoint } = useContext(StoreContext);

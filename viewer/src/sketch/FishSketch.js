@@ -61,10 +61,12 @@ export function setup(Container) {
     });*/
 
     // preventing user from clicking too fast
+    /*
     socket.on('number-exceeded', () => {
         msg = "click slower!";
         setTimeout(resetText, 3000);
     });
+    */
 
     // this is for receiving position data from cat UI
     ///////////////////////////////////////////
