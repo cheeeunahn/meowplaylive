@@ -98,7 +98,7 @@ function newConnection(socket) {
     });
 
     socket.on('number-exceeded', (arg) => {
-        socket.broadcast.to(arg.id).emit('number-exceeded');
+        socket.broadcast.to(arg.socketid).emit('number-exceeded');
         console.log('oops! too many objects on the screen!');
     });
 
