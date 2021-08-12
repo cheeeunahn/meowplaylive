@@ -106,7 +106,24 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                             timestamp: timestamp
                         });
 
-                        setAvailablePoint(availablePoint - currentPoint);
+                        let isDone = false;
+
+                        const onSuccess = () => {
+                            if (!isDone) {
+                                setAvailablePoint(availablePoint - currentPoint);
+                                isDone = true;
+                            }
+                        };
+
+                        const onFail = () => {
+                            if (!isDone) {
+                                isDone = true;
+                            }
+                        };
+
+                        socket.once('cat-tap-success', onSuccess);
+                        socket.once('cat-tap-fail', onFail);
+
                         onClose();
                     }}
                 >
