@@ -112,9 +112,9 @@ function draw() {
     // tell viewer UI where the fish is positioned at what angle
     // also send fish nickname information
     let data = { fish_positions: [
-        {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername()},
-        {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername()},
-        {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername()} ]};
+        {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername(), color: fishGroup[0].getColor()},
+        {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), color: fishGroup[1].getColor()},
+        {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), color: fishGroup[2].getColor()} ]};
     socket.emit('move-fish-group', data);
 
     if (mouseIsPressed) {
@@ -411,6 +411,10 @@ class Fish {
 
     getPrevState () {
         return this.showPrevState;
+    }
+
+    getRedColor () {
+        return red(this.fishColor);
     }
 
     isShowing() {

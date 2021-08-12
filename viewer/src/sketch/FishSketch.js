@@ -53,13 +53,6 @@ export function setup(Container) {
         setTimeout(resetToDefaultScreen, 5000);
     });
 
-    // when fail event happens
-    /*TO DO*/
-    /*socket.on('cat-tap-fail', () => {
-        displayFailImg = true;
-        setTimeout(resetToDefaultScreen, 5000);
-    });*/
-
     // preventing user from clicking too fast
     socket.on('number-exceeded', () => {
         msg = "click slower!";
@@ -73,6 +66,7 @@ export function setup(Container) {
         for (var i = 0; i < fishGroup.length; i++) {
             fishGroup[i].updatePosition(arg.fish_positions[i].posX, arg.fish_positions[i].posY, arg.fish_positions[i].angle, rectWidth, rectHeight);
             fishGroup[i].updateUsername(arg.fish_positions[i].username);
+            fishGroup[i].updateColor(arg.fish_positions[i].color);
         }
     });
     ///////////////////////////////////////////
@@ -120,21 +114,6 @@ function drawCatUI() {
 
     pop();
 
-    // for displaying success icon
-    /*
-    if (displaySuccessImg) {
-        imageMode(CENTER);
-        image(successImg, rectWidth/2, rectHeight/2, rectWidth/3, rectHeight/3);
-    }
-
-    // for displaying success text (delete later)
-    /////////////////////////
-    fill(15);
-    textFont(nanumFontBold);
-    textSize(32);
-    text(msg, 150, 10);
-    /////////////////////////
-    */
 }
 
 function resetToDefaultScreen() {
@@ -144,7 +123,7 @@ function resetToDefaultScreen() {
 
 class CloneFish {
     constructor() {
-        this.fish_gif = loadImage('../cat/assets/fish_blue.gif');
+        this.fish_gif = loadImage('../cat/assets/fish_white.gif');
         this.fish_gif.play();
 
         this.px = -500;
@@ -153,6 +132,8 @@ class CloneFish {
         this.angle = 0;
 
         this.username = "";
+
+        this.fishColor = color(255,255,255);
     }
 
     updatePosition(px, py, angle, rectWidth, rectHeight) {
@@ -166,13 +147,16 @@ class CloneFish {
         this.username = username;
     }
 
+    updateColor(color) {
+        this.fishColor = color;
+    }
+
     draw() {
         push();
         
         translate(this.px, this.py);
         rotate(this.angle);
-        tint(6,85,103);
-        //tint(21,38,54);
+        tint(this.fishColor, 255);
         image(this.fish_gif, 0, 0, 180, 180);
 
         textFont(nanumFontBold);
