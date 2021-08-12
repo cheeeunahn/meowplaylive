@@ -1,4 +1,5 @@
-import React, { createContext, ReactNode, useState } from 'react';
+import { socket } from 'common/Connection';
+import React, { createContext, ReactNode, useEffect, useState } from 'react';
 
 /**
  * States of the app & setter functions.
@@ -48,7 +49,7 @@ interface Props {
  * };
  */
 export const StoreProvider = ({ children }: Props) => {
-    const maxPoint = 500000;
+    const maxPoint = 0;
 
     const [voiceBlob, setVoiceBlob] = useState<Blob | null>(null);
     const [nickname, setNickname] = useState<string>('');
@@ -66,6 +67,25 @@ export const StoreProvider = ({ children }: Props) => {
 
         usedPoint: maxPoint - availablePoint
     };
+
+    useEffect(() => {
+        const onApplyPoint = (data: { nickname: string, point: number }) => {
+            if (nickname === data.nickname) {
+                setAvailablePoint(data.point);
+            }
+        };
+
+        if (nickname.length > 0) {
+            socket.on('apply-point', onApplyPoint);
+
+            // Request the amount of available points from the server.
+            socket.emit('init-point', { socketid: socket.id, nickname: nickname });
+        };
+
+        return () => {
+            socket.off('apply-point', onApplyPoint);
+        };
+    }, [nickname]);
 
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>;
 };

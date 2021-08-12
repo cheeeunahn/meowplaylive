@@ -24,6 +24,9 @@ voiceDatabase.loadDatabase();
 
 const chatDatabase = new Datastore('chat-database.db');
 chatDatabase.loadDatabase();
+
+const pointDatabase = new Datastore('point-database.db');
+pointDatabase.loadDatabase();
 //////////////////////////////////////////////////
 
 // Suppress CORS warning.
@@ -118,6 +121,45 @@ function newConnection(socket) {
         console.log(`New chat: ${chat.content} by ${chat.nickname}`);
         chatDatabase.insert(chat);
         io.emit('upload-chat', chat);
+    });
+
+    const maxPoint = 500000;
+
+    // Used when initializing the amount of remaining points of viewer ui.
+    socket.on('init-point', data => {
+        const { socketid, nickname } = data;
+
+        pointDatabase.findOne({ nickname: nickname }, { nickname: 1, point: 1 }, (err, doc) => {
+            let initialPoint = 0;
+
+            if (doc === null) {
+                initialPoint = maxPoint;
+                pointDatabase.insert({ nickname: nickname, point: initialPoint });
+            } else {
+                initialPoint = doc.point;
+            }
+
+            io.emit('apply-point', { nickname: nickname, point: initialPoint });
+        });
+    });
+
+    // For storing the amount of remaining points of each user to DB.
+    socket.on('update-point', data => {
+        const { socketid, nickname, point } = data;
+
+        pointDatabase.findOne({ nickname: nickname }, { nickname: 1, point: 1 }, (err, doc) => {
+            let newPoint = 0;
+
+            if (doc === null) {
+                newPoint = maxPoint;
+                pointDatabase.insert({ nickname: nickname, point: newPoint });
+            } else {
+                newPoint = point;
+                pointDatabase.update({ nickname: nickname }, { nickname: nickname, point: newPoint }, {});
+            }
+
+            io.emit('apply-point', { nickname: nickname, point: newPoint });
+        });
     });
 }
 //////////////////////////////////////////////////

@@ -38,11 +38,21 @@ socket.on('number-exceeded', () => {
 });
 
 export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
-    const { voiceBlob, nickname, availablePoint, setAvailablePoint } = useContext(StoreContext);
+    const { voiceBlob, nickname, availablePoint } = useContext(StoreContext);
 
     const [lastResult, setLastResult] = useState<LastResult>('StartedOrSucceeded');
     const [currentPointLevel, setCurrentPointLevel] = useState<number>(0);
     const currentPoint = pointList[currentPointLevel];
+
+    const spendPoint = () => {
+        if (currentPoint > availablePoint) {
+            alert(`You can't donate ${numberToFormattedString(currentPoint)} points since you have ${numberToFormattedString(availablePoint)} points left.`);
+            return;
+        }
+
+        const pointToSpend = availablePoint - currentPoint;
+        socket.emit('update-point', { socketid: socket.id, nickname: nickname, point: pointToSpend });
+    };
 
     return (
         <CommonModal
@@ -120,11 +130,6 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                         marginTop: '0.5rem'
                     })}
                     onClick={() => {
-                        if (currentPoint > availablePoint) {
-                            alert(`You can't donate ${numberToFormattedString(currentPoint)} points since you have ${numberToFormattedString(availablePoint)} points left.`);
-                            return;
-                        }
-
                         socket.emit('name-sent', nickname);
 
                         const timestamp = Date.now();
@@ -150,7 +155,7 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                         const onSuccess = () => {
                             if (!isDone) {
                                 if (lastResult !== 'FailedFirst') {
-                                    setAvailablePoint(availablePoint - currentPoint);
+                                    spendPoint();
                                 }
 
                                 setLastResult('StartedOrSucceeded');
@@ -161,7 +166,7 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                         const onFail = () => {
                             if (!isDone) {
                                 if (lastResult !== 'FailedFirst') {
-                                    setAvailablePoint(availablePoint - currentPoint);
+                                    spendPoint();
                                 }
 
                                 setLastResult((lastResult === 'StartedOrSucceeded') ? 'FailedFirst' : 'FailedAgain');
