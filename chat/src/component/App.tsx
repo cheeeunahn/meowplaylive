@@ -29,7 +29,6 @@ export const App = () => (
                 height: '100%',
                 padding: '1rem'
             })}>
-                <Header />
                 <CurrentPage />
             </div>
         </StylesProvider>
