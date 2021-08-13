@@ -11,20 +11,22 @@ const emojiTable = [
 
 interface Props {
     onSelect: (emoji: string) => void;
+    buttonColor?: string;
+    className?: string;
 }
 
-export const EmojiSelector = ({ onSelect }: Props) => (
-    <div className={css({
+export const EmojiSelector = ({ onSelect, buttonColor = '#ffffff', className }: Props) => (
+    <div className={css([{
         width: '100%',
         textAlign: 'center',
         marginBottom: '1rem'
-    })}>
+    }, className])}>
         {emojiTable.map((row, y) => (
             <div>
                 {row.map((emoji, x) => (
                     <CommonButton
                         variant={'text'}
-                        buttonColor={'#ffffff'}
+                        buttonColor={buttonColor}
                         key={`${y}-${x}-${emoji}`}
                         className={css({
                             cursor: 'pointer',

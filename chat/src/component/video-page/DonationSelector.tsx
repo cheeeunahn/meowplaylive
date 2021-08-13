@@ -1,20 +1,62 @@
 import React, { useContext, useState } from 'react';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 
 import { StoreContext } from 'component/Store';
 import { socket } from 'common/Connection';
 import { Chat } from 'common/Chat';
-import { CommonBox, CommonButton, CommonInput, CommonProfile, youTubeColors } from 'component/Common';
 import { numberToFormattedString } from 'common/StringUtils';
+import { CommonBox, CommonButton, CommonInput, CommonProfile, CommonSlider, youTubeColors } from 'component/Common';
+import { EmojiSelector } from 'component/video-page/EmojiSelector';
+
+const iconStyle = css({
+    cursor: 'pointer',
+    width: '1.2rem',
+    height: '1.2rem',
+    // This put the text at the center of the vertical axis.
+    lineHeight: '1.2rem',
+    fontSize: '1rem',
+    textAlign: 'center',
+    color: youTubeColors.darkGray
+});
+
+const smileStyle = cx('fa', 'fa-smile-o',
+    css([iconStyle, {
+        color: '#bbbbbb',
+        backgroundColor: youTubeColors.darkGray,
+        borderRadius: '50%'
+    }])
+);
+
+const keyboardStyle = cx('fa', 'fa-keyboard-o',
+    css([iconStyle, {
+        width: '1.5rem',
+        borderRadius: '0.2rem',
+        fontSize: '1.5rem',
+        color: youTubeColors.darkGray,
+        backgroundColor: 'transparent'
+    }])
+);
+
+const xStyle = cx('fa', 'fa-times', css({
+    cursor: 'pointer',
+    width: '1.5rem',
+    marginRight: '1rem',
+    fontSize: '1.2rem',
+    color: youTubeColors.lightGray,
+    '&:hover': {
+        color: youTubeColors.gray
+    }
+}));
 
 interface Props {
-    onSend: () => void;
+    onClose: () => void;
 }
 
-export const DonationSelector = ({ onSend }: Props) => {
+export const DonationSelector = ({ onClose }: Props) => {
     const { profileColor, nickname } = useContext(StoreContext);
 
     const [content, setContent] = useState<string>('');
+    const [showEmojiSelector, setShowEmojiSelector] = useState<boolean>(false);
 
     const chat: Chat = {
         profileColor: profileColor,
@@ -53,9 +95,24 @@ export const DonationSelector = ({ onSend }: Props) => {
             left: 0,
             right: 0,
             padding: '0 1rem',
-            marginTop: '0.5rem',
             marginBottom: '0.5rem'
         })}>
+            <div className={css({
+                marginTop: '0.5rem'
+            })}>
+                <i
+                    className={xStyle}
+                    aria-hidden={true}
+                    onClick={() => {
+                        onClose();
+                    }}
+                />
+                <span className={css({
+                    color: youTubeColors.gray
+                })}>
+                    Send a Super Chat
+                </span>
+            </div>
             <div className={css({
                 textAlign: 'right',
                 width: '100%',
@@ -102,7 +159,6 @@ export const DonationSelector = ({ onSend }: Props) => {
                 </div>
                 <div className={css({
                     boxSizing: 'border-box',
-                    marginBottom: '1rem',
                     padding: '0.5rem 1rem',
                     backgroundColor: youTubeColors.lightYellow
                 })}>
@@ -119,12 +175,52 @@ export const DonationSelector = ({ onSend }: Props) => {
                         onKeyPress={key => {
                             if (key === 'Enter') {
                                 sendSuperChat();
-                                onSend();
+                                onClose();
                             }
                         }}
                     />
                 </div>
             </CommonBox>
+            {showEmojiSelector && (
+                <EmojiSelector
+                    className={css({
+                        boxSizing: 'border-box',
+                        paddingTop: '1rem',
+                        marginBottom: 0,
+                        backgroundColor: youTubeColors.veryLightGray
+                    })}
+                    buttonColor={youTubeColors.transparentGray}
+                    onSelect={emoji => {
+                        cropAndSetContent(content + emoji);
+                    }}
+                />
+            )}
+            <div className={css({
+                boxSizing: 'border-box',
+                display: 'flex',
+                flexDirection: 'row',
+                width: '100%',
+                marginBottom: '1rem',
+                padding: '1rem 1rem',
+                backgroundColor: youTubeColors.veryLightGray
+            })}>
+                <div className={css({
+                    display: 'inline-flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    width: '1.5rem',
+                    textAlign: 'center',
+                    marginRight: '1rem'
+                })}>
+                    <i
+                        className={showEmojiSelector ? keyboardStyle : smileStyle}
+                        aria-hidden={true}
+                        onClick={() => {
+                            setShowEmojiSelector(!showEmojiSelector);
+                        }}
+                    />
+                </div>
+            </div>
             <div className={css({
                 textAlign: 'center',
                 width: '100%',
@@ -134,6 +230,18 @@ export const DonationSelector = ({ onSend }: Props) => {
             })}>
                 &#8361; <span className={css({ color: youTubeColors.darkGray })}>{numberToFormattedString(10000)}</span> KRW
             </div>
+            <CommonSlider
+                className={css({
+                    marginBottom: '1rem'
+                })}
+                showMark={true}
+                showThumb={true}
+                isReadonly={true}
+                min={0}
+                max={10}
+                value={3}
+                step={1}
+            />
             <CommonButton
                 className={css({
                     display: 'block',
@@ -143,7 +251,7 @@ export const DonationSelector = ({ onSend }: Props) => {
                 buttonColor={youTubeColors.lightBlue}
                 onClick={() => {
                     sendSuperChat();
-                    onSend();
+                    onClose();
                 }}
             >
                 Buy and send

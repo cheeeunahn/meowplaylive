@@ -30,6 +30,7 @@ const xStyle = cx('fa', 'fa-times', iconStyle, css({
 const starStyle = cx('fa', 'fa-star', iconStyle, css({
     height: '1.2rem',
     lineHeight: '1.2rem',
+    borderRadius: '0.2rem',
     fontSize: '0.8rem',
     color: '#ffffff',
     backgroundColor: youTubeColors.lightGray

@@ -143,7 +143,7 @@ export const ChatSender = () => {
             )}
             {showDonationSelector && (
                 <DonationSelector
-                    onSend={() => {
+                    onClose={() => {
                         setShowDonationSelector(false);
                     }}
                 />

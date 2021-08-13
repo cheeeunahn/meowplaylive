@@ -27,6 +27,7 @@ export const moreCommonColors = {
 
 // Based on YouTube.
 export const youTubeColors = {
+    transparentGray: 'rgba(17, 17, 17, 0)',
     veryLightGray: 'rgba(17, 17, 17, 0.2)',
     lightGray: 'rgba(17, 17, 17, 0.4)',
     gray: 'rgba(17, 17, 17, 0.6)',
