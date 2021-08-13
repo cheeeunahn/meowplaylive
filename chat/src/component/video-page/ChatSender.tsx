@@ -62,13 +62,23 @@ export const ChatSender = () => {
         timestamp: Date.now()
     };
 
+    const maxContentLength = 200;
+
+    const cropAndSetContent = (newContent: string) => {
+        if (newContent.length <= maxContentLength) {
+            setContent(newContent);
+        } else {
+            setContent(newContent.substring(0, maxContentLength));
+        }
+    };
+
     const sendChat = () => {
         if (content.length === 0) {
             return;
         }
 
         socket.emit('upload-chat', chat);
-        setContent('');
+        cropAndSetContent('');
     };
 
     return (
@@ -97,7 +107,7 @@ export const ChatSender = () => {
                         placeholder={'Say something...'}
                         value={content}
                         onChange={value => {
-                            setContent(value);
+                            cropAndSetContent(value);
                         }}
                         onKeyPress={key => {
                             if (key === 'Enter') {
@@ -109,7 +119,7 @@ export const ChatSender = () => {
             </div>
             {showEmojiSelector && (
                 <EmojiSelector onSelect={emoji => {
-                    setContent(content + emoji);
+                    cropAndSetContent(content + emoji);
                 }} />
             )}
             <div className={css({
@@ -143,7 +153,7 @@ export const ChatSender = () => {
                     color: youTubeColors.lightGray,
                     marginLeft: 'auto'
                 })}>
-                    {content.length}/200
+                    {content.length}/{maxContentLength}
                 </span>
                 <i
                     className={cx('fa', 'fa-paper-plane', css([
