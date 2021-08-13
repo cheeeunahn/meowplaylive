@@ -1,12 +1,21 @@
 import React, { useContext, useState } from 'react';
 import { css, cx } from '@emotion/css';
 
-import { CommonInput, moreCommonColors } from 'component/Common';
+import { commonColors, CommonInput, CommonProfile, youTubeColors } from 'component/Common';
 import { StoreContext } from 'component/Store';
 import { socket } from 'common/Connection';
 import { Chat } from 'common/Chat';
 
-const iconColor = moreCommonColors.gray;
+const iconStyle = css({
+    width: '1.2rem',
+    height: '1.2rem',
+    // This put the text at the center of the vertical axis.
+    lineHeight: '1.2rem',
+    fontSize: '1rem',
+    textAlign: 'center',
+    color: '#ffffff',
+    backgroundColor: youTubeColors.lightGray
+});
 
 export const ChatSender = () => {
     const { profileColor, nickname } = useContext(StoreContext);
@@ -34,41 +43,24 @@ export const ChatSender = () => {
         <div className={css({
             boxSizing: 'border-box',
             width: '100%',
-            backgroundColor: '#eeeeee',
-            padding: '0.5rem 2rem'
+            padding: '1rem 2rem'
         })}>
             <div className={css({
-                marginBottom: '0.5rem'
+                marginBottom: '1rem'
             })}>
-                <i
-                    className={cx(
-                        'fa', 'fa-user',
-                        css({
-                            display: 'inline-block',
-                            verticalAlign: 'top',
-                            width: '1rem',
-                            height: '1rem',
-                            marginRight: '1rem',
-                            textAlign: 'center',
-                            color: profileColor,
-                            border: '1px solid #000000',
-                            borderRadius: '50%'
-                        })
-                    )}
-                    aria-hidden={true}
-                />
+                <CommonProfile profileColor={profileColor} />
                 <div className={css({
                     display: 'inline-block'
                 })}>
                     <div className={css({
-                        color: moreCommonColors.gray,
+                        color: youTubeColors.gray,
                         marginBottom: '0.5rem'
                     })}>
                         {nickname}
                     </div>
                     <CommonInput
                         variant={'standard'}
-                        placeholder={'Say something'}
+                        placeholder={'Say something...'}
                         value={content}
                         onChange={value => {
                             setContent(value);
@@ -88,20 +80,46 @@ export const ChatSender = () => {
             })}>
                 <i
                     className={cx('fa', 'fa-smile-o',
-                        css({
-                            color: iconColor,
+                        css([iconStyle, {
+                            borderRadius: '50%',
+                            fontSize: '1.5rem',
                             marginRight: '1rem'
-                        })
+                        }])
                     )}
                     aria-hidden={true}
                 />
                 <i
                     className={cx('fa', 'fa-usd',
-                        css({
-                            color: iconColor
-                        })
+                        css([iconStyle, {
+                            width: '1.5rem',
+                            borderRadius: '0.2rem'
+                        }])
                     )}
                     aria-hidden={true}
+                />
+                <span className={css({
+                    color: youTubeColors.lightGray,
+                    marginLeft: 'auto'
+                })}>
+                    {content.length}/200
+                </span>
+                <i
+                    className={cx('fa', 'fa-paper-plane', css([
+                        {
+                            color: youTubeColors.lightGray,
+                            marginLeft: '1rem'
+                        },
+                        (content.length > 0) && {
+                            cursor: 'pointer',
+                            '&:hover': {
+                                color: commonColors.blue
+                            }
+                        }
+                    ]))}
+                    aria-hidden={true}
+                    onClick={() => {
+                        sendChat();
+                    }}
                 />
             </div>
         </div>
