@@ -167,7 +167,7 @@ function drawFish (data) {
     console.log(data);
 }
 
-function touchStarted () {
+function touchEnded () {
     for (var i = 0; i < fishGroup.length; i++){
         if (fishGroup[i].checkHit()) {
             this.splashSound.setVolume(1);
