@@ -1,6 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/css';
-import { youTubeColors } from 'component/Common';
+
+import { CommonButton, youTubeColors } from 'component/Common';
 
 const emojiTable = [
     ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣'],
@@ -21,7 +22,9 @@ export const EmojiSelector = ({ onSelect }: Props) => (
         {emojiTable.map((row, y) => (
             <div>
                 {row.map((emoji, x) => (
-                    <button
+                    <CommonButton
+                        variant={'text'}
+                        buttonColor={'#ffffff'}
                         key={`${y}-${x}-${emoji}`}
                         className={css({
                             cursor: 'pointer',
@@ -30,21 +33,18 @@ export const EmojiSelector = ({ onSelect }: Props) => (
                             borderRadius: '0.2rem',
                             width: '2rem',
                             height: '2rem',
+                            minWidth: '0',
                             lineHeight: '2rem',
                             fontFamily: 'inherit',
                             fontSize: '1rem',
-                            padding: 0,
-                            backgroundColor: 'transparent',
-                            '&:hover': {
-                                backgroundColor: youTubeColors.veryLightGray
-                            }
+                            padding: 0
                         })}
                         onClick={() => {
                             onSelect(emoji);
                         }}
                     >
                         {emoji}
-                    </button>
+                    </CommonButton>
                 ))}
             </div>
         ))}

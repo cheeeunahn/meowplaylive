@@ -6,6 +6,7 @@ import { StoreContext } from 'component/Store';
 import { socket } from 'common/Connection';
 import { Chat } from 'common/Chat';
 import { EmojiSelector } from 'component/video-page/EmojiSelector';
+import { SpecialChatMenu } from 'component/video-page/SpecialChatMenu';
 
 const iconStyle = css({
     cursor: 'pointer',
@@ -53,6 +54,7 @@ export const ChatSender = () => {
 
     const [content, setContent] = useState<string>('');
     const [showEmojiSelector, setShowEmojiSelector] = useState<boolean>(false);
+    const [showSpecialChatMenu, setShowSpecialChatMenu] = useState<boolean>(false);
 
     const chat: Chat = {
         profileColor: profileColor,
@@ -83,6 +85,7 @@ export const ChatSender = () => {
 
     return (
         <div className={css({
+            position: 'relative',
             boxSizing: 'border-box',
             width: '100%',
             padding: '1rem 0'
@@ -122,6 +125,11 @@ export const ChatSender = () => {
                     cropAndSetContent(content + emoji);
                 }} />
             )}
+            {showSpecialChatMenu && (
+                <SpecialChatMenu onClose={() => {
+                    setShowSpecialChatMenu(false);
+                }} />
+            )}
             <div className={css({
                 boxSizing: 'border-box',
                 display: 'flex',
@@ -148,6 +156,9 @@ export const ChatSender = () => {
                 <i
                     className={moneyStyle}
                     aria-hidden={true}
+                    onClick={() => {
+                        setShowSpecialChatMenu(true);
+                    }}
                 />
                 <span className={css({
                     color: youTubeColors.lightGray,

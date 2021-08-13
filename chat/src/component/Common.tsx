@@ -30,7 +30,7 @@ export const youTubeColors = {
     veryLightGray: 'rgba(17, 17, 17, 0.2)',
     lightGray: 'rgba(17, 17, 17, 0.4)',
     gray: 'rgba(17, 17, 17, 0.6)',
-    darkGray: 'rgb(17, 17, 17)'
+    darkGray: 'rgb(17, 17, 17, 0.8)'
 };
 
 interface CommonBoxProps {
@@ -56,6 +56,7 @@ export const CommonBox = ({ className, children }: CommonBoxProps) => {
 
 interface CommonButtonProps {
     buttonColor?: string;
+    variant?: 'text' | 'outlined' | 'contained';
     isDisabled?: boolean;
     onClick?: () => void;
     className?: string;
@@ -64,6 +65,7 @@ interface CommonButtonProps {
 
 export const CommonButton = ({
     buttonColor = commonColors.blue,
+    variant = 'contained',
     isDisabled = false,
     onClick,
     className,
@@ -86,7 +88,7 @@ export const CommonButton = ({
     return (
         <Button
             className={css([defaultStyle, className])}
-            variant={'contained'}
+            variant={variant}
             onClick={onClick}
             disabled={isDisabled}
         >
