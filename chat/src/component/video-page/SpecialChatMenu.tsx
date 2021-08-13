@@ -4,6 +4,7 @@ import { css, cx } from '@emotion/css';
 import { CommonButton, youTubeColors } from 'component/Common';
 
 interface Props {
+    onOpenDonationSelector: () => void;
     onClose: () => void;
 }
 
@@ -44,7 +45,7 @@ const messageStyle = css({
     fontSize: '0.8rem'
 });
 
-export const SpecialChatMenu = ({ onClose }: Props) => (
+export const SpecialChatMenu = ({ onOpenDonationSelector, onClose }: Props) => (
     <div className={css({
         zIndex: 100,
         backgroundColor: '#ffffff',
@@ -66,6 +67,9 @@ export const SpecialChatMenu = ({ onClose }: Props) => (
             className={buttonStyle}
             variant={'text'}
             buttonColor={'rgba(255, 255, 255, 0)'}
+            onClick={() => {
+                onOpenDonationSelector();
+            }}
         >
             <i className={starStyle} aria-hidden={true} />
             <div>

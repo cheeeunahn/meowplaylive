@@ -30,7 +30,10 @@ export const youTubeColors = {
     veryLightGray: 'rgba(17, 17, 17, 0.2)',
     lightGray: 'rgba(17, 17, 17, 0.4)',
     gray: 'rgba(17, 17, 17, 0.6)',
-    darkGray: 'rgb(17, 17, 17, 0.8)'
+    darkGray: 'rgb(17, 17, 17, 0.8)',
+    lightYellow: 'rgb(255, 202, 40)',
+    yellow: 'rgb(255, 179, 0)',
+    lightBlue: 'hsl(206.1, 79.3%, 52.7%)'
 };
 
 interface CommonBoxProps {
@@ -292,13 +295,14 @@ export const CommonCloseButton = ({ onClick }: CommonCloseButtonProps) => (
 
 interface CommonProfileProps {
     profileColor: string;
+    className?: string;
 }
 
-export const CommonProfile = ({ profileColor }: CommonProfileProps) => (
+export const CommonProfile = ({ profileColor, className }: CommonProfileProps) => (
     <i
         className={cx(
             'fa', 'fa-user',
-            css({
+            css([{
                 display: 'inline-block',
                 verticalAlign: 'top',
                 width: '1.5rem',
@@ -311,7 +315,7 @@ export const CommonProfile = ({ profileColor }: CommonProfileProps) => (
                 color: '#ffffff',
                 backgroundColor: profileColor,
                 borderRadius: '50%'
-            })
+            }, className])
         )}
         aria-hidden={true}
     />
