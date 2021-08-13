@@ -40,6 +40,7 @@ function setup() {
     //getAudioContext().suspend();
 
     tempFish = loadGif('./assets/fish_white.gif');
+    tempFish.pause();
     tempFishPosX = -1000;
     tempFishPosY = -1000;
 
