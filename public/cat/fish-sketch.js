@@ -265,12 +265,15 @@ class Fish {
         }*/
 
         this.position = createVector(this.px, this.py);
-
+        /*
         do {
             this.vx = random(-12,12);
             this.vy = random(-12,12);
         }while(abs(this.vx)<5 || abs(this.vy)<5);
-    
+        */
+
+        this.vx = random(5,12);
+        this.vy = random(5,12);
         /*
         if (this.py >= windowHeight/2-50 && this.py <= windowHeight/2+50) {
             while (abs(this.vx)>10 && abs(this.vy)>7) {
