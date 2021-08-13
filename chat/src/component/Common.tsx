@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Slider from '@material-ui/core/Slider';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 
 // Basic colors.
 export const commonColors = {
@@ -23,6 +23,14 @@ export const moreCommonColors = {
     yellow: '#ffd700',
     gray: '#c0c0c0',
     lightBrown: '#cd7f32'
+};
+
+// Based on YouTube.
+export const youTubeColors = {
+    veryLightGray: 'rgba(17, 17, 17, 0.2)',
+    lightGray: 'rgba(17, 17, 17, 0.4)',
+    gray: 'rgba(17, 17, 17, 0.6)',
+    darkGray: 'rgb(17, 17, 17)'
 };
 
 interface CommonBoxProps {
@@ -278,4 +286,31 @@ export const CommonCloseButton = ({ onClick }: CommonCloseButtonProps) => (
     >
         X
     </CommonIconButton>
+);
+
+interface CommonProfileProps {
+    profileColor: string;
+}
+
+export const CommonProfile = ({ profileColor }: CommonProfileProps) => (
+    <i
+        className={cx(
+            'fa', 'fa-user',
+            css({
+                display: 'inline-block',
+                verticalAlign: 'top',
+                width: '1.5rem',
+                height: '1.5rem',
+                // This put the text at the center of the vertical axis.
+                lineHeight: '1.5rem',
+                fontSize: '1rem',
+                textAlign: 'center',
+                marginRight: '1rem',
+                color: '#ffffff',
+                backgroundColor: profileColor,
+                borderRadius: '50%'
+            })
+        )}
+        aria-hidden={true}
+    />
 );

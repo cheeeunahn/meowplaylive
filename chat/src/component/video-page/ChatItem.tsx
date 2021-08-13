@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react';
-import { css, cx } from '@emotion/css';
+import React from 'react';
+import { css } from '@emotion/css';
 
-import { CommonBox } from 'component/Common';
+import { CommonBox, CommonProfile, youTubeColors } from 'component/Common';
 import { Chat } from 'common/Chat';
 
 interface Props {
@@ -24,23 +24,11 @@ export const ChatItem = ({ chat }: Props) => (
             boxShadow: 'none'
         }
     ])}>
-        <i
-            className={cx(
-                'fa', 'fa-user',
-                css({
-                    width: '1rem',
-                    height: '1rem',
-                    textAlign: 'center',
-                    color: chat.profileColor,
-                    border: '1px solid #000000',
-                    borderRadius: '50%'
-                })
-            )}
-            aria-hidden={true}
-        />
+        <CommonProfile profileColor={chat.profileColor} />
         <span className={css({
             marginLeft: '0.5rem',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            color: youTubeColors.gray
         })}>
             {chat.nickname}
         </span>

@@ -26,7 +26,7 @@ const labelStyle = css({
 export const LandingPage = () => {
     const { setVideoID, setNickname, setPage } = useContext(StoreContext);
 
-    const [currentVideoURL, setCurrentVideoURL] = useState<string>('');
+    const [currentVideoURL, setCurrentVideoURL] = useState<string>('https://youtu.be/Qulvg_qLt8M');
     const [currentNickname, setCurrentNickname] = useState<string>('');
 
     return (
