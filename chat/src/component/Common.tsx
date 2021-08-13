@@ -25,10 +25,12 @@ export const moreCommonColors = {
     lightBrown: '#cd7f32'
 };
 
-// Extracted from YouTube.
+// Based on YouTube.
 export const youTubeColors = {
+    veryLightGray: 'rgba(17, 17, 17, 0.2)',
     lightGray: 'rgba(17, 17, 17, 0.4)',
-    gray: 'rgba(17, 17, 17, 0.6)'
+    gray: 'rgba(17, 17, 17, 0.6)',
+    darkGray: 'rgb(17, 17, 17)'
 };
 
 interface CommonBoxProps {

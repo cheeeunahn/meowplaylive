@@ -5,8 +5,10 @@ import { commonColors, CommonInput, CommonProfile, youTubeColors } from 'compone
 import { StoreContext } from 'component/Store';
 import { socket } from 'common/Connection';
 import { Chat } from 'common/Chat';
+import { EmojiSelector } from 'component/video-page/EmojiSelector';
 
 const iconStyle = css({
+    cursor: 'pointer',
     width: '1.2rem',
     height: '1.2rem',
     // This put the text at the center of the vertical axis.
@@ -14,13 +16,43 @@ const iconStyle = css({
     fontSize: '1rem',
     textAlign: 'center',
     color: '#ffffff',
-    backgroundColor: youTubeColors.lightGray
+    backgroundColor: youTubeColors.lightGray,
+    '&:hover': {
+        backgroundColor: youTubeColors.gray
+    }
 });
+
+const smileStyle = cx('fa', 'fa-smile-o',
+    css([iconStyle, {
+        borderRadius: '50%'
+    }])
+);
+
+const keyboardStyle = cx('fa', 'fa-keyboard-o',
+    css([iconStyle, {
+        width: '1.5rem',
+        borderRadius: '0.2rem',
+        fontSize: '1.5rem',
+        color: youTubeColors.darkGray,
+        backgroundColor: 'transparent',
+        '&:hover': {
+            backgroundColor: 'transparent'
+        }
+    }])
+);
+
+const moneyStyle = cx('fa', 'fa-usd',
+    css([iconStyle, {
+        width: '1.5rem',
+        borderRadius: '0.2rem'
+    }])
+);
 
 export const ChatSender = () => {
     const { profileColor, nickname } = useContext(StoreContext);
 
     const [content, setContent] = useState<string>('');
+    const [showEmojiSelector, setShowEmojiSelector] = useState<boolean>(false);
 
     const chat: Chat = {
         profileColor: profileColor,
@@ -43,10 +75,12 @@ export const ChatSender = () => {
         <div className={css({
             boxSizing: 'border-box',
             width: '100%',
-            padding: '1rem 2rem'
+            padding: '1rem 0'
         })}>
             <div className={css({
-                marginBottom: '1rem'
+                boxSizing: 'border-box',
+                marginBottom: '1rem',
+                padding: '0 2rem'
             })}>
                 <CommonProfile profileColor={profileColor} />
                 <div className={css({
@@ -73,28 +107,36 @@ export const ChatSender = () => {
                     />
                 </div>
             </div>
+            {showEmojiSelector && (
+                <EmojiSelector onSelect={emoji => {
+                    setContent(content + emoji);
+                }} />
+            )}
             <div className={css({
+                boxSizing: 'border-box',
                 display: 'flex',
                 flexDirection: 'row',
-                width: '100%'
+                width: '100%',
+                padding: '0 2rem'
             })}>
+                <div className={css({
+                    display: 'inline-flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    width: '1.5rem',
+                    textAlign: 'center',
+                    marginRight: '1rem'
+                })}>
+                    <i
+                        className={showEmojiSelector ? keyboardStyle : smileStyle}
+                        aria-hidden={true}
+                        onClick={() => {
+                            setShowEmojiSelector(!showEmojiSelector);
+                        }}
+                    />
+                </div>
                 <i
-                    className={cx('fa', 'fa-smile-o',
-                        css([iconStyle, {
-                            borderRadius: '50%',
-                            fontSize: '1.5rem',
-                            marginRight: '1rem'
-                        }])
-                    )}
-                    aria-hidden={true}
-                />
-                <i
-                    className={cx('fa', 'fa-usd',
-                        css([iconStyle, {
-                            width: '1.5rem',
-                            borderRadius: '0.2rem'
-                        }])
-                    )}
+                    className={moneyStyle}
                     aria-hidden={true}
                 />
                 <span className={css({
