@@ -143,6 +143,9 @@ export const ChatSender = () => {
             )}
             {showDonationSelector && (
                 <DonationSelector
+                    onSend={() => {
+                        setShowDonationSelector(false);
+                    }}
                 />
             )}
             <div className={css({

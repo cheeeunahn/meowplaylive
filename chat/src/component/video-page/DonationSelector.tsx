@@ -7,7 +7,11 @@ import { Chat } from 'common/Chat';
 import { CommonBox, CommonButton, CommonInput, CommonProfile, youTubeColors } from 'component/Common';
 import { numberToFormattedString } from 'common/StringUtils';
 
-export const DonationSelector = () => {
+interface Props {
+    onSend: () => void;
+}
+
+export const DonationSelector = ({ onSend }: Props) => {
     const { profileColor, nickname } = useContext(StoreContext);
 
     const [content, setContent] = useState<string>('');
@@ -30,7 +34,7 @@ export const DonationSelector = () => {
         }
     };
 
-    const sendChat = () => {
+    const sendSuperChat = () => {
         if (content.length === 0) {
             return;
         }
@@ -56,6 +60,7 @@ export const DonationSelector = () => {
                 textAlign: 'right',
                 width: '100%',
                 fontSize: '0.8rem',
+                marginTop: '0.5rem',
                 marginBottom: '0.5rem',
                 color: youTubeColors.gray
             })}>
@@ -113,7 +118,8 @@ export const DonationSelector = () => {
                         }}
                         onKeyPress={key => {
                             if (key === 'Enter') {
-                                sendChat();
+                                sendSuperChat();
+                                onSend();
                             }
                         }}
                     />
@@ -135,6 +141,10 @@ export const DonationSelector = () => {
                     borderRadius: 0
                 })}
                 buttonColor={youTubeColors.lightBlue}
+                onClick={() => {
+                    sendSuperChat();
+                    onSend();
+                }}
             >
                 Buy and send
             </CommonButton>
