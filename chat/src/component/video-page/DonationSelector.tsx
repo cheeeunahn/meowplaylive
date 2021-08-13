@@ -98,7 +98,7 @@ export const DonationSelector = ({ onClose }: Props) => {
             marginBottom: '0.5rem'
         })}>
             <div className={css({
-                marginTop: '0.5rem'
+                marginTop: '1rem'
             })}>
                 <i
                     className={xStyle}
