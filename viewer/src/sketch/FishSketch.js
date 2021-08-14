@@ -30,6 +30,7 @@ let pawprintLocX;
 let pawprintLocY;
 let displayRipple;
 let rippleRadius;
+let drawType;
 
 export function setup(Container) {
     // load font files - Nanum Square
@@ -48,11 +49,20 @@ export function setup(Container) {
     displayRipple = false;
     rippleRadius = 0;
 
+    drawType = 'mouse';
+    fishGroup = null;
 
     const canvas = createCanvas(rectWidth, rectHeight);
     canvas.parent(Container);
 
     console.log(socket.id);
+
+    socket.on('drawType', (arg) => {
+        drawType = arg;
+        console.log("I am:" + drawType);
+        // a group of cloned fish from cat UI
+        fishGroup = [new CloneFish(drawType), new CloneFish(drawType), new CloneFish(drawType), new CloneFish(drawType+"default")];
+    })
 
     // when success event happens
     socket.on('cat-tap-success', () => {
@@ -67,15 +77,17 @@ export function setup(Container) {
     socket.on('move-fish-group', (arg) => {
         //console.log("this is the id: " + this.socket.id);
         //console.log(arg.fish_positions[0].id);
-        for (var i = 0; i < fishGroup.length; i++) {
-            fishGroup[i].updatePosition(arg.fish_positions[i].posX, arg.fish_positions[i].posY, arg.fish_positions[i].angle, rectWidth, rectHeight);
-            fishGroup[i].updateUsername(arg.fish_positions[i].username);
-            fishGroup[i].updateColor(arg.fish_positions[i].r, arg.fish_positions[i].g, arg.fish_positions[i].b);
-            if(arg.fish_positions[i].id.localeCompare(socket.id) == 0) {
-                fishGroup[i].highlightState();
-            }
-            else {
-                fishGroup[i].normalState();
+        if (fishGroup !== null) {
+            for (var i = 0; i < fishGroup.length; i++) {
+                fishGroup[i].updatePosition(arg.fish_positions[i].posX, arg.fish_positions[i].posY, arg.fish_positions[i].angle, rectWidth, rectHeight);
+                fishGroup[i].updateUsername(arg.fish_positions[i].username);
+                fishGroup[i].updateColor(arg.fish_positions[i].r, arg.fish_positions[i].g, arg.fish_positions[i].b);
+                if(arg.fish_positions[i].id.localeCompare(socket.id) == 0) {
+                    fishGroup[i].highlightState();
+                }
+                else {
+                    fishGroup[i].normalState();
+                }
             }
         }
 
@@ -85,8 +97,7 @@ export function setup(Container) {
     ///////////////////////////////////////////
     msg = "";
 
-    // a group of cloned fish from cat UI
-    fishGroup = [new CloneFish(), new CloneFish(), new CloneFish(), new CloneFish("default")];
+    
 }
 
 export function draw() {
@@ -138,8 +149,10 @@ function drawCatUI() {
     fill(222,243,246); // background color of canvas
     rect(rectPosX, rectPosY, rectWidth, rectHeight);
 
-    for (var i = 0; i < fishGroup.length; i++) {
-        fishGroup[i].draw();
+    if (fishGroup !== null){
+        for (var i = 0; i < fishGroup.length; i++) {
+            fishGroup[i].draw();
+        }
     }
 
     push();
@@ -172,14 +185,22 @@ function resetToDefaultScreen() {
 class CloneFish {
     constructor(arg) {
         this.fishSize = 0;
-
-        if (arg != null){ // default fish swimming around
+        this.fishType = arg;
+        if (arg.localeCompare("fishdefault")==0){ // default fish swimming around
             this.fishSize = 100;
             this.fish_gif = loadImage('../cat/assets/fish_blue.gif');
         }
-        else {
+        else if (arg.localeCompare("mousedefault")==0){ // default fish swimming around
+            this.fishSize = 100;
+            this.fish_gif = loadImage('../cat/assets/mouse.gif');
+        }
+        else if (arg.localeCompare("fish")==0){
             this.fishSize = 180;
             this.fish_gif = loadImage('../cat/assets/realfish.gif');
+        }
+        else if (arg.localeCompare("mouse")==0){
+            this.fishSize = 180;
+            this.fish_gif = loadImage('../cat/assets/mouse.gif');
         }
         
         this.fish_gif.play();
@@ -226,7 +247,10 @@ class CloneFish {
         push();
         
         translate(this.px, this.py);
-        rotate(this.angle);
+        if (this.fishType.localeCompare("mouse")==0||this.fishType.localeCompare("mousedefault")==0)
+            rotate(this.angle+PI);
+        else
+            rotate(this.angle);
 
         if (this.username != "")
         {

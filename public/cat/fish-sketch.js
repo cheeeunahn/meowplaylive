@@ -78,6 +78,9 @@ function setup() {
 
     // socket connection
     socket = io();
+    socket.on('connect', () => {
+        socket.emit('drawType', "fish");
+     });
     // when viewer button is clicked, draw the fish
     socket.on('name-sent', (name) => {
         username = name;
@@ -150,7 +153,7 @@ function draw() {
         {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), r: fishGroup[1].getRedColor(), g: fishGroup[1].getGreenColor(), b: fishGroup[1].getBlueColor(), id: fishGroup[1].getId(), size: fishGroup[1].getFishSize()},
         {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), r: fishGroup[2].getRedColor(), g: fishGroup[2].getGreenColor(), b: fishGroup[2].getBlueColor(), id: fishGroup[2].getId(), size: fishGroup[2].getFishSize()},
         {posX: defaultFish.getPositionX()/windowWidth, posY: defaultFish.getPositionY()/windowHeight, angle: defaultFish.getAngle(), username: defaultFish.getUsername(), r: defaultFish.getRedColor(), g: defaultFish.getGreenColor(), b: defaultFish.getBlueColor(), id: defaultFish.getId(), size: fishGroup[0].getFishSize()}],
-        touch_positions:{posX: touchPosX/windowWidth, posY: touchPosY/windowHeight}};
+        touch_positions:{posX: touchPosX/windowWidth, posY: touchPosY/windowHeight}, drawType: {type: 'fish'}};
     socket.emit('move-fish-group', data);
 
     if (mouseIsPressed) {

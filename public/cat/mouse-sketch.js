@@ -1,183 +1,594 @@
-let mouse_gif;
-let position;
-let velocity;
-let bgSound;
-let squeakSound;
-let hitSound;
-let voiceSound;
-let mouseColor;
-let hit;
-let poly;
-let angle;
-let displayRipple;
-let rippleRadius;
+/**
+ * Sketch for drawing mouse on cat UI
+ */
 
-function preload() {
-    //load sound and image files
-    soundFormats('mp3');
-    bgSound = loadSound('./assets/bgsound.mp3');
-    squeakSound = loadSound('./assets/squeak.mp3');
-    hitSound = loadSound('./assets/squeak2.mp3');
-    mouse_gif = loadImage('./assets/mouse.gif');
-    voiceSound = loadSound('./uploads/test-recording.m4a');
+ let waterSound;
+ let bubbleSound;
+ let touchSound;
+ let splashSound;
+ 
+ let fishGroup;
+ let tempFish; // for making the cat feel as if it caught the fish
+ let tempFishPosX;
+ let tempFishPosY;
+ let tempFishAngle;
+ let defaultFish; // default fish just swimming around
+ 
+ let displayRipple;
+ let rippleRadius;
+ let username;
+ 
+ let titleNickname; // for displaying winner nickname
+ 
+ let touchPosX;
+ let touchPosY;
+ 
+ function preload() {
+     // load the necesfsary sound files
+     soundFormats('mp3');
+     waterSound = loadSound('./assets/bgsound.mp3');
+     // a test voice recording
+     //let voiceSound = loadSound('./uploads/test-recording.m4a');
+     touchSound = loadSound('./assets/tap.mp3');
+     bubbleSound = loadSound('./assets/squeak.mp3');
+     splashSound = loadSound('./assets/squeak2.mp3');
+ 
+     //set angle mode
+     angleMode(RADIANS);
+ }
+ 
+ function setup() {
+     // this was just for testing purposes
+     // simulating iOS mobile environment
+     //getAudioContext().suspend();
+ 
+     tempFish = loadImage('./assets/mouse.gif');
+     tempFish.pause();
+     tempFishPosX = -1000;
+     tempFishPosY = -1000;
+ 
+     touchPosX = -1000;
+     touchPosY = -1000;
+     
+     defaultFish = new Fish("default");
+     defaultFish.setToNewPosition();
+ 
+     // load font files - Nanum Square
+     nanumFontRegular = loadFont('./assets/NanumSquareR.ttf');
+     nanumFontBold = loadFont('./assets/NanumSquareEB.ttf');
+ 
+     // create canvas
+     createCanvas (windowWidth,windowHeight);
+     // add screen pointer
+     addScreenPositionFunction();
+ 
+     //play background sound
+     waterSound.setVolume(0.3);
+     waterSound.loop();
+ 
+     rippleRadius = 1;
+     displayRipple = false;
+ 
+     // a group of fish, the maximum allowed size is 3
+     fishGroup = [new Fish(), new Fish(), new Fish()];
+ 
+     titleNickname = "";
+ 
+     // socket connection
+     socket = io();
+     socket.on('connect', () => {
+        socket.emit('drawType', "mouse");
+     });
+     // when viewer button is clicked, draw the fish
+     socket.on('name-sent', (name) => {
+         username = name;
+         console.log(name);
+       });
+     socket.on('button-clicked', drawFish);
 
-    angleMode(RADIANS);
-}
-
-function setup() {
-    createCanvas (windowWidth,windowHeight);
-    addScreenPositionFunction();
-
-    //position = createVector(random(0,windowWidth/2), random(0,windowHeight/2));
-    //velocity = createVector (12, 12);
-
-    rippleRadius = 1;
-
-    poly = [];
-    poly[0] = createVector(0,0);
-    poly[1] = createVector(0,0);
-    poly[2] = createVector(0,0);
-    poly[3] = createVector(0,0);
-
-    bgSound.setVolume(0.1);
-    bgSound.loop();
-
-    hit = false;
-    displayRipple = false;
-    mouse_gif.play();
-
-    // socket connection
-    socket = io();
-    socket.on('button-clicked', drawMouse);
-}
-
-function draw() {
-    background(250,235,215);
-
-    /*
-    if (frameCount%250 == 0){
-        squeakSound.setVolume(0.2);
-        squeakSound.play();
-    }*/
-
-
-
-    /*
-    if ((position.x > width + 200) || (position.x < -100)) {
-        velocity.x = velocity.x * -1;
-    }
-    if ((position.y > height + 200) || (position.y < -100)) {
-        velocity.y = velocity.y * -1;
-    } */
-
-    if (velocity != null) {
-    
-        position.add(velocity);
-
-        push();
-        translate (position.x, position.y);
-
-        if (velocity.y > 0) {
-            if (velocity.x < 0)
-                angle = atan(velocity.y/velocity.x)-(PI);
-            else
-                angle = (-3*PI/2)-atan(-velocity.y/velocity.x)-PI/2;    
-        }
-        else {
-            if (velocity.x < 0)
-                angle = (-3*PI/2)-atan(-velocity.y/velocity.x)+PI/2;
-            else
-                angle = (3*PI/2)-atan(-velocity.y/velocity.x)+PI/2;
-        }
-
-        rotate(angle);
-        image(mouse_gif, 0,0, width/5,width/5);
-        textSize(width/50);
-        textAlign(CENTER, CENTER);
-        fill(0);
-        noStroke();
-        text('WonderLab', mouse_gif.width/9, mouse_gif.height/9);
-        
-        let v1 = createVector(0,0);
-        let v2 = createVector(mouse_gif.width, 0);
-        let v3 = createVector(mouse_gif.width, mouse_gif.height);
-        let v4 = createVector(0,mouse_gif.height);
-
-        poly[0] = screenPosition(v1);
-        poly[1] = screenPosition(v2);
-        poly[2] = screenPosition(v3);
-        poly[3] = screenPosition(v4);
-
-        pop();
-    }
-
-    if (mouseIsPressed){
-        strokeWeight(6);
-        stroke(255,255,0);
-    }
-    else{
-        noStroke();
-    }
-    noFill();
-    circle(pmouseX, pmouseY, height/10);
-
-    if (displayRipple) {
-        noFill();
-        strokeWeight(8);
-        stroke(128,96,77);
-        circle(pmouseX, pmouseY, rippleRadius);
-        rippleRadius +=100;
-
-        if (rippleRadius > width){
-            rippleRadius = 1;
-            displayRipple = false;
-        }
-    }
-}    
-
-function drawMouse() {
-    squeakSound.setVolume(0.1);
-    squeakSound.play();
-    let px = random(100,windowWidth);
-    let py = random(100,windowHeight);
-    position = createVector(px, py);
-    let vx = random(-15,15);
-    let vy = random(-15,15);
-
-    while (vx == vy || abs(vx) < 6) {
-        vx = random(-15,15);
-        vy = random(-15,15);
-    }
-
-    if (vx > 0 && px > windowWidth/2)
-        vx = -vx;
-    if (vy > 0 && py > windowHeight/2)
-        vy = -vy;
-
-    velocity = createVector (vx, vy);
-}
-
-function touchEnded () {
-    //console.log(poly[0]);
-    hit = collidePointPoly(pmouseX, pmouseY, poly);
-    //console.log(hit);
-    if (hit)
-    {
-        let px = -500;
-        let py = -500; // put it somewhere invisible
-        position = createVector(px, py);
-        velocity = createVector(0,0);
-        hitSound.setVolume(0.5);
-        hitSound.play();
-        voiceSound.setVolume(2.0);
-        if (voiceSound.isPlaying())
-            voiceSound.stop();    
-        voiceSound.play();
-        displayRipple = true;
-        socket.emit('cat-tap-success');
-    } 
-}
-
-function mousePressed() {
-    userStartAudio();
-  }
+ }
+ 
+ function draw() {
+     background(247, 240, 230); // background color of canvas
+     let showDefaultFish = false;
+     textFont(nanumFontBold);
+     textSize(width/12);
+     textAlign(CENTER, CENTER);
+     fill(0);
+     noStroke();
+     text(titleNickname, width/2, height/10);
+ 
+     if (fishGroup !== null || fishGroup.length != 0) {
+         for (var i = 0; i < fishGroup.length; i++){
+             fishGroup[i].show();
+             if (!fishGroup[i].isShowing()){
+                 //if isShowing() value change occurs from true to false, trigger emit event
+                 //fish x position is set to -1000 when it is hit
+                 if (fishGroup[i].getPrevState()==true && fishGroup[i].getPositionX()!=-5000)
+                     socket.emit('cat-tap-fail', fishGroup[i].getId());
+             }
+             fishGroup[i].setPrevState(fishGroup[i].isShowing()); // save previous isShowing() value
+         }
+     }
+ 
+     for (var i = 0; i < fishGroup.length; i++){
+         if(fishGroup[i].isShowing()){
+             break;
+         }
+         else
+             showDefaultFish = true;
+     }
+ 
+     if (showDefaultFish) {
+         defaultFish.show();
+         if(!defaultFish.isShowing()) {
+             defaultFish.setToNewPosition();
+             bubbleSound.setVolume(0.1);
+             if (bubbleSound.isPlaying())
+                 bubbleSound.stop();
+             bubbleSound.play();
+         }
+     }
+     else{
+         defaultFish.hide();
+     }
+ 
+     if (tempFish != null && tempFishPosX >= 0) {
+         push();
+         translate(mouseX, mouseY)
+         rotate(tempFishAngle+PI);
+         imageMode(CENTER);
+         image(tempFish, 0, 0, windowWidth/2.5, windowWidth/2.5);
+         pop();
+     }
+ 
+     // tell viewer UI where the fish is positioned at what angle
+     // also send fish nickname information
+     let data = { fish_positions: [
+         {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername(), r: fishGroup[0].getRedColor(), g: fishGroup[0].getGreenColor(), b: fishGroup[0].getBlueColor(), id: fishGroup[0].getId(), size: fishGroup[0].getFishSize()},
+         {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), r: fishGroup[1].getRedColor(), g: fishGroup[1].getGreenColor(), b: fishGroup[1].getBlueColor(), id: fishGroup[1].getId(), size: fishGroup[1].getFishSize()},
+         {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), r: fishGroup[2].getRedColor(), g: fishGroup[2].getGreenColor(), b: fishGroup[2].getBlueColor(), id: fishGroup[2].getId(), size: fishGroup[2].getFishSize()},
+         {posX: defaultFish.getPositionX()/windowWidth, posY: defaultFish.getPositionY()/windowHeight, angle: defaultFish.getAngle(), username: defaultFish.getUsername(), r: defaultFish.getRedColor(), g: defaultFish.getGreenColor(), b: defaultFish.getBlueColor(), id: defaultFish.getId(), size: fishGroup[0].getFishSize()}],
+         touch_positions:{posX: touchPosX/windowWidth, posY: touchPosY/windowHeight}, drawType: {type: 'mouse'}};
+     socket.emit('move-fish-group', data);
+ 
+     if (mouseIsPressed) {
+         strokeWeight(6);
+         stroke(255);
+     }
+     else {
+         noStroke();
+     }
+     noFill()
+     circle(pmouseX, pmouseY, height/10);
+ 
+ 
+     if (displayRipple) {
+         noFill();
+         strokeWeight(10);
+         stroke(255);
+         circle(pmouseX, pmouseY, rippleRadius);
+         rippleRadius +=100;
+ 
+         if (rippleRadius > width){
+             rippleRadius = 0;
+             displayRipple = false;
+         }
+     }
+ }
+ 
+ function drawFish (data) {
+     for (var i = 0; i < fishGroup.length; i++){
+         if ((fishGroup[i].getPositionX() > windowWidth || fishGroup[i].getPositionX() < 0)&&
+             (fishGroup[i].getPositionY() > windowHeight || fishGroup[i].getPositionY() < 0)) {
+             fishGroup[i].setUsername(username);
+             fishGroup[i].setId(data.socketid); // the socket id of the fish
+             fishGroup[i].setVoiceFileName(data.audioFileName); // audio recorded by the user
+             fishGroup[i].setDonation(data.donation);
+             fishGroup[i].setToNewPosition();
+             if (data.donation > 10000) {
+                 bubbleSound.setVolume(1);
+             }
+             else {
+                 bubbleSound.setVolume(0.4);
+             }
+             if (bubbleSound.isPlaying())
+                 bubbleSound.stop();
+             bubbleSound.play();
+             return;
+         }
+     }
+     socket.emit('number-exceeded', data);
+     console.log(data);
+ }
+ 
+ function touchEnded () {
+     touchPosX = mouseX;
+     touchPosY = mouseY;
+ 
+     setTimeout(() => {
+         touchPosX = -1000;
+         touchPosY = -1000;
+     }, 300);
+ 
+     if(defaultFish.checkHit()){
+         tempFishPosX = mouseX;
+         tempFishPosY = mouseY;
+         tempFishAngle = defaultFish.getAngle();
+ 
+         setTimeout(() => {
+             tempFishPosX = -1000;
+             tempFishPosY = -1000;
+         }, 100);
+     }
+ 
+     for (var i = 0; i < fishGroup.length; i++){
+         if (fishGroup[i].checkHit()) {
+             splashSound.setVolume(1);
+             if (splashSound.isPlaying())
+                 splashSound.stop();
+             splashSound.play();
+             //this.voiceSound.setVolume(2.0);
+             //if (this.voiceSound.isPlaying())
+             //    this.voiceSound.stop();    
+             //this.voiceSound.play();
+             fishGroup[i].playVoice(); // Play the voice recorded by the user.
+             titleNickname = "Thank you," + fishGroup[i].username;
+             
+             tempFishPosX = mouseX;
+             tempFishPosY = mouseY;
+             tempFishAngle = fishGroup[i].getAngle();
+ 
+             setTimeout(() => {
+                 tempFishPosX = -1000;
+                 tempFishPosY = -1000;
+             }, 1500);
+ 
+             setTimeout(() => {
+                 titleNickname = "";
+             }, 5000);
+         }
+         else {
+             touchSound.setVolume(0.1);
+             if (splashSound.isPlaying()||touchSound.isPlaying())
+                 touchSound.stop();
+             if (!splashSound.isPlaying())
+                 touchSound.play();
+         }
+     }
+ }
+ 
+ /**
+  * mousePressed() is a must for iOS and Android
+  * optional for Desktop Chrome, but do not delete
+  */
+ function mousePressed() {
+     userStartAudio();
+ }
+ 
+ // A class for drawing fish
+ class Fish {
+     constructor(arg) {
+         if (arg != null ) {
+             this.fish_gif = loadImage('./assets/mouse.gif');
+         }
+         else {
+             this.fish_gif = loadImage('./assets/mouse.gif')
+         }
+         //this.fish_gif = loadImage('./assets/fish_blue.gif');
+         /*if(this.fish_gif.loaded())
+             this.fish_gif.play();*/
+ 
+         // fish colors
+         this.colorPalette = [color(81, 252, 215), color(81, 243, 252), color(64, 204, 255),
+             color(71, 149, 252), color(64, 134, 255), color(64, 74, 255), color(102, 64, 255)];
+ 
+         this.px = -1000;
+         this.py = -1000; // put it somewhere invisible
+         this.position = createVector(this.px, this.py);
+         this.velocity = createVector(0,0);
+ 
+         this.fishSize = windowWidth/5.2;
+ 
+         this.angle = 0;
+ 
+         this.hit = false;
+ 
+         this.poly = [];
+         this.poly[0] = createVector(0,0);
+         this.poly[1] = createVector(0,0);
+         this.poly[2] = createVector(0,0);
+         this.poly[3] = createVector(0,0);
+ 
+         this.username="";
+         this.id="";
+ 
+         this.showPrevState = false;
+ 
+         // default donation amount from user
+         this.donation = -1;
+         
+         this.fishColor = color(255);
+ 
+         // voice file name recorded by user.
+         this.voiceFileName = null;
+     }
+ 
+     setToNewPosition() {
+ 
+         if (this.donation >= 10000) {
+             this.locX_index = Math.floor(Math.random() * 2);
+             this.locY_index = Math.floor(Math.random() * 2);
+             this.location_x = [10, windowWidth-10];
+             this.location_y = [10, windowHeight-10];
+             this.px = this.location_x[this.locX_index];
+             this.py = this.location_y[this.locY_index];
+         }
+ 
+         else {
+             this.px = random(10,windowWidth-10);
+             this.py = random(10, windowHeight-10);
+         }
+ 
+         this.position = createVector(this.px, this.py);
+ 
+ 
+         if (this.donation >= 10000){
+             this.vx = random(7,12);
+             this.vy = random(7,12);
+         }
+         else if (this.donation > 0) {
+             do{
+                 this.vx = random (-12, 12);
+                 this.vy = random(-12, 12);
+             }while (abs(this.vx) < 7);
+         }
+         else {
+             do{
+                 this.vx = random (-8, 8);
+                 this.vy = random(-8, 8);
+             }while (abs(this.vx) < 5);
+         }
+ 
+         if ((this.vx > 0 && this.px > windowWidth/2)||(this.vx < 0 && this.px < windowWidth/2)){
+             this.vx = -this.vx;
+         }
+         
+         if ((this.vy > 0 && this.py > windowHeight/2)||(this.vy < 0 && this.py < windowHeight/2))
+             this.vy = -this.vy;
+     
+         this.velocity = createVector (this.vx, this.vy);
+     }
+ 
+     hide() {
+         this.px = -5000;
+         this.py = -5000; // put it somewhere invisible
+         this.velocity = createVector(0,0);
+         this.position = createVector(this.px, this.py);
+     }
+ 
+     show() {
+         if (this.velocity != null) {
+ 
+             // if it is a default fish
+             if (this.donation < 0){
+                 if (this.position.x > windowWidth/2){
+                     if (random(-1,1) > 0)
+                         this.velocity.add(createVector(-3,-1));
+                     else
+                         this.velocity.add(createVector(1,3));
+                 }
+                 else if (this.position.x > windowWidth/3){
+                     if (random(-1,1) > 0)
+                         this.velocity.add(createVector(-1,2));
+                     else
+                         this.velocity.add(createVector(2,0));
+                 }
+             }
+ 
+             this.position.add(this.velocity);
+ 
+             push();
+ 
+             translate (this.position.x, this.position.y);
+ 
+             if (this.velocity.y > 0) {
+                 if (this.velocity.x > 0)
+                     this.angle = atan(this.velocity.y/this.velocity.x)-(PI);
+                 else
+                     this.angle = (-3*PI/2)-atan(-this.velocity.y/this.velocity.x)-PI/2;    
+             }
+             else {
+                 if (this.velocity.x > 0)
+                     this.angle = (-3*PI/2)-atan(-this.velocity.y/this.velocity.x)+PI/2;
+                 else
+                     this.angle = (3*PI/2)-atan(-this.velocity.y/this.velocity.x)+PI/2;
+             }
+             rotate(this.angle+PI);
+ 
+             //blendMode(MULTIPLY);
+             switch (this.donation){
+                 case 1000:
+                     this.fishColor = this.colorPalette[0];
+                     this.fishSize = width/5;
+                     //tint(0,100);
+                     break;
+                 case 2000:
+                     this.fishColor = this.colorPalette[1];
+                     this.fishSize = width/4.5;
+                     //tint(0,120);
+                     break;
+                 case 5000:
+                     this.fishColor = this.colorPalette[2];
+                     this.fishSize = width/4;
+                     //tint(0,130);
+                     break;
+                 case 10000:
+                     this.fishColor = this.colorPalette[3];
+                     this.fishSize = width/3.5;
+                     //tint(0,140);
+                     break;
+                 case 20000:
+                     this.fishColor = this.colorPalette[4];
+                     this.fishSize = width/3;
+                     //tint(0,150);
+                     break;
+                 case 50000:
+                     this.fishColor = this.colorPalette[5];
+                     this.fishSize = width/2.5;
+                     //tint(0,160);
+                     break;
+                 case 100000:
+                     this.fishColor = this.colorPalette[6];
+                     this.fishSize = width/2;
+                     //tint(0,170);
+                     break;
+                 case 200000:
+                     this.fishColor = this.colorPalette[6];
+                     this.fishSize = width/2;
+                     //tint(0,180);
+                     break;
+                 case 300000:
+                     this.fishColor = this.colorPalette[6];
+                     this.fishSize = width/2;
+                     //tint(0,190);
+                     break;
+                 case 400000:
+                     this.fishColor = this.colorPalette[6];
+                     this.fishSize = width/2;
+                    // tint(0,200);
+                     break;
+                 case 500000:
+                     this.fishColor = this.colorPalette[6];
+                     this.fishSize = width/2;
+                     //tint(0,255);
+                     break;
+                 default:
+                     break;
+                     //console.log("error retrieving donation amount from viewer");
+             }
+ 
+             if (this.donation > 0){
+                 blendMode(MULTIPLY);
+             }
+             else {
+                 blendMode(MULTIPLY);
+             }
+ 
+             if (this.fishSize != null){
+                 tint(this.fishColor,120);
+                 imageMode(CENTER);
+                 image(this.fish_gif, 0, 0, this.fishSize,this.fishSize);
+                 
+                 textSize(width/25);
+                 textAlign(CENTER, CENTER);
+                 fill(0);
+                 noStroke();
+                 text(this.username, this.fish_gif.width/9, this.fish_gif.height/9);
+             }
+ 
+             
+             // setting collider boundaries
+             this.v1 = createVector(-this.fish_gif.width/2,-this.fish_gif.height/2);
+             this.v2 = createVector(this.fish_gif.width/2, -this.fish_gif.height/2);
+             this.v3 = createVector(this.fish_gif.width/2, this.fish_gif.height/2);
+             this.v4 = createVector(-this.fish_gif.width/2,this.fish_gif.height/2);
+             this.poly[0] = screenPosition(this.v1);
+             this.poly[1] = screenPosition(this.v2);
+             this.poly[2] = screenPosition(this.v3);
+             this.poly[3] = screenPosition(this.v4);
+ 
+             pop();
+         }
+     }
+ 
+     checkHit() {
+         this.hit = collidePointPoly(pmouseX, pmouseY, this.poly);
+         //console.log(poly[0]);
+         console.log(this.hit);
+         if (this.hit) {
+             displayRipple = true;
+             if (this.donation > 0)
+                 socket.emit('cat-tap-success', this.id); // send the socket id of this fish object
+             this.px = -5000;
+             this.py = -5000; // put it somewhere invisible
+             this.velocity = createVector(0,0);
+             this.position = createVector(this.px, this.py);
+         } 
+         return this.hit;
+     }
+ 
+     setUsername(username) {
+         this.username = username;
+     }
+ 
+     setId(id) {
+         this.id = id;
+     }
+ 
+     setDonation(donation) {
+         this.donation = donation;
+     }
+ 
+     setPrevState (showPrevState) {
+         this.showPrevState = showPrevState;
+     }
+ 
+     getPrevState () {
+         return this.showPrevState;
+     }
+ 
+     getRedColor () {
+         return red(this.fishColor);
+     }
+ 
+     getGreenColor () {
+         return green(this.fishColor);
+     }
+ 
+     getBlueColor () {
+         return blue(this.fishColor);
+     }
+ 
+     getFishSize () {
+         return this.fishSize;
+     }
+ 
+     isShowing() {
+         // return true when showing in screen
+         return !((this.position.x < 0 || this.position.x > windowWidth)||(this.position.y < 0 || this.position.y > windowHeight));
+     }
+ 
+     getPositionX() {
+         return this.position.x;
+     }
+ 
+     getPositionY() {
+         return this.position.y;
+     }
+ 
+     getAngle() {
+         return this.angle;
+     }
+ 
+     getUsername() {
+         return this.username;
+     }
+ 
+     getId() {
+         return this.id;
+     }
+ 
+     setVoiceFileName(audioFileName) {
+         this.voiceFileName = audioFileName;
+     }
+ 
+     playVoice() {
+         console.log(`Playing ${this.voiceFileName}...`);
+ 
+         const voiceSound = loadSound(`./uploads/${this.voiceFileName}`, () => {
+             voiceSound.setVolume(1.5);
+             voiceSound.play();
+         });
+     }
+ }

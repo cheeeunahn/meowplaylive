@@ -78,6 +78,11 @@ function newConnection(socket) {
         console.log('button clicked!');
     });
 
+    socket.on('drawType', (arg) => {
+        socket.broadcast.emit('drawType', arg);
+        console.log("draw type: " + arg);
+    })
+
     socket.on('cat-tap-success', (socketid) => {
         socket.broadcast.to(socketid).emit('cat-tap-success');
         console.log('cat tap success!');
