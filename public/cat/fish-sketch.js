@@ -4,12 +4,10 @@
  * p5.js screen X screen Y functions from https://github.com/bohnacker/p5js-screenPosition
  */
 
-
 let waterSound;
 let bubbleSound;
 let touchSound;
 let splashSound;
-//let voiceSound;
 
 let fishGroup;
 let tempFish; // for making the cat feel as if it caught the fish
@@ -22,15 +20,14 @@ let displayRipple;
 let rippleRadius;
 let username;
 
-let titleNickname;
-
+let titleNickname; // for displaying winner nickname
 
 function preload() {
     // load the necessary sound files
     soundFormats('mp3');
     waterSound = loadSound('./assets/waterstream.mp3');
     // a test voice recording
-    //voiceSound = loadSound('./uploads/test-recording.m4a');
+    //let voiceSound = loadSound('./uploads/test-recording.m4a');
     touchSound = loadSound('./assets/splash.mp3');
     bubbleSound = loadSound('./assets/bubble.mp3');
     splashSound = loadSound('./assets/touchsplash.mp3');
@@ -44,12 +41,12 @@ function setup() {
     // simulating iOS mobile environment
     //getAudioContext().suspend();
 
-    tempFish = loadGif('./assets/fish_white.gif');
+    tempFish = loadGif('./assets/realfish.gif');
     tempFish.pause();
     tempFishPosX = -1000;
     tempFishPosY = -1000;
     
-    defaultFish = new Fish();
+    defaultFish = new Fish("default");
     defaultFish.setToNewPosition();
 
     // load font files - Nanum Square
@@ -71,8 +68,6 @@ function setup() {
     // a group of fish, the maximum allowed size is 3
     fishGroup = [new Fish(), new Fish(), new Fish()];
 
-    // temporary variable for displaying username
-    // chosen by the cat
     titleNickname = "";
 
     // socket connection
@@ -96,12 +91,13 @@ function draw() {
             bubbleSound.stop();
         bubbleSound.play();
     }
+
     textFont(nanumFontBold);
     textSize(width/12);
     textAlign(CENTER, CENTER);
     fill(0);
     noStroke();
-    text(titleNickname, width/2, height/9);
+    text(titleNickname, width/2, height/10);
 
     if (fishGroup !== null || fishGroup.length != 0) {
         for (var i = 0; i < fishGroup.length; i++){
@@ -121,8 +117,7 @@ function draw() {
         translate(mouseX, mouseY)
         rotate(tempFishAngle);
         imageMode(CENTER);
-        tint(color(0,0,255),120);
-        image(tempFish, 0, 0, windowWidth/3, windowWidth/3);
+        image(tempFish, 0, 0, windowWidth/2.8, windowWidth/2.8);
         pop();
     }
 
@@ -185,6 +180,17 @@ function drawFish (data) {
 }
 
 function touchEnded () {
+    if(defaultFish.checkHit()){
+        tempFishPosX = mouseX;
+        tempFishPosY = mouseY;
+        tempFishAngle = defaultFish.getAngle();
+
+        setTimeout(() => {
+            tempFishPosX = -1000;
+            tempFishPosY = -1000;
+        }, 100);
+    }
+
     for (var i = 0; i < fishGroup.length; i++){
         if (fishGroup[i].checkHit()) {
             splashSound.setVolume(1);
@@ -231,15 +237,20 @@ function mousePressed() {
 
 // A class for drawing fish
 class Fish {
-    constructor() {
-        this.fish_gif = loadGif('./assets/fish_white.gif')
+    constructor(arg) {
+        if (arg != null ) {
+            this.fish_gif = loadGif('./assets/fish_blue.gif');
+        }
+        else {
+            this.fish_gif = loadGif('./assets/realfish.gif')
+        }
         //this.fish_gif = loadImage('./assets/fish_blue.gif');
         /*if(this.fish_gif.loaded())
             this.fish_gif.play();*/
 
         // fish colors
-        this.colorPalette = [color(31, 135, 74), color(16, 99, 71), color(10, 99, 84),
-            color(1, 96, 102), color(27, 79, 95), color(22, 77, 119), color(19, 59, 107), color(17, 55, 98),
+        this.colorPalette = [color(81, 252, 215), color(81, 243, 252), color(64, 204, 255),
+            color(71, 149, 252), color(64, 134, 255), color(64, 74, 255), color(102, 64, 255), color(17, 55, 98),
             color(12, 43, 85), color(17, 31, 84), color(23, 6, 65)];
 
         this.px = -1000;
@@ -247,7 +258,7 @@ class Fish {
         this.position = createVector(this.px, this.py);
         this.velocity = createVector(0,0);
 
-        this.fishSize = windowWidth/5;
+        this.fishSize = windowWidth/4;
 
         this.angle = 0;
 
@@ -266,7 +277,8 @@ class Fish {
 
         // default donation amount from user
         this.donation = -1;
-        this.fishColor = color(0,0,0);
+        
+        this.fishColor = color(255);
 
         // voice file name recorded by user.
         this.voiceFileName = null;
@@ -281,7 +293,6 @@ class Fish {
             this.location_y = [10, windowHeight-10];
             this.px = this.location_x[this.locX_index];
             this.py = this.location_y[this.locY_index];
-    
         }
 
         else {
@@ -290,6 +301,7 @@ class Fish {
         }
 
         this.position = createVector(this.px, this.py);
+
 
         if (this.donation >= 10000){
             this.vx = random(7,15);
@@ -303,8 +315,8 @@ class Fish {
         }
         else {
             do{
-                this.vx = random (-10, 10);
-                this.vy = random(-10, 10);
+                this.vx = random (-8, 8);
+                this.vy = random(-8, 8);
             }while (abs(this.vx) < 5);
         }
 
@@ -321,12 +333,19 @@ class Fish {
     show() {
         if (this.velocity != null) {
 
+            // if it is a default fish
             if (this.donation < 0){
                 if (this.position.x > windowWidth/2){
-                    if (random(0,2) > 0)
-                        this.velocity.add(createVector(3,3));
+                    if (random(-1,1) > 0)
+                        this.velocity.add(createVector(-3,-1));
                     else
-                        this.velocity.add(createVector(-3,3));
+                        this.velocity.add(createVector(1,3));
+                }
+                else if (this.position.x > windowWidth/3){
+                    if (random(-1,1) > 0)
+                        this.velocity.add(createVector(-1,2));
+                    else
+                        this.velocity.add(createVector(2,0));
                 }
             }
 
@@ -350,70 +369,77 @@ class Fish {
             }
             rotate(this.angle);
 
-            blendMode(MULTIPLY);
+            //blendMode(MULTIPLY);
             switch (this.donation){
                 case 1000:
                     this.fishColor = this.colorPalette[0];
                     this.fishSize = width/5;
-                    tint(0,100);
+                    //tint(0,100);
                     break;
                 case 2000:
                     this.fishColor = this.colorPalette[1];
                     this.fishSize = width/4.5;
-                    tint(0,120);
+                    //tint(0,120);
                     break;
                 case 5000:
                     this.fishColor = this.colorPalette[2];
-                    this.fishSize = width/4.5;
-                    tint(0,130);
+                    this.fishSize = width/4;
+                    //tint(0,130);
                     break;
                 case 10000:
                     this.fishColor = this.colorPalette[3];
-                    this.fishSize = width/4;
-                    tint(0,140);
+                    this.fishSize = width/3.5;
+                    //tint(0,140);
                     break;
                 case 20000:
                     this.fishColor = this.colorPalette[4];
                     this.fishSize = width/3;
-                    tint(0,150);
+                    //tint(0,150);
                     break;
                 case 50000:
                     this.fishColor = this.colorPalette[5];
-                    this.fishSize = width/3;
-                    tint(0,160);
+                    this.fishSize = width/2.5;
+                    //tint(0,160);
                     break;
                 case 100000:
                     this.fishColor = this.colorPalette[6];
-                    this.fishSize = width/2.8;
-                    tint(0,170);
+                    this.fishSize = width/2;
+                    //tint(0,170);
                     break;
                 case 200000:
-                    this.fishColor = this.colorPalette[7];
-                    this.fishSize = width/2.5;
-                    tint(0,180);
+                    this.fishColor = this.colorPalette[6];
+                    this.fishSize = width/2;
+                    //tint(0,180);
                     break;
                 case 300000:
-                    this.fishColor = this.colorPalette[8];
-                    this.fishSize = width/2.5;
-                    tint(0,190);
+                    this.fishColor = this.colorPalette[6];
+                    this.fishSize = width/2;
+                    //tint(0,190);
                     break;
                 case 400000:
-                    this.fishColor = this.colorPalette[9];
-                    this.fishSize = width/2.5;
-                    tint(0,200);
+                    this.fishColor = this.colorPalette[6];
+                    this.fishSize = width/2;
+                   // tint(0,200);
                     break;
                 case 500000:
-                    this.fishColor = this.colorPalette[10];
-                    this.fishSize = width/2.5;
-                    tint(0,255);
+                    this.fishColor = this.colorPalette[6];
+                    this.fishSize = width/2;
+                    //tint(0,255);
                     break;
                 default:
                     break;
                     //console.log("error retrieving donation amount from viewer");
             }
 
+            if (this.donation > 0){
+                blendMode(BURN);
+            }
+            else {
+                blendMode(MULTIPLY);
+            }
+
             if (this.fishSize != null){
-                tint(this.fishColor,255);
+                tint(this.fishColor,120);
                 imageMode(CENTER);
                 image(this.fish_gif, 0, 0, this.fishSize,this.fishSize);
                 
@@ -445,7 +471,8 @@ class Fish {
         console.log(this.hit);
         if (this.hit) {
             displayRipple = true;
-            socket.emit('cat-tap-success', this.id); // send the socket id of this fish object
+            if (this.donation > 0)
+                socket.emit('cat-tap-success', this.id); // send the socket id of this fish object
             this.px = -5000;
             this.py = -5000; // put it somewhere invisible
             this.velocity = createVector(0,0);
@@ -519,6 +546,7 @@ class Fish {
         console.log(`Playing ${this.voiceFileName}...`);
 
         const voiceSound = loadSound(`./uploads/${this.voiceFileName}`, () => {
+            voiceSound.setVolume(2.0);
             voiceSound.play();
         });
     }
