@@ -22,6 +22,9 @@ let username;
 
 let titleNickname; // for displaying winner nickname
 
+let touchPosX;
+let touchPosY;
+
 function preload() {
     // load the necessary sound files
     soundFormats('mp3');
@@ -45,6 +48,9 @@ function setup() {
     tempFish.pause();
     tempFishPosX = -1000;
     tempFishPosY = -1000;
+
+    touchPosX = -1000;
+    touchPosY = -1000;
     
     defaultFish = new Fish("default");
     defaultFish.setToNewPosition();
@@ -83,14 +89,8 @@ function setup() {
 function draw() {
     background(222,243,246); // background color of canvas
 
-    defaultFish.show();
-    if(!defaultFish.isShowing()) {
-        defaultFish.setToNewPosition();
-        bubbleSound.setVolume(0.1);
-        if (bubbleSound.isPlaying())
-            bubbleSound.stop();
-        bubbleSound.play();
-    }
+    let showDefaultFish = false;
+
 
     textFont(nanumFontBold);
     textSize(width/12);
@@ -112,6 +112,28 @@ function draw() {
         }
     }
 
+    for (var i = 0; i < fishGroup.length; i++){
+        if(fishGroup[i].isShowing()){
+            break;
+        }
+        else
+            showDefaultFish = true;
+    }
+
+    if (showDefaultFish) {
+        defaultFish.show();
+        if(!defaultFish.isShowing()) {
+            defaultFish.setToNewPosition();
+            bubbleSound.setVolume(0.1);
+            if (bubbleSound.isPlaying())
+                bubbleSound.stop();
+            bubbleSound.play();
+        }
+    }
+    else{
+        defaultFish.hide();
+    }
+
     if (tempFish != null && tempFishPosX >= 0) {
         push();
         translate(mouseX, mouseY)
@@ -124,10 +146,11 @@ function draw() {
     // tell viewer UI where the fish is positioned at what angle
     // also send fish nickname information
     let data = { fish_positions: [
-        {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername(), r: fishGroup[0].getRedColor(), g: fishGroup[0].getGreenColor(), b: fishGroup[0].getBlueColor(), id: fishGroup[0].getId()},
-        {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), r: fishGroup[1].getRedColor(), g: fishGroup[1].getGreenColor(), b: fishGroup[1].getBlueColor(), id: fishGroup[1].getId()},
-        {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), r: fishGroup[2].getRedColor(), g: fishGroup[2].getGreenColor(), b: fishGroup[2].getBlueColor(), id: fishGroup[2].getId()},
-        {posX: defaultFish.getPositionX()/windowWidth, posY: defaultFish.getPositionY()/windowHeight, angle: defaultFish.getAngle(), username: defaultFish.getUsername(), r: defaultFish.getRedColor(), g: defaultFish.getGreenColor(), b: defaultFish.getBlueColor(), id: defaultFish.getId()}]};
+        {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername(), r: fishGroup[0].getRedColor(), g: fishGroup[0].getGreenColor(), b: fishGroup[0].getBlueColor(), id: fishGroup[0].getId(), size: fishGroup[0].getFishSize()},
+        {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), r: fishGroup[1].getRedColor(), g: fishGroup[1].getGreenColor(), b: fishGroup[1].getBlueColor(), id: fishGroup[1].getId(), size: fishGroup[1].getFishSize()},
+        {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), r: fishGroup[2].getRedColor(), g: fishGroup[2].getGreenColor(), b: fishGroup[2].getBlueColor(), id: fishGroup[2].getId(), size: fishGroup[2].getFishSize()},
+        {posX: defaultFish.getPositionX()/windowWidth, posY: defaultFish.getPositionY()/windowHeight, angle: defaultFish.getAngle(), username: defaultFish.getUsername(), r: defaultFish.getRedColor(), g: defaultFish.getGreenColor(), b: defaultFish.getBlueColor(), id: defaultFish.getId(), size: fishGroup[0].getFishSize()}],
+        touch_positions:{posX: touchPosX/windowWidth, posY: touchPosY/windowHeight}};
     socket.emit('move-fish-group', data);
 
     if (mouseIsPressed) {
@@ -181,6 +204,14 @@ function drawFish (data) {
 }
 
 function touchEnded () {
+    touchPosX = mouseX;
+    touchPosY = mouseY;
+
+    setTimeout(() => {
+        touchPosX = -1000;
+        touchPosY = -1000;
+    }, 300);
+
     if(defaultFish.checkHit()){
         tempFishPosX = mouseX;
         tempFishPosY = mouseY;
@@ -258,7 +289,7 @@ class Fish {
         this.position = createVector(this.px, this.py);
         this.velocity = createVector(0,0);
 
-        this.fishSize = windowWidth/4;
+        this.fishSize = windowWidth/5.2;
 
         this.angle = 0;
 
@@ -304,13 +335,13 @@ class Fish {
 
 
         if (this.donation >= 10000){
-            this.vx = random(7,15);
-            this.vy = random(7,15);
+            this.vx = random(7,12);
+            this.vy = random(7,12);
         }
         else if (this.donation > 0) {
             do{
-                this.vx = random (-15, 15);
-                this.vy = random(-15, 15);
+                this.vx = random (-12, 12);
+                this.vy = random(-12, 12);
             }while (abs(this.vx) < 7);
         }
         else {
@@ -328,6 +359,13 @@ class Fish {
             this.vy = -this.vy;
     
         this.velocity = createVector (this.vx, this.vy);
+    }
+
+    hide() {
+        this.px = -5000;
+        this.py = -5000; // put it somewhere invisible
+        this.velocity = createVector(0,0);
+        this.position = createVector(this.px, this.py);
     }
 
     show() {
@@ -513,6 +551,10 @@ class Fish {
         return blue(this.fishColor);
     }
 
+    getFishSize () {
+        return this.fishSize;
+    }
+
     isShowing() {
         // return true when showing in screen
         return !((this.position.x < 0 || this.position.x > windowWidth)||(this.position.y < 0 || this.position.y > windowHeight));
@@ -546,7 +588,7 @@ class Fish {
         console.log(`Playing ${this.voiceFileName}...`);
 
         const voiceSound = loadSound(`./uploads/${this.voiceFileName}`, () => {
-            voiceSound.setVolume(2.0);
+            voiceSound.setVolume(1.5);
             voiceSound.play();
         });
     }

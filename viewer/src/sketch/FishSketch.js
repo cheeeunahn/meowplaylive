@@ -22,12 +22,18 @@ let rectWidth;
 let rectHeight;
 let rectPosX;
 let rectPosY;
+let nanumFontLight;
 let nanumFontRegular;
 let nanumFontBold;
+let pawprint;
+let pawprintLocX;
+let pawprintLocY;
+let displayRipple;
+let rippleRadius;
 
 export function setup(Container) {
-
     // load font files - Nanum Square
+    nanumFontLight = loadFont('./assets/NanumSquareL.ttf');
     nanumFontRegular = loadFont('./assets/NanumSquareR.ttf');
     nanumFontBold = loadFont('./assets/NanumSquareB.ttf');
 
@@ -35,6 +41,13 @@ export function setup(Container) {
     rectHeight = 1024 / 2; // following ipad pro screen ratio 1366px x 1024px
     rectPosX = 0; // the x position of the cat UI screen
     rectPosY = 0; // the y posiiton of the cat UI screen
+
+    pawprint = loadImage('./assets/paw.png');
+    pawprintLocX = -1000;
+    pawprintLocY = -1000;
+    displayRipple = false;
+    rippleRadius = 0;
+
 
     const canvas = createCanvas(rectWidth, rectHeight);
     canvas.parent(Container);
@@ -44,7 +57,7 @@ export function setup(Container) {
     // when success event happens
     socket.on('cat-tap-success', () => {
         //successCount++;
-        msg = "thank you for your message!";
+        msg = "the cat heard you!";
         // show success icon for 5 seconds and reset
         setTimeout(resetToDefaultScreen, 5000);
     });
@@ -59,9 +72,15 @@ export function setup(Container) {
             fishGroup[i].updateUsername(arg.fish_positions[i].username);
             fishGroup[i].updateColor(arg.fish_positions[i].r, arg.fish_positions[i].g, arg.fish_positions[i].b);
             if(arg.fish_positions[i].id.localeCompare(socket.id) == 0) {
-                fishGroup[i].updateUsername("ME!!!!");
+                fishGroup[i].highlightState();
+            }
+            else {
+                fishGroup[i].normalState();
             }
         }
+
+        pawprintLocX = rectPosX + rectWidth * (arg.touch_positions.posX);
+        pawprintLocY = rectPosY + rectHeight * (arg.touch_positions.posY);
     });
     ///////////////////////////////////////////
     msg = "";
@@ -75,11 +94,11 @@ export function draw() {
     drawCatUI();
 
     textFont(nanumFontRegular);
-    textSize(width/50);
+    textSize(height/30);
     textAlign(CENTER, RIGHT);
     fill(0);
     noStroke();
-    text("[Cat Screen Viewer]", 10, height/25);
+    text("[Cat Screen Viewer]", width/7, height/20);
 
     textFont(nanumFontBold);
     textSize(width/40);
@@ -87,6 +106,29 @@ export function draw() {
     fill(0);
     noStroke();
     text(msg, width/2, height/5);
+
+    imageMode(CENTER);
+    image(pawprint, pawprintLocX, pawprintLocY, width/10, width/10);
+
+    if (pawprintLocX > 0 && pawprintLocY > 0)
+        displayRipple = true;
+    else {
+        displayRipple = false;
+        rippleRadius = 0;
+    }
+
+    if (displayRipple) {
+        noFill();
+        strokeWeight(2);
+        stroke(244,143,177);
+        circle(pawprintLocX, pawprintLocY, rippleRadius);
+        rippleRadius +=10;
+
+        if (rippleRadius > width/2){
+            rippleRadius = 0;
+            displayRipple = false;
+        }
+    }
 }
 
 // this funciton has the code for drawing the cat UI
@@ -136,7 +178,7 @@ class CloneFish {
             this.fish_gif = loadImage('../cat/assets/fish_blue.gif');
         }
         else {
-            this.fishSize = 150;
+            this.fishSize = 180;
             this.fish_gif = loadImage('../cat/assets/realfish.gif');
         }
         
@@ -150,6 +192,9 @@ class CloneFish {
         this.username = "";
 
         this.fishColor = color(255,255,255);
+
+        this.textColor = color(0);
+        this.fontStyle = loadFont('./assets/NanumSquareL.ttf');
     }
 
     updatePosition(px, py, angle, rectWidth, rectHeight) {
@@ -167,6 +212,16 @@ class CloneFish {
         this.fishColor = color(r,g,b);
     }
 
+    highlightState() {
+        this.textColor = color(0,0,255);
+        this.fontStyle = nanumFontBold;
+    }
+
+    normalState() {
+        this.textColor = color(0);
+        this.fontStyle = nanumFontLight;
+    }
+
     draw() {
         push();
         
@@ -182,12 +237,12 @@ class CloneFish {
         imageMode(CENTER);
         image(this.fish_gif, 0, 0, this.fishSize, this.fishSize);
 
-        textFont(nanumFontBold);
+        textFont(this.fontStyle);
         textSize(rectWidth/32);
         textAlign(CENTER, CENTER);
-        fill(10);
+        fill(this.textColor);
         noStroke();
-        text(this.username, this.fish_gif.width/9, this.fish_gif.height/12);
+        text(this.username, this.fish_gif.width/9, this.fish_gif.height/10);
         
         pop();
     }
