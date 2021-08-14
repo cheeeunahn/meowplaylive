@@ -1,6 +1,9 @@
 # MeowPlayLive
-This is the final repository for MeowPlayLive (master's thesis project).
+Final repository for MeowPlayLive (Master's thesis project).
+
+For a live demo of MeowPlayLive, please visit:
+https://meow-play-live.herokuapp.com/
 
 Contributors:
-Chee Eun Ahn
-Hunmin Park
+- Chee Eun Ahn
+- Hunmin Park
