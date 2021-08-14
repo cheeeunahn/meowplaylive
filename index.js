@@ -56,7 +56,6 @@ function computeAndEmitDonationSumMap(socket) {
 // a nice cheat sheet from stackoverflow: https://stackoverflow.com/questions/10058226/send-response-to-all-clients-except-sender
 function newConnection(socket) {
     console.log('new connection: ' + socket.id);
-
     // ===================================================
     // For cat and viewer ui.
 

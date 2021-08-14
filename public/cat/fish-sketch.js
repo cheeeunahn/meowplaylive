@@ -117,16 +117,17 @@ function draw() {
         translate(mouseX, mouseY)
         rotate(tempFishAngle);
         imageMode(CENTER);
-        image(tempFish, 0, 0, windowWidth/2.8, windowWidth/2.8);
+        image(tempFish, 0, 0, windowWidth/2.5, windowWidth/2.5);
         pop();
     }
 
     // tell viewer UI where the fish is positioned at what angle
     // also send fish nickname information
     let data = { fish_positions: [
-        {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername(), r: fishGroup[0].getRedColor(), g: fishGroup[0].getGreenColor(), b: fishGroup[0].getBlueColor()},
-        {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), r: fishGroup[1].getRedColor(), g: fishGroup[1].getGreenColor(), b: fishGroup[1].getBlueColor()},
-        {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), r: fishGroup[2].getRedColor(), g: fishGroup[2].getGreenColor(), b: fishGroup[2].getBlueColor()} ]};
+        {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername(), r: fishGroup[0].getRedColor(), g: fishGroup[0].getGreenColor(), b: fishGroup[0].getBlueColor(), id: fishGroup[0].getId()},
+        {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), r: fishGroup[1].getRedColor(), g: fishGroup[1].getGreenColor(), b: fishGroup[1].getBlueColor(), id: fishGroup[1].getId()},
+        {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), r: fishGroup[2].getRedColor(), g: fishGroup[2].getGreenColor(), b: fishGroup[2].getBlueColor(), id: fishGroup[2].getId()},
+        {posX: defaultFish.getPositionX()/windowWidth, posY: defaultFish.getPositionY()/windowHeight, angle: defaultFish.getAngle(), username: defaultFish.getUsername(), r: defaultFish.getRedColor(), g: defaultFish.getGreenColor(), b: defaultFish.getBlueColor(), id: defaultFish.getId()}]};
     socket.emit('move-fish-group', data);
 
     if (mouseIsPressed) {
@@ -218,7 +219,7 @@ function touchEnded () {
             }, 5000);
         }
         else {
-            touchSound.setVolume(0.25);
+            touchSound.setVolume(0.35);
             if (splashSound.isPlaying()||touchSound.isPlaying())
                 touchSound.stop();
             if (!splashSound.isPlaying())
@@ -250,8 +251,7 @@ class Fish {
 
         // fish colors
         this.colorPalette = [color(81, 252, 215), color(81, 243, 252), color(64, 204, 255),
-            color(71, 149, 252), color(64, 134, 255), color(64, 74, 255), color(102, 64, 255), color(17, 55, 98),
-            color(12, 43, 85), color(17, 31, 84), color(23, 6, 65)];
+            color(71, 149, 252), color(64, 134, 255), color(64, 74, 255), color(102, 64, 255)];
 
         this.px = -1000;
         this.py = -1000; // put it somewhere invisible

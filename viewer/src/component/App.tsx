@@ -9,6 +9,7 @@ import { Header } from 'component/header/Header';
 import { LevelView } from 'component/level-view/LevelView';
 import { RankView } from 'component/rank-view/RankView';
 
+
 export const App = () => {
     return (
         <StoreProvider>

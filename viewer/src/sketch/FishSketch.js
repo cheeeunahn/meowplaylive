@@ -14,12 +14,9 @@
  * - Added success icon image (need to add on to it after implementing "click me" function on viewer-screen.html)
  */
 
-import { socket } from 'common/Connection';
+import { socket } from 'common/Connection'
 
-let msg; // to delete later
-let successImg;
-let displaySuccessImg; // boolean for displaying success icon
-//let successCount;
+let msg; // display thank you message
 let fishGroup;
 let rectWidth;
 let rectHeight;
@@ -29,12 +26,10 @@ let nanumFontRegular;
 let nanumFontBold;
 
 export function setup(Container) {
+
     // load font files - Nanum Square
     nanumFontRegular = loadFont('./assets/NanumSquareR.ttf');
-    nanumFontBold = loadFont('./assets/NanumSquareEB.ttf');
-    //load success image
-    successImg = loadImage('./assets/success-image.png');
-    displaySuccessImg = false;
+    nanumFontBold = loadFont('./assets/NanumSquareB.ttf');
 
     rectWidth = 1366 / 2;
     rectHeight = 1024 / 2; // following ipad pro screen ratio 1366px x 1024px
@@ -44,6 +39,8 @@ export function setup(Container) {
     const canvas = createCanvas(rectWidth, rectHeight);
     canvas.parent(Container);
 
+    console.log(socket.id);
+
     // when success event happens
     socket.on('cat-tap-success', () => {
         //successCount++;
@@ -52,35 +49,38 @@ export function setup(Container) {
         setTimeout(resetToDefaultScreen, 5000);
     });
 
-    // preventing user from clicking too fast
-    /*
-    socket.on('number-exceeded', () => {
-        msg = "click slower!";
-        setTimeout(resetText, 3000);
-    });
-    */
-
     // this is for receiving position data from cat UI
     ///////////////////////////////////////////
     socket.on('move-fish-group', (arg) => {
-        //console.log(arg);
+        //console.log("this is the id: " + this.socket.id);
+        //console.log(arg.fish_positions[0].id);
         for (var i = 0; i < fishGroup.length; i++) {
             fishGroup[i].updatePosition(arg.fish_positions[i].posX, arg.fish_positions[i].posY, arg.fish_positions[i].angle, rectWidth, rectHeight);
             fishGroup[i].updateUsername(arg.fish_positions[i].username);
             fishGroup[i].updateColor(arg.fish_positions[i].r, arg.fish_positions[i].g, arg.fish_positions[i].b);
+            if(arg.fish_positions[i].id.localeCompare(socket.id) == 0) {
+                fishGroup[i].updateUsername("ME!!!!");
+            }
         }
     });
     ///////////////////////////////////////////
     msg = "";
-    //successCount = 0;
 
     // a group of cloned fish from cat UI
-    fishGroup = [new CloneFish(), new CloneFish(), new CloneFish()];
+    fishGroup = [new CloneFish(), new CloneFish(), new CloneFish(), new CloneFish("default")];
 }
 
 export function draw() {
     background(255);
     drawCatUI();
+
+    textFont(nanumFontRegular);
+    textSize(width/50);
+    textAlign(CENTER, RIGHT);
+    fill(0);
+    noStroke();
+    text("[Cat Screen Viewer]", 10, height/25);
+
     textFont(nanumFontBold);
     textSize(width/40);
     textAlign(CENTER, CENTER);
@@ -128,8 +128,18 @@ function resetToDefaultScreen() {
 }
 
 class CloneFish {
-    constructor() {
-        this.fish_gif = loadImage('../cat/assets/fish_white.gif');
+    constructor(arg) {
+        this.fishSize = 0;
+
+        if (arg != null){ // default fish swimming around
+            this.fishSize = 100;
+            this.fish_gif = loadImage('../cat/assets/fish_blue.gif');
+        }
+        else {
+            this.fishSize = 150;
+            this.fish_gif = loadImage('../cat/assets/realfish.gif');
+        }
+        
         this.fish_gif.play();
 
         this.px = -500;
@@ -162,8 +172,15 @@ class CloneFish {
         
         translate(this.px, this.py);
         rotate(this.angle);
-        tint(this.fishColor, 255);
-        image(this.fish_gif, 0, 0, 180, 180);
+
+        if (this.username != "")
+        {
+            blendMode(BURN);
+            tint(this.fishColor, 255);
+        }
+
+        imageMode(CENTER);
+        image(this.fish_gif, 0, 0, this.fishSize, this.fishSize);
 
         textFont(nanumFontBold);
         textSize(rectWidth/32);

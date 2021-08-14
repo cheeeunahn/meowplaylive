@@ -5,6 +5,7 @@ import { setSketch } from 'common/Sketch';
 import { CommonBox } from 'component/Common';
 import * as FishSketch from 'sketch/FishSketch';
 import { CatResultView } from 'component/content/CatResultView';
+import { socket } from 'common/Connection'
 
 export const CatScreen = () => {
     const ref = useRef(null);
