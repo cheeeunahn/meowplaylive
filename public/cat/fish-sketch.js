@@ -117,6 +117,7 @@ function draw() {
 
     for (var i = 0; i < fishGroup.length; i++){
         if(fishGroup[i].isShowing()){
+            showDefaultFish = false;
             break;
         }
         else
@@ -223,7 +224,7 @@ function touchEnded () {
         setTimeout(() => {
             tempFishPosX = -1000;
             tempFishPosY = -1000;
-        }, 100);
+        }, 1500);
     }
 
     for (var i = 0; i < fishGroup.length; i++){
@@ -274,7 +275,7 @@ function mousePressed() {
 class Fish {
     constructor(arg) {
         if (arg != null ) {
-            this.fish_gif = loadGif('./assets/fish_blue.gif');
+            this.fish_gif = loadGif('./assets/realfish.gif');
         }
         else {
             this.fish_gif = loadGif('./assets/realfish.gif')
@@ -292,7 +293,7 @@ class Fish {
         this.position = createVector(this.px, this.py);
         this.velocity = createVector(0,0);
 
-        this.fishSize = windowWidth/5.2;
+        this.fishSize = windowWidth/4.8;
 
         this.angle = 0;
 
@@ -316,9 +317,12 @@ class Fish {
 
         // voice file name recorded by user.
         this.voiceFileName = null;
+
+        this.fishMoveRandom = random(-1.5,1.5);
     }
 
     setToNewPosition() {
+        this.fishMoveRandom = random(-1.5,1.5);
 
         if (this.donation >= 10000) {
             this.locX_index = Math.floor(Math.random() * 2);
@@ -338,20 +342,20 @@ class Fish {
 
 
         if (this.donation >= 10000){
-            this.vx = random(7,12);
-            this.vy = random(7,12);
+            this.vx = random(7,10);
+            this.vy = random(7,10);
         }
         else if (this.donation > 0) {
             do{
-                this.vx = random (-12, 12);
-                this.vy = random(-12, 12);
-            }while (abs(this.vx) < 7);
+                this.vx = random (-10, 10);
+                this.vy = random(-10, 10);
+            }while (abs(this.vx) < 5);
         }
         else {
             do{
                 this.vx = random (-8, 8);
                 this.vy = random(-8, 8);
-            }while (abs(this.vx) < 5);
+            }while (abs(this.vx) < 4);
         }
 
         if ((this.vx > 0 && this.px > windowWidth/2)||(this.vx < 0 && this.px < windowWidth/2)){
@@ -377,16 +381,10 @@ class Fish {
             // if it is a default fish
             if (this.donation < 0){
                 if (this.position.x > windowWidth/2){
-                    if (random(-1,1) > 0)
-                        this.velocity.add(createVector(-3,-1));
-                    else
-                        this.velocity.add(createVector(1,3));
+                    this.velocity.add(createVector(this.fishMoveRandom,this.fishMoveRandom));
                 }
                 else if (this.position.x > windowWidth/3){
-                    if (random(-1,1) > 0)
-                        this.velocity.add(createVector(-1,2));
-                    else
-                        this.velocity.add(createVector(2,0));
+                    this.velocity.add(createVector(this.fishMoveRandom,this.fishMoveRandom));
                 }
             }
 
@@ -518,6 +516,7 @@ class Fish {
             this.py = -5000; // put it somewhere invisible
             this.velocity = createVector(0,0);
             this.position = createVector(this.px, this.py);
+
         } 
         return this.hit;
     }

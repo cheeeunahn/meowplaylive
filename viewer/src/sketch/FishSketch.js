@@ -188,11 +188,11 @@ class CloneFish {
         this.fishType = arg;
         if (arg.localeCompare("fishdefault")==0){ // default fish swimming around
             this.fishSize = 100;
-            this.fish_gif = loadImage('../cat/assets/fish_blue.gif');
+            this.fish_gif = loadImage('../cat/assets/realfish.gif');
         }
         else if (arg.localeCompare("mousedefault")==0){ // default fish swimming around
             this.fishSize = 100;
-            this.fish_gif = loadImage('../cat/assets/mouse.gif');
+            this.fish_gif = loadImage('../cat/assets/realmouse.gif');
         }
         else if (arg.localeCompare("fish")==0){
             this.fishSize = 180;
@@ -200,7 +200,7 @@ class CloneFish {
         }
         else if (arg.localeCompare("mouse")==0){
             this.fishSize = 180;
-            this.fish_gif = loadImage('../cat/assets/mouse.gif');
+            this.fish_gif = loadImage('../cat/assets/realmouse.gif');
         }
         
         this.fish_gif.play();
@@ -247,14 +247,17 @@ class CloneFish {
         push();
         
         translate(this.px, this.py);
-        if (this.fishType.localeCompare("mouse")==0||this.fishType.localeCompare("mousedefault")==0)
-            rotate(this.angle+PI);
-        else
+        //if (this.fishType.localeCompare("mouse")==0||this.fishType.localeCompare("mousedefault")==0)
+            //rotate(this.angle+PI);
+        //else
             rotate(this.angle);
 
         if (this.username != "")
         {
-            blendMode(BURN);
+            if (this.fishType.localeCompare("mouse")==0||this.fishType.localeCompare("mousedefault")==0)
+                blendMode(MULTIPLY);
+            else
+                blendMode(BURN);
             tint(this.fishColor, 255);
         }
 

@@ -42,7 +42,7 @@
      // simulating iOS mobile environment
      //getAudioContext().suspend();
  
-     tempFish = loadImage('./assets/mouse.gif');
+     tempFish = loadImage('./assets/realmouse.gif');
      tempFish.pause();
      tempFishPosX = -1000;
      tempFishPosY = -1000;
@@ -86,6 +86,12 @@
        });
      socket.on('button-clicked', drawFish);
 
+    window.setInterval(() => {
+        bubbleSound.setVolume(0.1);
+        if (bubbleSound.isPlaying())
+            bubbleSound.stop();
+        bubbleSound.play();
+     },3000);
  }
  
  function draw() {
@@ -113,6 +119,7 @@
  
      for (var i = 0; i < fishGroup.length; i++){
          if(fishGroup[i].isShowing()){
+             showDefaultFish = false;
              break;
          }
          else
@@ -123,10 +130,6 @@
          defaultFish.show();
          if(!defaultFish.isShowing()) {
              defaultFish.setToNewPosition();
-             bubbleSound.setVolume(0.1);
-             if (bubbleSound.isPlaying())
-                 bubbleSound.stop();
-             bubbleSound.play();
          }
      }
      else{
@@ -136,9 +139,10 @@
      if (tempFish != null && tempFishPosX >= 0) {
          push();
          translate(mouseX, mouseY)
-         rotate(tempFishAngle+PI);
+         //rotate(tempFishAngle+PI);
+         rotate(tempFishAngle);
          imageMode(CENTER);
-         image(tempFish, 0, 0, windowWidth/2.5, windowWidth/2.5);
+         image(tempFish, 0, 0, windowWidth/3, windowWidth/3);
          pop();
      }
  
@@ -219,7 +223,7 @@
          setTimeout(() => {
              tempFishPosX = -1000;
              tempFishPosY = -1000;
-         }, 100);
+         }, 1500);
      }
  
      for (var i = 0; i < fishGroup.length; i++){
@@ -270,10 +274,10 @@
  class Fish {
      constructor(arg) {
          if (arg != null ) {
-             this.fish_gif = loadImage('./assets/mouse.gif');
+             this.fish_gif = loadImage('./assets/realmouse.gif');
          }
          else {
-             this.fish_gif = loadImage('./assets/mouse.gif')
+             this.fish_gif = loadImage('./assets/realmouse.gif')
          }
          //this.fish_gif = loadImage('./assets/fish_blue.gif');
          /*if(this.fish_gif.loaded())
@@ -288,7 +292,7 @@
          this.position = createVector(this.px, this.py);
          this.velocity = createVector(0,0);
  
-         this.fishSize = windowWidth/5.2;
+         this.fishSize = windowWidth/4.5;
  
          this.angle = 0;
  
@@ -339,14 +343,14 @@
          }
          else if (this.donation > 0) {
              do{
-                 this.vx = random (-12, 12);
-                 this.vy = random(-12, 12);
+                 this.vx = random (-15, 15);
+                 this.vy = random(-15, 15);
              }while (abs(this.vx) < 7);
          }
          else {
              do{
-                 this.vx = random (-8, 8);
-                 this.vy = random(-8, 8);
+                 this.vx = random (-10, 10);
+                 this.vy = random(-10, 10);
              }while (abs(this.vx) < 5);
          }
  
@@ -404,9 +408,13 @@
                  else
                      this.angle = (3*PI/2)-atan(-this.velocity.y/this.velocity.x)+PI/2;
              }
-             rotate(this.angle+PI);
- 
+
+             //if (this.donation < 0)
+                rotate(this.angle);
+            // else
+                //rotate(this.angle+PI);
              //blendMode(MULTIPLY);
+
              switch (this.donation){
                  case 1000:
                      this.fishColor = this.colorPalette[0];
@@ -476,7 +484,7 @@
              }
  
              if (this.fishSize != null){
-                 tint(this.fishColor,120);
+                 tint(this.fishColor,150);
                  imageMode(CENTER);
                  image(this.fish_gif, 0, 0, this.fishSize,this.fishSize);
                  
