@@ -31,8 +31,27 @@
             padding: 1rem;
         }
 
-        button {
+        .UpdateButton,
+        .AutoUpdateButton {
             cursor: pointer;
+        }
+
+        @keyframes dateAnimation {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .UpdateDate {
+            height: 1.2rem;
+        }
+
+        .UpdateDate>span {
+            animation: dateAnimation 1 1s;
         }
     </style>
 </head>
@@ -41,6 +60,8 @@
     <div class="App">
         <h1>Download</h1>
         <button class="UpdateButton">Update</button>
+        <button class="AutoUpdateButton">Start auto update</button>
+        <div class="UpdateDate"></div>
         <hr />
         <h2>DB</h2>
         <ul class="DBView"></ul>
@@ -52,8 +73,14 @@
         const DBView = document.querySelector('.DBView');
         const UploadsView = document.querySelector('.UploadsView');
         const UpdateButton = document.querySelector('.UpdateButton');
+        const AutoUpdateButton = document.querySelector('.AutoUpdateButton');
+        const UpdateDate = document.querySelector('.UpdateDate');
         const DownloadAllButton = document.querySelector('.DownloadAllButton');
         const socket = io();
+        let autoUpdateInterval = null;
+
+        // If you click 'Start auto update', the website sends a request per ??? seconds.
+        const autoUpdateSeconds = 60;
 
         function createLink(href, value) {
             return `<a class="Link" target="_blank" href="${href}">${value}</a>`;
@@ -77,6 +104,8 @@
                 Item.innerHTML = createLink(`/cat/uploads/${name}`, name);
                 UploadsView.appendChild(Item);
             });
+
+            UpdateDate.innerHTML = `<span>Last update: ${new Date()}</span>`;
         });
 
         function requestAllData() {
@@ -87,6 +116,19 @@
 
         UpdateButton.addEventListener('click', () => {
             requestAllData();
+        });
+
+        AutoUpdateButton.addEventListener('click', () => {
+            if (autoUpdateInterval === null) {
+                autoUpdateInterval = setInterval(() => {
+                    requestAllData();
+                }, autoUpdateSeconds * 1000);
+
+                AutoUpdateButton.innerHTML = 'Stop auto update';
+            } else {
+                clearInterval(autoUpdateInterval);
+                AutoUpdateButton.innerHTML = 'Start auto update';
+            }
         });
 
         socket.on('connect', () => {
