@@ -5,6 +5,12 @@ import { CommonBox, CommonProfile, youTubeColors } from 'component/Common';
 import { Chat } from 'common/Chat';
 import { numberToFormattedString } from 'common/StringUtils';
 
+const commonContentStyle = css({
+    // If the line is too long, move some characters to the next line.
+    // (To avoid the scrollbar...)
+    wordBreak: 'break-all'
+});
+
 interface Props {
     chat: Chat;
 }
@@ -22,15 +28,14 @@ export const DefaultChatItem = ({ chat }: Props) => (
     ])}>
         <CommonProfile profileColor={chat.profileColor} />
         <span className={css({
-            marginLeft: '0.5rem',
             fontWeight: 'bold',
             color: youTubeColors.gray
         })}>
             {chat.nickname}
         </span>
-        <span className={css({
+        <span className={css([commonContentStyle, {
             marginLeft: '0.5rem'
-        })}>
+        }])}>
             {chat.content}
         </span>
     </CommonBox>
@@ -71,12 +76,12 @@ export const SuperChatItem = ({ chat }: Props) => (
                 </div>
             </div>
         </div>
-        <div className={css({
+        <div className={css([commonContentStyle, {
             boxSizing: 'border-box',
             marginBottom: '1rem',
             padding: '0.5rem 1rem',
             backgroundColor: youTubeColors.lightYellow
-        })}>
+        }])}>
             {chat.content}
         </div>
     </CommonBox>

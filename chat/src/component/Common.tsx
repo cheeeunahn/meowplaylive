@@ -300,24 +300,29 @@ interface CommonProfileProps {
 }
 
 export const CommonProfile = ({ profileColor, className }: CommonProfileProps) => (
-    <i
-        className={cx(
-            'fa', 'fa-user',
-            css([{
-                display: 'inline-block',
-                verticalAlign: 'top',
-                width: '1.5rem',
-                height: '1.5rem',
-                // This put the text at the center of the vertical axis.
-                lineHeight: '1.5rem',
-                fontSize: '1rem',
-                textAlign: 'center',
-                marginRight: '1rem',
-                color: '#ffffff',
-                backgroundColor: profileColor,
-                borderRadius: '50%'
-            }, className])
-        )}
-        aria-hidden={true}
-    />
+    <div className={css({
+        display: 'inline-block',
+        width: '1.5rem',
+        marginRight: '1rem'
+    })}>
+        <i
+            className={cx(
+                'fa', 'fa-user',
+                css([{
+                    display: 'inline-block',
+                    verticalAlign: 'top',
+                    width: '1.5rem',
+                    height: '1.5rem',
+                    // This put the text at the center of the vertical axis.
+                    lineHeight: '1.5rem',
+                    fontSize: '1rem',
+                    textAlign: 'center',
+                    color: '#ffffff',
+                    backgroundColor: profileColor,
+                    borderRadius: '50%'
+                }, className])
+            )}
+            aria-hidden={true}
+        />
+    </div>
 );

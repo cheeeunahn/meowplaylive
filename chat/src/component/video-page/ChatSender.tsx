@@ -93,13 +93,15 @@ export const ChatSender = () => {
             padding: '1rem 0'
         })}>
             <div className={css({
+                display: 'flex',
+                flexDirection: 'row',
                 boxSizing: 'border-box',
                 marginBottom: '1rem',
                 padding: '0 2rem'
             })}>
                 <CommonProfile profileColor={profileColor} />
                 <div className={css({
-                    display: 'inline-block'
+                    flex: 1
                 })}>
                     <div className={css({
                         color: youTubeColors.gray,
