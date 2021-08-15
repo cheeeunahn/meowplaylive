@@ -4,10 +4,13 @@
  * p5.js screen X screen Y functions from https://github.com/bohnacker/p5js-screenPosition
  */
 
+
 let waterSound;
 let bubbleSound;
 let touchSound;
 let splashSound;
+
+let bgColor; // the background color of this sketch
 
 let fishGroup;
 let tempFish; // for making the cat feel as if it caught the fish
@@ -15,6 +18,7 @@ let tempFishPosX;
 let tempFishPosY;
 let tempFishAngle;
 let defaultFish; // default fish just swimming around
+let defaultCaught; // boolean for determining whether cat got the default fish
 
 let displayRipple;
 let rippleRadius;
@@ -44,6 +48,8 @@ function setup() {
     // simulating iOS mobile environment
     //getAudioContext().suspend();
 
+    bgColor = color(222,243,246);
+
     tempFish = loadGif('./assets/realfish.gif');
     tempFish.pause();
     tempFishPosX = -1000;
@@ -54,6 +60,7 @@ function setup() {
     
     defaultFish = new Fish("default");
     defaultFish.setToNewPosition();
+    defaultCaught = false;
 
     // load font files - Nanum Square
     nanumFontRegular = loadFont('./assets/NanumSquareR.ttf');
@@ -90,10 +97,10 @@ function setup() {
 }
 
 function draw() {
-    background(222,243,246); // background color of canvas
-
+    //background(222,243,246);
+    // background color of canvas
+    background(bgColor);
     let showDefaultFish = false;
-
 
     textFont(nanumFontBold);
     textSize(width/12);
@@ -124,7 +131,7 @@ function draw() {
             showDefaultFish = true;
     }
 
-    if (showDefaultFish) {
+    if (showDefaultFish && !defaultCaught) {
         defaultFish.show();
         if(!defaultFish.isShowing()) {
             defaultFish.setToNewPosition();
@@ -150,11 +157,11 @@ function draw() {
     // tell viewer UI where the fish is positioned at what angle
     // also send fish nickname information
     let data = { fish_positions: [
-        {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername(), r: fishGroup[0].getRedColor(), g: fishGroup[0].getGreenColor(), b: fishGroup[0].getBlueColor(), id: fishGroup[0].getId(), size: fishGroup[0].getFishSize()},
-        {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), r: fishGroup[1].getRedColor(), g: fishGroup[1].getGreenColor(), b: fishGroup[1].getBlueColor(), id: fishGroup[1].getId(), size: fishGroup[1].getFishSize()},
-        {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), r: fishGroup[2].getRedColor(), g: fishGroup[2].getGreenColor(), b: fishGroup[2].getBlueColor(), id: fishGroup[2].getId(), size: fishGroup[2].getFishSize()},
-        {posX: defaultFish.getPositionX()/windowWidth, posY: defaultFish.getPositionY()/windowHeight, angle: defaultFish.getAngle(), username: defaultFish.getUsername(), r: defaultFish.getRedColor(), g: defaultFish.getGreenColor(), b: defaultFish.getBlueColor(), id: defaultFish.getId(), size: fishGroup[0].getFishSize()}],
-        touch_positions:{posX: touchPosX/windowWidth, posY: touchPosY/windowHeight}, drawType: {type: 'fish'}};
+        {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername(), r: fishGroup[0].getRedColor(), g: fishGroup[0].getGreenColor(), b: fishGroup[0].getBlueColor(), id: fishGroup[0].getId(), size: fishGroup[0].getFishSize()/windowWidth},
+        {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), r: fishGroup[1].getRedColor(), g: fishGroup[1].getGreenColor(), b: fishGroup[1].getBlueColor(), id: fishGroup[1].getId(), size: fishGroup[1].getFishSize()/windowWidth},
+        {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), r: fishGroup[2].getRedColor(), g: fishGroup[2].getGreenColor(), b: fishGroup[2].getBlueColor(), id: fishGroup[2].getId(), size: fishGroup[2].getFishSize()/windowWidth},
+        {posX: defaultFish.getPositionX()/windowWidth, posY: defaultFish.getPositionY()/windowHeight, angle: defaultFish.getAngle(), username: defaultFish.getUsername(), r: defaultFish.getRedColor(), g: defaultFish.getGreenColor(), b: defaultFish.getBlueColor(), id: defaultFish.getId(), size: defaultFish.getFishSize()/windowWidth}],
+        touch_positions:{posX: touchPosX/windowWidth, posY: touchPosY/windowHeight}, drawType: {type: 'fish', bg_r: red(bgColor), bg_g: green(bgColor), bg_b: blue(bgColor)}};
     socket.emit('move-fish-group', data);
 
     if (mouseIsPressed) {
@@ -217,14 +224,16 @@ function touchEnded () {
     }, 300);
 
     if(defaultFish.checkHit()){
+        defaultCaught = true;
         tempFishPosX = mouseX;
         tempFishPosY = mouseY;
         tempFishAngle = defaultFish.getAngle();
 
         setTimeout(() => {
+            defaultCaught = false;
             tempFishPosX = -1000;
             tempFishPosY = -1000;
-        }, 1500);
+        }, 1000);
     }
 
     for (var i = 0; i < fishGroup.length; i++){

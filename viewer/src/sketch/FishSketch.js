@@ -25,18 +25,24 @@ let rectPosY;
 let nanumFontLight;
 let nanumFontRegular;
 let nanumFontBold;
+let notoSansKRBlack;
 let pawprint;
 let pawprintLocX;
 let pawprintLocY;
 let displayRipple;
 let rippleRadius;
 let drawType;
+let bgColor;
 
 export function setup(Container) {
+
+    bgColor = color(255,255,255);
+
     // load font files - Nanum Square
     nanumFontLight = loadFont('./assets/NanumSquareL.ttf');
     nanumFontRegular = loadFont('./assets/NanumSquareR.ttf');
     nanumFontBold = loadFont('./assets/NanumSquareB.ttf');
+    notoSansKRBlack = loadFont('./assets/NotoSansKR-Black.otf');
 
     rectWidth = 1366 / 2;
     rectHeight = 1024 / 2; // following ipad pro screen ratio 1366px x 1024px
@@ -82,6 +88,7 @@ export function setup(Container) {
                 fishGroup[i].updatePosition(arg.fish_positions[i].posX, arg.fish_positions[i].posY, arg.fish_positions[i].angle, rectWidth, rectHeight);
                 fishGroup[i].updateUsername(arg.fish_positions[i].username);
                 fishGroup[i].updateColor(arg.fish_positions[i].r, arg.fish_positions[i].g, arg.fish_positions[i].b);
+                fishGroup[i].updateSize(arg.fish_positions[i].size);
                 if(arg.fish_positions[i].id.localeCompare(socket.id) == 0) {
                     fishGroup[i].highlightState();
                 }
@@ -90,6 +97,8 @@ export function setup(Container) {
                 }
             }
         }
+
+        bgColor = color(arg.drawType.bg_r, arg.drawType.bg_g, arg.drawType.bg_b);
 
         pawprintLocX = rectPosX + rectWidth * (arg.touch_positions.posX);
         pawprintLocY = rectPosY + rectHeight * (arg.touch_positions.posY);
@@ -146,7 +155,9 @@ export function draw() {
 function drawCatUI() {
     rectMode(CORNER);
     noStroke();
-    fill(222,243,246); // background color of canvas
+    //fill(222,243,246);
+    // background color of canvas
+    fill(bgColor);
     rect(rectPosX, rectPosY, rectWidth, rectHeight);
 
     if (fishGroup !== null){
@@ -229,13 +240,17 @@ class CloneFish {
         this.username = username;
     }
 
+    updateSize(size){
+        this.fishSize = size*rectWidth;
+    }
+
     updateColor(r,g,b) {
         this.fishColor = color(r,g,b);
     }
 
     highlightState() {
         this.textColor = color(0,0,255);
-        this.fontStyle = nanumFontBold;
+        this.fontStyle = notoSansKRBlack;
     }
 
     normalState() {

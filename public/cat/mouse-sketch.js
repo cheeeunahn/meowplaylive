@@ -6,6 +6,8 @@
  let bubbleSound;
  let touchSound;
  let splashSound;
+
+ let bgColor; // the background color of this sketch
  
  let fishGroup;
  let tempFish; // for making the cat feel as if it caught the fish
@@ -13,6 +15,7 @@
  let tempFishPosY;
  let tempFishAngle;
  let defaultFish; // default fish just swimming around
+ let defaultCaught; // boolean for determining whether cat got the default fish
  
  let displayRipple;
  let rippleRadius;
@@ -42,6 +45,8 @@
      // simulating iOS mobile environment
      //getAudioContext().suspend();
  
+     bgColor = color(247, 240, 230);
+
      tempFish = loadImage('./assets/realmouse.gif');
      tempFish.pause();
      tempFishPosX = -1000;
@@ -52,6 +57,7 @@
      
      defaultFish = new Fish("default");
      defaultFish.setToNewPosition();
+     defaultCaught = false;
  
      // load font files - Nanum Square
      nanumFontRegular = loadFont('./assets/NanumSquareR.ttf');
@@ -95,10 +101,13 @@
  }
  
  function draw() {
-     background(247, 240, 230); // background color of canvas
+     //background(247, 240, 230); 
+     // background color of canvas
+     background(bgColor);
+
      let showDefaultFish = false;
      textFont(nanumFontBold);
-     textSize(width/12);
+     textSize(windowHeight/10);
      textAlign(CENTER, CENTER);
      fill(0);
      noStroke();
@@ -126,7 +135,7 @@
              showDefaultFish = true;
      }
  
-     if (showDefaultFish) {
+     if (showDefaultFish && !defaultCaught) {
          defaultFish.show();
          if(!defaultFish.isShowing()) {
              defaultFish.setToNewPosition();
@@ -149,11 +158,11 @@
      // tell viewer UI where the fish is positioned at what angle
      // also send fish nickname information
      let data = { fish_positions: [
-         {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername(), r: fishGroup[0].getRedColor(), g: fishGroup[0].getGreenColor(), b: fishGroup[0].getBlueColor(), id: fishGroup[0].getId(), size: fishGroup[0].getFishSize()},
-         {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), r: fishGroup[1].getRedColor(), g: fishGroup[1].getGreenColor(), b: fishGroup[1].getBlueColor(), id: fishGroup[1].getId(), size: fishGroup[1].getFishSize()},
-         {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), r: fishGroup[2].getRedColor(), g: fishGroup[2].getGreenColor(), b: fishGroup[2].getBlueColor(), id: fishGroup[2].getId(), size: fishGroup[2].getFishSize()},
-         {posX: defaultFish.getPositionX()/windowWidth, posY: defaultFish.getPositionY()/windowHeight, angle: defaultFish.getAngle(), username: defaultFish.getUsername(), r: defaultFish.getRedColor(), g: defaultFish.getGreenColor(), b: defaultFish.getBlueColor(), id: defaultFish.getId(), size: fishGroup[0].getFishSize()}],
-         touch_positions:{posX: touchPosX/windowWidth, posY: touchPosY/windowHeight}, drawType: {type: 'mouse'}};
+         {posX: fishGroup[0].getPositionX()/windowWidth, posY: fishGroup[0].getPositionY()/windowHeight, angle: fishGroup[0].getAngle(), username: fishGroup[0].getUsername(), r: fishGroup[0].getRedColor(), g: fishGroup[0].getGreenColor(), b: fishGroup[0].getBlueColor(), id: fishGroup[0].getId(), size: fishGroup[0].getFishSize()/windowWidth},
+         {posX: fishGroup[1].getPositionX()/windowWidth, posY: fishGroup[1].getPositionY()/windowHeight, angle: fishGroup[1].getAngle(), username: fishGroup[1].getUsername(), r: fishGroup[1].getRedColor(), g: fishGroup[1].getGreenColor(), b: fishGroup[1].getBlueColor(), id: fishGroup[1].getId(), size: fishGroup[1].getFishSize()/windowWidth},
+         {posX: fishGroup[2].getPositionX()/windowWidth, posY: fishGroup[2].getPositionY()/windowHeight, angle: fishGroup[2].getAngle(), username: fishGroup[2].getUsername(), r: fishGroup[2].getRedColor(), g: fishGroup[2].getGreenColor(), b: fishGroup[2].getBlueColor(), id: fishGroup[2].getId(), size: fishGroup[2].getFishSize()/windowWidth},
+         {posX: defaultFish.getPositionX()/windowWidth, posY: defaultFish.getPositionY()/windowHeight, angle: defaultFish.getAngle(), username: defaultFish.getUsername(), r: defaultFish.getRedColor(), g: defaultFish.getGreenColor(), b: defaultFish.getBlueColor(), id: defaultFish.getId(), size: defaultFish.getFishSize()/windowWidth}],
+         touch_positions:{posX: touchPosX/windowWidth, posY: touchPosY/windowHeight}, drawType: {type: 'mouse', bg_r: red(bgColor), bg_g: green(bgColor), bg_b: blue(bgColor)}};
      socket.emit('move-fish-group', data);
  
      if (mouseIsPressed) {
@@ -216,11 +225,13 @@
      }, 300);
  
      if(defaultFish.checkHit()){
+         defaultCaught = true;
          tempFishPosX = mouseX;
          tempFishPosY = mouseY;
          tempFishAngle = defaultFish.getAngle();
  
          setTimeout(() => {
+             defaultCaught= false;
              tempFishPosX = -1000;
              tempFishPosY = -1000;
          }, 1500);
@@ -237,7 +248,7 @@
              //    this.voiceSound.stop();    
              //this.voiceSound.play();
              fishGroup[i].playVoice(); // Play the voice recorded by the user.
-             titleNickname = "Thank you," + fishGroup[i].username;
+             titleNickname = "Thank you! " + fishGroup[i].username;
              
              tempFishPosX = mouseX;
              tempFishPosY = mouseY;
@@ -343,14 +354,14 @@
          }
          else if (this.donation > 0) {
              do{
-                 this.vx = random (-15, 15);
-                 this.vy = random(-15, 15);
-             }while (abs(this.vx) < 7);
+                 this.vx = random (-12, 12);
+                 this.vy = random(-12, 12);
+             }while (abs(this.vx) < 8);
          }
          else {
              do{
-                 this.vx = random (-10, 10);
-                 this.vy = random(-10, 10);
+                 this.vx = random (-8, 8);
+                 this.vy = random(-8, 8);
              }while (abs(this.vx) < 5);
          }
  
