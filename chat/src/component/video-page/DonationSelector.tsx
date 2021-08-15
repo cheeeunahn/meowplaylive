@@ -63,7 +63,8 @@ export const DonationSelector = ({ onClose }: Props) => {
         nickname: nickname,
         content: content,
         donation: 10000,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        type: 'SuperChat'
     };
 
     const maxContentLength = 200;

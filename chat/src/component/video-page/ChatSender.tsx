@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { css, cx } from '@emotion/css';
 
 import { commonColors, CommonInput, CommonProfile, youTubeColors } from 'component/Common';
@@ -58,14 +58,6 @@ export const ChatSender = () => {
     const [showSpecialChatMenu, setShowSpecialChatMenu] = useState<boolean>(false);
     const [showDonationSelector, setShowDonationSelector] = useState<boolean>(false);
 
-    const chat: Chat = {
-        profileColor: profileColor,
-        nickname: nickname,
-        content: content,
-        donation: 0,
-        timestamp: Date.now()
-    };
-
     const maxContentLength = 200;
 
     const cropAndSetContent = (newContent: string) => {
@@ -81,9 +73,32 @@ export const ChatSender = () => {
             return;
         }
 
+        const chat: Chat = {
+            profileColor: profileColor,
+            nickname: nickname,
+            content: content,
+            donation: 0,
+            timestamp: Date.now(),
+            type: 'DefaultChat'
+        };
+
         socket.emit('upload-chat', chat);
         cropAndSetContent('');
     };
+
+    useEffect(() => {
+        // Send a special chat at the start which means 'joining the network'.
+        const chat: Chat = {
+            profileColor: profileColor,
+            nickname: nickname,
+            content: '',
+            donation: 0,
+            timestamp: Date.now(),
+            type: 'JoinChat'
+        };
+
+        socket.emit('upload-chat', chat);
+    }, []);
 
     return (
         <div className={css({

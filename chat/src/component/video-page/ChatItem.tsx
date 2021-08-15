@@ -5,6 +5,10 @@ import { CommonBox, CommonProfile, youTubeColors } from 'component/Common';
 import { Chat } from 'common/Chat';
 import { numberToFormattedString } from 'common/StringUtils';
 
+const commonChatItemStyle = css({
+    marginBottom: '0.5rem'
+});
+
 const commonContentStyle = css({
     // If the line is too long, move some characters to the next line.
     // (To avoid the scrollbar...)
@@ -16,16 +20,13 @@ interface Props {
 }
 
 export const DefaultChatItem = ({ chat }: Props) => (
-    <CommonBox className={css([
-        {
-            display: 'flex',
-            boxSizing: 'border-box',
-            alignItems: 'center',
-            marginBottom: '0.5rem',
-            padding: 0,
-            boxShadow: 'none'
-        }
-    ])}>
+    <CommonBox className={css([commonChatItemStyle, {
+        display: 'flex',
+        boxSizing: 'border-box',
+        alignItems: 'center',
+        padding: 0,
+        boxShadow: 'none'
+    }])}>
         <CommonProfile profileColor={chat.profileColor} />
         <span className={css({
             fontWeight: 'bold',
@@ -42,9 +43,9 @@ export const DefaultChatItem = ({ chat }: Props) => (
 );
 
 export const SuperChatItem = ({ chat }: Props) => (
-    <CommonBox className={css({
+    <CommonBox className={css([commonChatItemStyle, {
         padding: 0
-    })}>
+    }])}>
         <div className={css({
             boxSizing: 'border-box',
             display: 'flex',
@@ -78,11 +79,22 @@ export const SuperChatItem = ({ chat }: Props) => (
         </div>
         <div className={css([commonContentStyle, {
             boxSizing: 'border-box',
-            marginBottom: '1rem',
             padding: '0.5rem 1rem',
             backgroundColor: youTubeColors.lightYellow
         }])}>
             {chat.content}
         </div>
+    </CommonBox>
+);
+
+export const JoinChatItem = ({ chat }: Props) => (
+    <CommonBox className={css([commonChatItemStyle, commonContentStyle, {
+        boxSizing: 'border-box',
+        padding: '0.5rem 1rem',
+        textAlign: 'center',
+        color: '#ffffff',
+        backgroundColor: youTubeColors.gray
+    }])}>
+        {chat.nickname} has joined the chat room
     </CommonBox>
 );

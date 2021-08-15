@@ -125,7 +125,7 @@ function newConnection(socket) {
     // ===================================================
     // For fake YouTube chat.
 
-    // arg: {profileColor: string, nickname: string, content: string, donation: number, timestamp: number}.
+    // arg: {profileColor: string, nickname: string, content: string, donation: number, timestamp: number, type: string}.
     socket.on('upload-chat', chat => {
         console.log(`New chat: ${chat.content} by ${chat.nickname}`);
         chatDatabase.insert(chat);

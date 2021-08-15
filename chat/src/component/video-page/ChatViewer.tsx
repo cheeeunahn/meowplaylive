@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 
 import { socket } from 'common/Connection';
 import { Chat } from 'common/Chat';
-import { DefaultChatItem, SuperChatItem } from 'component/video-page/ChatItem';
+import { DefaultChatItem, JoinChatItem, SuperChatItem } from 'component/video-page/ChatItem';
 
 export const ChatViewer = () => {
     const [chats, setChats] = useState<Chat[]>([]);
@@ -56,13 +56,20 @@ export const ChatViewer = () => {
         >
             {chats.map((chat, index) => (
                 <div {...((index === chats.length - 1) ? { ref: ref } : {})}>
-                    {(chat.donation === 0) ? (
+                    {(chat.type === 'DefaultChat') && (
                         <DefaultChatItem
                             key={`${index}-${chat.timestamp}`}
                             chat={chat}
                         />
-                    ) : (
+                    )}
+                    {(chat.type === 'SuperChat') && (
                         <SuperChatItem
+                            key={`${index}-${chat.timestamp}`}
+                            chat={chat}
+                        />
+                    )}
+                    {(chat.type === 'JoinChat') && (
+                        <JoinChatItem
                             key={`${index}-${chat.timestamp}`}
                             chat={chat}
                         />
