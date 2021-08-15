@@ -26,3 +26,9 @@ export function timestampToString(value: number) {
 
     return `${year}.${month}.${day}-${hour}.${minutes}.${seconds}`;
 }
+
+export function validateNickname(nickname: string) {
+    // Allow: English/Korean characters, numbers, underlines, hyphens and spaces.
+    // Nickname shouldn't start with a space.
+    return /^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9_\-][a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9_\-\s]*$/g.test(nickname);
+}

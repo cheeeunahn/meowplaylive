@@ -3,6 +3,7 @@ import { css } from '@emotion/css';
 
 import { CommonInput, commonColors, CommonButton } from 'component/Common';
 import { StoreContext } from 'component/Store';
+import { validateNickname } from 'common/StringUtils';
 
 export const NicknameEditor = () => {
     const { nickname, setNickname } = useContext(StoreContext);
@@ -47,7 +48,7 @@ export const NicknameEditor = () => {
                     width: '6rem'
                 })}
                 buttonColor={commonColors.brown}
-                isDisabled={currentNickname.length === 0}
+                isDisabled={!validateNickname(currentNickname)}
                 onClick={() => {
                     setNickname(currentNickname);
                     setEditing(!isEditing);

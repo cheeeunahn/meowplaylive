@@ -55,6 +55,10 @@
         const DownloadAllButton = document.querySelector('.DownloadAllButton');
         const socket = io();
 
+        function createLink(href, value) {
+            return `<a class="Link" target="_blank" href="${href}">${value}</a>`;
+        }
+
         socket.on('get-all-data', dataNames => {
             const { db, uploads } = dataNames;
 
@@ -62,7 +66,7 @@
 
             db.forEach(name => {
                 const Item = document.createElement('li');
-                Item.innerHTML = `<a class="Link" target="_blank" href="/db/${name}">${name}</a>`;
+                Item.innerHTML = createLink(`/db/${name}`, name);
                 DBView.appendChild(Item);
             });
 
@@ -70,7 +74,7 @@
 
             uploads.forEach(name => {
                 const Item = document.createElement('li');
-                Item.innerHTML = `<a class="Link" target="_blank" href="/cat/uploads/${name}">${name}</a>`;
+                Item.innerHTML = createLink(`/cat/uploads/${name}`, name);
                 UploadsView.appendChild(Item);
             });
         });
