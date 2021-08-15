@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Download</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style type="text/css">
+        html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .App {
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 1rem;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="App">
+        <h1>Download</h1>
+        <button class="UpdateButton">Update</button>
+        <hr />
+        <h2>DB</h2>
+        <ul class="DBView"></ul>
+        <h2>Uploads</h2>
+        <ul class="UploadsView"></ul>
+        <hr />
+    </div>
+    <script type="text/javascript">
+        const DBView = document.querySelector('.DBView');
+        const UploadsView = document.querySelector('.UploadsView');
+        const UpdateButton = document.querySelector('.UpdateButton');
+        const DownloadAllButton = document.querySelector('.DownloadAllButton');
+        const socket = io();
+
+        socket.on('get-all-data', dataNames => {
+            const { db, uploads } = dataNames;
+
+            DBView.innerHTML = '';
+
+            db.forEach(name => {
+                const Item = document.createElement('li');
+                Item.innerHTML = `<a class="Link" target="_blank" href="/db/${name}">${name}</a>`;
+                DBView.appendChild(Item);
+            });
+
+            UploadsView.innerHTML = '';
+
+            uploads.forEach(name => {
+                const Item = document.createElement('li');
+                Item.innerHTML = `<a class="Link" target="_blank" href="/cat/uploads/${name}">${name}</a>`;
+                UploadsView.appendChild(Item);
+            });
+        });
+
+        function requestAllData() {
+            socket.emit('get-all-data', {
+                socketid: socket.id
+            });
+        }
+
+        UpdateButton.addEventListener('click', () => {
+            requestAllData();
+        });
+
+        socket.on('connect', () => {
+            requestAllData();
+        });
+    </script>
+</body>
+
+</html>

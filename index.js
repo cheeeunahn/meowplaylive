@@ -19,13 +19,13 @@ io.sockets.on('connection', newConnection);
 // Testing nedb database
 const Datastore = require('nedb');
 
-const voiceDatabase = new Datastore('voice-database.db');
+const voiceDatabase = new Datastore('db/voice-database.db');
 voiceDatabase.loadDatabase();
 
-const chatDatabase = new Datastore('chat-database.db');
+const chatDatabase = new Datastore('db/chat-database.db');
 chatDatabase.loadDatabase();
 
-const pointDatabase = new Datastore('point-database.db');
+const pointDatabase = new Datastore('db/point-database.db');
 pointDatabase.loadDatabase();
 //////////////////////////////////////////////////
 
@@ -33,6 +33,7 @@ pointDatabase.loadDatabase();
 app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/db', express.static(path.join(__dirname, 'db')));
 
 function computeAndEmitDonationSumMap(socket) {
     voiceDatabase.find({}, { nickname: 1, donation: 1 }, (err, docs) => {
@@ -164,6 +165,17 @@ function newConnection(socket) {
 
             io.emit('apply-point', { nickname: nickname, point: newPoint });
         });
+    });
+
+    socket.on('get-all-data', (req) => {
+        const { socketid } = req;
+
+        const dataNames = {
+            db: fs.readdirSync('db'),
+            uploads: fs.readdirSync('public/cat/uploads').filter(name => (name !== '.gitkeep'))
+        };
+
+        io.to(socketid).emit('get-all-data', dataNames);
     });
 }
 //////////////////////////////////////////////////
