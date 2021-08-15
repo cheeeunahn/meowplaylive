@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 
 import { CommonModal, CommonBox, CommonCloseButton, CommonSlider, commonColors, CommonButton } from 'component/Common';
 import { StoreContext } from 'component/Store';
-import { numberToFormattedString } from 'common/StringUtils';
+import { numberToFormattedString, timestampToString } from 'common/StringUtils';
 import { socket } from 'common/Connection';
 
 type LastResult =
@@ -139,7 +139,8 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                             audio: voiceBlob!!,
                             donation: currentPoint,
                             socketid: socket.id,
-                            timestamp: timestamp
+                            timestamp: timestamp,
+                            timestampString: timestampToString(timestamp)
                         });
 
                         socket.emit('upload-audio', {

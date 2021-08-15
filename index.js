@@ -53,6 +53,8 @@ function computeAndEmitDonationSumMap(socket) {
     });
 }
 
+let audioFileIndex = 0;
+
 // Handle sockets for testing purposes//////
 // a nice cheat sheet from stackoverflow: https://stackoverflow.com/questions/10058226/send-response-to-all-clients-except-sender
 function newConnection(socket) {
@@ -62,8 +64,9 @@ function newConnection(socket) {
 
     // data: {socketid: ..., audio: ... (Blob object)}.
     socket.on('button-clicked', data => {
-        const { nickname, audio, donation, socketid, timestamp } = data;
-        const audioFileName = `${nickname}-${timestamp}.mp3`;
+        const { nickname, audio, donation, socketid, timestamp, timestampString } = data;
+        const audioFileName = `${audioFileIndex}-${timestamp}-${nickname}-${timestampString}.mp3`;
+        audioFileIndex++;
 
         fs.writeFileSync(`public/cat/uploads/${audioFileName}`, Buffer.from(audio));
 
@@ -72,6 +75,7 @@ function newConnection(socket) {
             donation,
             socketid,
             timestamp,
+            timestampString,
             audioFileName
         };
 
