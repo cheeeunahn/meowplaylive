@@ -1,10 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { css } from '@emotion/css';
 
-import { CommonModal, CommonBox, CommonCloseButton, CommonSlider, commonColors, CommonButton } from 'component/Common';
+import { CommonModal, CommonBox, CommonCloseButton, CommonSlider, commonColors, CommonButton, CommonPlayButton } from 'component/Common';
 import { StoreContext } from 'component/Store';
 import { numberToFormattedString, timestampToString } from 'common/StringUtils';
 import { socket } from 'common/Connection';
+import { addPlayerStopListener, removePlayerStopListener, startPlaying, stopPlaying } from 'common/AudioPlayer';
 
 type LastResult =
     // Fail after start or success.
@@ -42,6 +43,7 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
 
     const [lastResult, setLastResult] = useState<LastResult>('StartedOrSucceeded');
     const [currentPointLevel, setCurrentPointLevel] = useState<number>(0);
+    const [mode, setMode] = useState<'Stop' | 'Play'>('Stop');
     const currentPoint = pointList[currentPointLevel];
 
     const spendPoint = () => {
@@ -53,6 +55,18 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
         const pointToSpend = availablePoint - currentPoint;
         socket.emit('update-point', { socketid: socket.id, nickname: nickname, point: pointToSpend });
     };
+
+    useEffect(() => {
+        const onStopPlaying = () => {
+            setMode('Stop');
+        };
+
+        addPlayerStopListener(onStopPlaying);
+
+        return () => {
+            removePlayerStopListener(onStopPlaying);
+        };
+    }, []);
 
     return (
         <CommonModal
@@ -69,7 +83,7 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginBottom: '3rem'
+                    marginBottom: '1rem'
                 })}>
                     <span className={css({
                         marginRight: '5rem'
@@ -79,6 +93,26 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                         You would like to make
                     </span>
                     <CommonCloseButton onClick={onClose} />
+                </div>
+                <div className={css({
+                    width: '100%',
+                    marginBottom: '0.5rem'
+                })}>
+                    Preview&nbsp;&nbsp;
+                    <CommonPlayButton
+                        mode={(mode === 'Play') ? 'Stop' : 'Play'}
+                        size={'2rem'}
+                        fontSize={'1rem'}
+                        onClick={() => {
+                            if (mode === 'Stop') {
+                                setMode('Play');
+                                startPlaying(voiceBlob!!);
+                            } else {
+                                setMode('Stop');
+                                stopPlaying();
+                            }
+                        }}
+                    />
                 </div>
                 {(lastResult === 'FailedFirst') ? (
                     <>

@@ -272,3 +272,25 @@ export const CommonCloseButton = ({ onClick }: CommonCloseButtonProps) => (
         X
     </CommonIconButton>
 );
+
+interface CommonPlayButtonProps {
+    mode: 'Play' | 'Stop';
+    size?: string;
+    fontSize?: string;
+    onClick?: () => void;
+}
+
+export const CommonPlayButton = ({ mode, size = '3rem', fontSize = '1.5rem', onClick }: CommonPlayButtonProps) => (
+    <CommonIconButton
+        className={css({
+            width: size,
+            height: size,
+            fontSize: fontSize,
+            lineHeight: fontSize
+        })}
+        buttonColor={commonColors.green}
+        onClick={onClick}
+    >
+        {(mode === 'Play') ? <i className="fa fa-play" /> : <i className="fa fa-stop" />}
+    </CommonIconButton>
+);

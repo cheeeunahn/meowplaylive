@@ -2,9 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { css } from '@emotion/css';
 
 import { StoreContext } from 'component/Store';
-import { commonColors, CommonSlider, CommonButton } from 'component/Common';
+import { commonColors, CommonSlider, CommonButton, CommonPlayButton } from 'component/Common';
 import { Clock } from 'component/recorder-dialog/Clock';
-import { PlayButton } from 'component/recorder-dialog/PlayButton';
 import { stopRecording, startRecording } from 'common/AudioRecorder';
 import { startPlaying, stopPlaying } from 'common/AudioPlayer';
 
@@ -88,19 +87,24 @@ export const RecorderView = ({ onSave }: Props) => {
                 width: '100%',
                 visibility: (currentVoiceBlob || (mode === 'Record')) ? 'visible' : 'hidden'
             })}>
-                {
-                    (mode === 'Record')
-                        ? <Clock time={time} />
-                        : <PlayButton mode={(mode === 'Play') ? 'Stop' : 'Play'} onClick={() => {
-                            if (mode === 'Stop') {
-                                setMode('Play');
-                                startPlaying(currentVoiceBlob!!);
-                            } else {
-                                setMode('Stop');
-                                stopPlaying();
-                            }
-                        }} />
-                }
+                <div className={css({
+                    marginBottom: '1rem'
+                })}>
+                    {(mode === 'Record') ? <Clock time={time} /> : (
+                        <CommonPlayButton
+                            mode={(mode === 'Play') ? 'Stop' : 'Play'}
+                            onClick={() => {
+                                if (mode === 'Stop') {
+                                    setMode('Play');
+                                    startPlaying(currentVoiceBlob!!);
+                                } else {
+                                    setMode('Stop');
+                                    stopPlaying();
+                                }
+                            }}
+                        />
+                    )}
+                </div>
                 <CommonSlider
                     sliderColor={commonColors.green}
                     showMark={false}

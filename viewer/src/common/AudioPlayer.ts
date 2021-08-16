@@ -11,3 +11,11 @@ export function stopPlaying() {
     player.src = '';
     console.log('[Player] Stopped playing!');
 }
+
+export function addPlayerStopListener(listener: () => void) {
+    player.addEventListener('ended', listener);
+}
+
+export function removePlayerStopListener(listener: () => void) {
+    player.removeEventListener('ended', listener);
+}

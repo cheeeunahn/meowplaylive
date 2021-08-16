@@ -14,8 +14,7 @@ export const Clock = ({ time }: Props) => {
         <div className={css({
             height: '3rem',
             fontSize: '2rem',
-            fontWeight: 'bold',
-            marginBottom: '1rem'
+            fontWeight: 'bold'
         })}>
             {minuteString}:{secondString}
         </div>
