@@ -28,7 +28,7 @@
 <body>
     <div id="slider-container" style="width: 100%; z-index: 9; position: absolute;">
         <p style="font-family: 'Noto Sans KR', sans-serif; margin-left: 1%; margin-bottom: -0.2%;">
-            Slide all the way to quit!
+            Slide all the way to change the game mode!
             <i class="fa fa-arrow-right" aria-hidden="true"></i>
             <i class="fa fa-arrow-right" aria-hidden="true"></i>
             <i class="fa fa-arrow-right" aria-hidden="true"></i>
@@ -48,8 +48,9 @@
 
             }
             if (value >= 98){
-                /*window.location.href='./cat-screen.html';*/
-                window.close();
+                location.replace('./mouse.html');
+                //location.replace('./cat-screen.html');
+                //window.location.href='./cat-screen.html';
             }
         }
     </script>
