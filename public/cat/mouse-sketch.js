@@ -295,8 +295,8 @@
              this.fish_gif.play();*/
  
          // fish colors
-         this.colorPalette = [color(81, 252, 215), color(81, 243, 252), color(64, 204, 255),
-             color(71, 149, 252), color(64, 134, 255), color(64, 74, 255), color(102, 64, 255)];
+         this.colorPalette = [color(141, 252, 177), color(141, 252, 225), color(159, 252, 245),
+             color(140, 219, 255), color(131, 188, 252), color(130, 159, 255), color(174, 153, 255)];
  
          this.px = -1000;
          this.py = -1000; // put it somewhere invisible
