@@ -24,6 +24,24 @@
             -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
             -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
         }
+        .mdl-slider {
+            -webkit-appearance: none;
+            width: 15%;
+            height: 25px;
+            border-radius: 10px;
+            margin-left: 1%;
+            margin-top:2%;
+            background: #d3d3d3;
+        }
+        .mdl-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Override default look */
+            appearance: none;
+            width: 50px; /* Set a specific slider handle width */
+            height: 50px; /* Slider handle height */
+            background: #000000; /* Green background */
+            border-radius: 50%;
+            cursor: pointer; /* Cursor on hover */
+        }
     </style>
 </head>
 <body>
@@ -35,7 +53,7 @@
             <i class="fa fa-arrow-right" aria-hidden="true"></i>
             <i class="fa fa-arrow-right" aria-hidden="true"></i>
         </p>
-        <input class="mdl-slider mdl-js-slider" id="slider" style="width: 25%; margin-left: 1%;" type="range" min="0" max="100" value="0" tabindex="0">
+        <input class="mdl-slider mdl-js-slider" id="slider" type="range" min="0" max="100" value="0" tabindex="0">
     </div> 
     <script>
         let sliderInput = document.getElementById("slider");

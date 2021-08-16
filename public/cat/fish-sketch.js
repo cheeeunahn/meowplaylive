@@ -103,7 +103,7 @@ function draw() {
     let showDefaultFish = false;
 
     textFont(nanumFontBold);
-    textSize(width/12);
+    textSize(windowWidth/12.5);
     textAlign(CENTER, CENTER);
     fill(0);
     noStroke();

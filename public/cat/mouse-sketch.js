@@ -107,7 +107,7 @@
 
      let showDefaultFish = false;
      textFont(nanumFontBold);
-     textSize(windowHeight/10);
+     textSize(windowHeight/12.5);
      textAlign(CENTER, CENTER);
      fill(0);
      noStroke();
@@ -194,7 +194,7 @@
  
  function drawFish (data) {
      for (var i = 0; i < fishGroup.length; i++){
-         if ((fishGroup[i].getPositionX() > windowWidth || fishGroup[i].getPositionX() < 0)&&
+         if ((fishGroup[i].getPositionX() > windowWidth || fishGroup[i].getPositionX() < 0)||
              (fishGroup[i].getPositionY() > windowHeight || fishGroup[i].getPositionY() < 0)) {
              fishGroup[i].setUsername(username);
              fishGroup[i].setId(data.socketid); // the socket id of the fish
