@@ -44,13 +44,19 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
     const spendPoint = () => {
         if (currentPoint > availablePoint) {
             alert(`You can't donate ${numberToFormattedString(currentPoint)} points since you have ${numberToFormattedString(availablePoint)} points left.`);
-            return;
+            return false;
         }
 
         updatePoint(availablePoint - currentPoint);
+        return true;
     };
 
     const sendDonation = () => {
+        // If spendPoint() fails (ex. not enough money), do nothing.
+        if (!spendPoint()) {
+            return;
+        }
+
         socket.emit('name-sent', nickname);
 
         const timestamp = Date.now();
@@ -74,7 +80,6 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
 
         const pointBeforeSpend = availablePoint;
         const lastSpentPoint = currentPoint;
-        spendPoint();
 
         const onFail = () => {
             // Return the half of the point if the user fails.
