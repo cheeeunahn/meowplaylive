@@ -37,8 +37,8 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
     const [mode, setMode] = useState<'Stop' | 'Play'>('Stop');
     const currentPoint = pointList[currentPointLevel];
 
-    const updatePoint = (newAvailablePoint: number) => {
-        socket.emit('update-point', { socketid: socket.id, nickname: nickname, point: newAvailablePoint });
+    const updatePoint = (pointDiff: number) => {
+        socket.emit('update-point', { socketid: socket.id, nickname: nickname, pointDiff: pointDiff });
     };
 
     const spendPoint = () => {
@@ -47,7 +47,7 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
             return false;
         }
 
-        updatePoint(availablePoint - currentPoint);
+        updatePoint(-currentPoint);
         return true;
     };
 
@@ -78,12 +78,11 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
             timestamp: timestamp
         });
 
-        const pointBeforeSpend = availablePoint;
         const lastSpentPoint = currentPoint;
 
         const onFail = () => {
             // Return the half of the point if the user fails.
-            updatePoint(pointBeforeSpend - Math.floor(lastSpentPoint / 2));
+            updatePoint(Math.floor(lastSpentPoint / 2));
         };
 
         socket.once('cat-tap-fail', onFail);

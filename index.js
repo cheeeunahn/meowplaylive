@@ -54,6 +54,7 @@ function computeAndEmitDonationSumMap(socket) {
 }
 
 let audioFileIndex = 0;
+const pointUpdateDataQueue = [];
 
 // Handle sockets for testing purposes//////
 // a nice cheat sheet from stackoverflow: https://stackoverflow.com/questions/10058226/send-response-to-all-clients-except-sender
@@ -152,9 +153,8 @@ function newConnection(socket) {
         });
     });
 
-    // For storing the amount of remaining points of each user to DB.
-    socket.on('update-point', data => {
-        const { socketid, nickname, point } = data;
+    function processPointUpdate(data) {
+        const { socketid, nickname, pointDiff } = data;
 
         pointDatabase.findOne({ nickname: nickname }, { nickname: 1, point: 1 }, (err, doc) => {
             let newPoint = 0;
@@ -163,12 +163,25 @@ function newConnection(socket) {
                 newPoint = maxPoint;
                 pointDatabase.insert({ nickname: nickname, point: newPoint });
             } else {
-                newPoint = point;
+                newPoint = doc.point + pointDiff;
                 pointDatabase.update({ nickname: nickname }, { nickname: nickname, point: newPoint }, {});
             }
 
             io.emit('apply-point', { nickname: nickname, point: newPoint });
         });
+    }
+
+    function processRemainingPointUpdates() {
+        while (pointUpdateDataQueue.length > 0) {
+            const data = pointUpdateDataQueue.shift();
+            processPointUpdate(data);
+        }
+    }
+
+    // For storing the amount of remaining points of each user to DB.
+    socket.on('update-point', data => {
+        pointUpdateDataQueue.push(data);
+        processRemainingPointUpdates();
     });
 
     socket.on('get-all-data', (req) => {
