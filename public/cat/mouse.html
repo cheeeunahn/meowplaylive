@@ -23,18 +23,8 @@
             -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
         }
     </style>
-
-    <script type = "text/JavaScript">
-        <!--
-        function AutoRefresh( t ) {
-            setTimeout("location.reload(true);", t);
-        }
-        //-->
-    </script>
-
 </head>
-<body onload = "JavaScript:AutoRefresh(60000);">
-    <script src="./mouse-sketch.js"></script>
+<body>
     <div id="slider-container" style="width: 100%; z-index: 9; position: absolute;">
         <p style="font-family: 'Noto Sans KR', sans-serif; margin-left: 1%; margin-bottom: -0.2%;">
             Slide all the way to quit!
@@ -52,11 +42,13 @@
 
         function goBack(e) {
             let value = sliderInput.value;
-            console.log(value);
-            if (value == 100){
-                window.location.href='./cat-screen.html';
+            //console.log(value);
+            if (value >= 98){
+                /*window.location.href='./cat-screen.html';*/
+                window.close();
             }
         }
     </script>
+    <script src="./mouse-sketch.js"></script>
 </body>
 </html>
