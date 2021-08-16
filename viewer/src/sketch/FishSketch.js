@@ -29,6 +29,10 @@ let notoSansKRBlack;
 let pawprint;
 let pawprintLocX;
 let pawprintLocY;
+let tempLocX;
+let tempLocY; // fish or mouse caught image location
+let tempFish;
+let tempFishAngle;
 let displayRipple;
 let rippleRadius;
 let drawType;
@@ -52,6 +56,10 @@ export function setup(Container) {
     pawprint = loadImage('./assets/paw.png');
     pawprintLocX = -1000;
     pawprintLocY = -1000;
+    tempFish = null;
+    tempLocX = -1000;
+    tempLocY = -1000;
+    tempFishAngle = 0;
     displayRipple = false;
     rippleRadius = 0;
 
@@ -102,6 +110,10 @@ export function setup(Container) {
 
         pawprintLocX = rectPosX + rectWidth * (arg.touch_positions.posX);
         pawprintLocY = rectPosY + rectHeight * (arg.touch_positions.posY);
+
+        tempLocX = rectPosX + rectWidth * (arg.temp_positions.posX);
+        tempLocY = rectPosY + rectHeight * (arg.temp_positions.posY);
+        tempFishAngle = arg.temp_positions.angle;
     });
     ///////////////////////////////////////////
     msg = "";
@@ -129,6 +141,15 @@ export function draw() {
 
     imageMode(CENTER);
     image(pawprint, pawprintLocX, pawprintLocY, width/10, width/10);
+
+    push();
+    translate(tempLocX, tempLocY);
+    rotate(tempFishAngle);
+    imageMode(CENTER);
+    if (tempFish !== null){
+        image(tempFish, 0, 0, width/5, width/5);
+    }
+    pop();
 
     if (pawprintLocX > 0 && pawprintLocY > 0)
         displayRipple = true;
@@ -200,18 +221,22 @@ class CloneFish {
         if (arg.localeCompare("fishdefault")==0){ // default fish swimming around
             this.fishSize = 100;
             this.fish_gif = loadImage('../cat/assets/realfish.gif');
+            tempFish = loadImage('../cat/assets/realfish.gif');
         }
         else if (arg.localeCompare("mousedefault")==0){ // default fish swimming around
             this.fishSize = 100;
             this.fish_gif = loadImage('../cat/assets/realmouse.gif');
+            tempFish = loadImage('../cat/assets/realmouse.gif');
         }
         else if (arg.localeCompare("fish")==0){
             this.fishSize = 180;
             this.fish_gif = loadImage('../cat/assets/realfish.gif');
+            tempFish = loadImage('../cat/assets/realfish.gif');
         }
         else if (arg.localeCompare("mouse")==0){
             this.fishSize = 180;
             this.fish_gif = loadImage('../cat/assets/realmouse.gif');
+            tempFish = loadImage('../cat/assets/realmouse.gif');
         }
         
         this.fish_gif.play();
