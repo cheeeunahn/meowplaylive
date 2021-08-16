@@ -148,6 +148,8 @@
      if (tempFish != null && tempFishPosX >= 0) {
          push();
          translate(mouseX, mouseY)
+         tempFishPosX = mouseX;
+         tempFishPosY = mouseY;
          //rotate(tempFishAngle+PI);
          rotate(tempFishAngle);
          imageMode(CENTER);
