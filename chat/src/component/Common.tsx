@@ -32,8 +32,6 @@ export const youTubeColors = {
     lightGray: 'rgba(17, 17, 17, 0.4)',
     gray: 'rgba(17, 17, 17, 0.6)',
     darkGray: 'rgb(17, 17, 17, 0.8)',
-    lightYellow: 'rgb(255, 202, 40)',
-    yellow: 'rgb(255, 179, 0)',
     lightBlue: 'hsl(206.1, 79.3%, 52.7%)'
 };
 

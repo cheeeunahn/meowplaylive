@@ -4,6 +4,7 @@ import { css } from '@emotion/css';
 import { CommonBox, CommonProfile, youTubeColors } from 'component/Common';
 import { Chat } from 'common/Chat';
 import { numberToFormattedString } from 'common/StringUtils';
+import { getSuperChatColors } from 'common/ColorUtils';
 
 const commonChatItemStyle = css({
     marginBottom: '0.5rem'
@@ -42,50 +43,54 @@ export const DefaultChatItem = ({ chat }: Props) => (
     </CommonBox>
 );
 
-export const SuperChatItem = ({ chat }: Props) => (
-    <CommonBox className={css([commonChatItemStyle, {
-        padding: 0
-    }])}>
-        <div className={css({
-            boxSizing: 'border-box',
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            padding: '0.5rem 1rem',
-            backgroundColor: youTubeColors.yellow
-        })}>
-            <CommonProfile
-                className={css({
-                    width: '2rem',
-                    height: '2rem',
-                    lineHeight: '2rem',
-                    fontSize: '1.5rem'
-                })}
-                profileColor={chat.profileColor}
-            />
+export const SuperChatItem = ({ chat }: Props) => {
+    const superChatColor = getSuperChatColors(chat.donation);
+
+    return (
+        <CommonBox className={css([commonChatItemStyle, {
+            padding: 0
+        }])}>
             <div className={css({
-                display: 'inline-block'
+                boxSizing: 'border-box',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                padding: '0.5rem 1rem',
+                backgroundColor: superChatColor.darkColor
             })}>
+                <CommonProfile
+                    className={css({
+                        width: '2rem',
+                        height: '2rem',
+                        lineHeight: '2rem',
+                        fontSize: '1.5rem'
+                    })}
+                    profileColor={chat.profileColor}
+                />
                 <div className={css({
-                    color: youTubeColors.gray,
-                    marginBottom: '0.5rem'
+                    display: 'inline-block'
                 })}>
-                    {chat.nickname}
-                </div>
-                <div>
-                    &#8361; {numberToFormattedString(chat.donation)}
+                    <div className={css({
+                        color: youTubeColors.gray,
+                        marginBottom: '0.5rem'
+                    })}>
+                        {chat.nickname}
+                    </div>
+                    <div>
+                        {numberToFormattedString(chat.donation)} Points
+                    </div>
                 </div>
             </div>
-        </div>
-        <div className={css([commonContentStyle, {
-            boxSizing: 'border-box',
-            padding: '0.5rem 1rem',
-            backgroundColor: youTubeColors.lightYellow
-        }])}>
-            {chat.content}
-        </div>
-    </CommonBox>
-);
+            <div className={css([commonContentStyle, {
+                boxSizing: 'border-box',
+                padding: '0.5rem 1rem',
+                backgroundColor: superChatColor.lightColor
+            }])}>
+                {chat.content}
+            </div>
+        </CommonBox>
+    );
+};
 
 export const JoinChatItem = ({ chat }: Props) => (
     <CommonBox className={css([commonChatItemStyle, commonContentStyle, {

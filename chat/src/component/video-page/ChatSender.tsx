@@ -7,7 +7,7 @@ import { socket } from 'common/Connection';
 import { Chat } from 'common/Chat';
 import { EmojiSelector } from 'component/video-page/EmojiSelector';
 import { SpecialChatMenu } from 'component/video-page/SpecialChatMenu';
-import { DonationSelector } from 'component/video-page/DonationSelector';
+import { SuperChatSender } from 'component/video-page/SuperChatSender';
 
 const iconStyle = css({
     cursor: 'pointer',
@@ -56,7 +56,7 @@ export const ChatSender = () => {
     const [content, setContent] = useState<string>('');
     const [showEmojiSelector, setShowEmojiSelector] = useState<boolean>(false);
     const [showSpecialChatMenu, setShowSpecialChatMenu] = useState<boolean>(false);
-    const [showDonationSelector, setShowDonationSelector] = useState<boolean>(false);
+    const [showSuperChatSender, setShowSuperChatSender] = useState<boolean>(false);
 
     const maxContentLength = 200;
 
@@ -152,17 +152,17 @@ export const ChatSender = () => {
                 <SpecialChatMenu
                     onOpenDonationSelector={() => {
                         setShowSpecialChatMenu(false);
-                        setShowDonationSelector(true);
+                        setShowSuperChatSender(true);
                     }}
                     onClose={() => {
                         setShowSpecialChatMenu(false);
                     }}
                 />
             )}
-            {showDonationSelector && (
-                <DonationSelector
+            {showSuperChatSender && (
+                <SuperChatSender
                     onClose={() => {
-                        setShowDonationSelector(false);
+                        setShowSuperChatSender(false);
                     }}
                 />
             )}

@@ -7,6 +7,21 @@ import { Chat } from 'common/Chat';
 import { numberToFormattedString } from 'common/StringUtils';
 import { CommonBox, CommonButton, CommonInput, CommonProfile, CommonSlider, youTubeColors } from 'component/Common';
 import { EmojiSelector } from 'component/video-page/EmojiSelector';
+import { getSuperChatColors } from 'common/ColorUtils';
+
+const pointList = [
+    1000,
+    2000,
+    5000,
+    10000,
+    20000,
+    50000,
+    100000,
+    200000,
+    300000,
+    400000,
+    500000
+];
 
 const iconStyle = css({
     cursor: 'pointer',
@@ -52,17 +67,20 @@ interface Props {
     onClose: () => void;
 }
 
-export const DonationSelector = ({ onClose }: Props) => {
+export const SuperChatSender = ({ onClose }: Props) => {
     const { profileColor, nickname } = useContext(StoreContext);
 
     const [content, setContent] = useState<string>('');
     const [showEmojiSelector, setShowEmojiSelector] = useState<boolean>(false);
+    const [currentPointLevel, setCurrentPointLevel] = useState<number>(0);
+    const currentPoint = pointList[currentPointLevel];
+    const superChatColor = getSuperChatColors(currentPoint);
 
     const chat: Chat = {
         profileColor: profileColor,
         nickname: nickname,
         content: content,
-        donation: 10000,
+        donation: currentPoint,
         timestamp: Date.now(),
         type: 'SuperChat'
     };
@@ -133,7 +151,7 @@ export const DonationSelector = ({ onClose }: Props) => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     padding: '0.5rem 1rem',
-                    backgroundColor: youTubeColors.yellow
+                    backgroundColor: superChatColor.darkColor
                 })}>
                     <CommonProfile
                         className={css({
@@ -154,14 +172,14 @@ export const DonationSelector = ({ onClose }: Props) => {
                             {nickname}
                         </div>
                         <div>
-                            &#8361; {numberToFormattedString(10000)}
+                            {numberToFormattedString(currentPoint)} Points
                         </div>
                     </div>
                 </div>
                 <div className={css({
                     boxSizing: 'border-box',
                     padding: '0.5rem 1rem',
-                    backgroundColor: youTubeColors.lightYellow
+                    backgroundColor: superChatColor.lightColor
                 })}>
                     <CommonInput
                         className={css({
@@ -229,7 +247,7 @@ export const DonationSelector = ({ onClose }: Props) => {
                 fontSize: '1.2rem',
                 color: youTubeColors.gray
             })}>
-                &#8361; <span className={css({ color: youTubeColors.darkGray })}>{numberToFormattedString(10000)}</span> KRW
+                <span className={css({ color: youTubeColors.darkGray })}>{numberToFormattedString(currentPoint)}</span> Points
             </div>
             <CommonSlider
                 className={css({
@@ -237,11 +255,13 @@ export const DonationSelector = ({ onClose }: Props) => {
                 })}
                 showMark={true}
                 showThumb={true}
-                isReadonly={true}
                 min={0}
                 max={10}
-                value={3}
+                value={currentPointLevel}
                 step={1}
+                onChange={value => {
+                    setCurrentPointLevel(value);
+                }}
             />
             <CommonButton
                 className={css({
