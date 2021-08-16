@@ -69,7 +69,7 @@
      addScreenPositionFunction();
  
      //play background sound
-     waterSound.setVolume(0.3);
+     waterSound.setVolume(0.2);
      waterSound.loop();
  
      rippleRadius = 1;
@@ -93,7 +93,7 @@
      socket.on('button-clicked', drawFish);
 
     window.setInterval(() => {
-        bubbleSound.setVolume(0.1);
+        bubbleSound.setVolume(0.3);
         if (bubbleSound.isPlaying())
             bubbleSound.stop();
         bubbleSound.play();
@@ -266,7 +266,7 @@
              }, 5000);
          }
          else {
-             touchSound.setVolume(0.1);
+             touchSound.setVolume(0.5);
              if (splashSound.isPlaying()||touchSound.isPlaying())
                  touchSound.stop();
              if (!splashSound.isPlaying())
