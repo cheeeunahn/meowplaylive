@@ -7,14 +7,6 @@ import { numberToFormattedString, timestampToString } from 'common/StringUtils';
 import { socket } from 'common/Connection';
 import { addPlayerStopListener, removePlayerStopListener, startPlaying, stopPlaying } from 'common/AudioPlayer';
 
-type LastResult =
-    // Fail after start or success.
-    'FailedFirst'
-    // Fail after fail.
-    | 'FailedAgain'
-    // Start or success.
-    | 'StartedOrSucceeded';
-
 const pointList = [
     1000,
     2000,
@@ -41,10 +33,13 @@ socket.on('number-exceeded', () => {
 export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
     const { voiceBlob, nickname, availablePoint } = useContext(StoreContext);
 
-    const [lastResult, setLastResult] = useState<LastResult>('StartedOrSucceeded');
     const [currentPointLevel, setCurrentPointLevel] = useState<number>(0);
     const [mode, setMode] = useState<'Stop' | 'Play'>('Stop');
     const currentPoint = pointList[currentPointLevel];
+
+    const updatePoint = (newAvailablePoint: number) => {
+        socket.emit('update-point', { socketid: socket.id, nickname: nickname, point: newAvailablePoint });
+    };
 
     const spendPoint = () => {
         if (currentPoint > availablePoint) {
@@ -52,8 +47,42 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
             return;
         }
 
-        const pointToSpend = availablePoint - currentPoint;
-        socket.emit('update-point', { socketid: socket.id, nickname: nickname, point: pointToSpend });
+        updatePoint(availablePoint - currentPoint);
+    };
+
+    const sendDonation = () => {
+        socket.emit('name-sent', nickname);
+
+        const timestamp = Date.now();
+
+        socket.emit('button-clicked', {
+            nickname: nickname,
+            audio: voiceBlob!!,
+            donation: currentPoint,
+            socketid: socket.id,
+            timestamp: timestamp,
+            timestampString: timestampToString(timestamp)
+        });
+
+        socket.emit('upload-audio', {
+            nickname: nickname,
+            audio: voiceBlob!!,
+            donation: currentPoint,
+            socketid: socket.id,
+            timestamp: timestamp
+        });
+
+        const pointBeforeSpend = availablePoint;
+        const lastSpentPoint = currentPoint;
+        spendPoint();
+
+        const onFail = () => {
+            // Return the half of the point if the user fails.
+            updatePoint(pointBeforeSpend - Math.floor(lastSpentPoint / 2));
+        };
+
+        socket.once('cat-tap-fail', onFail);
+        onClose();
     };
 
     useEffect(() => {
@@ -114,49 +143,23 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                         }}
                     />
                 </div>
-                {(lastResult === 'FailedFirst') ? (
-                    <>
-                        <div className={css({
-                            fontWeight: 'bold',
-                            fontSize: '1.2rem',
-                            marginBottom: '1rem',
-                            textTransform: 'uppercase'
-                        })}>
-                            This time it's free for you!
-                        </div>
-                        <div className={css({
-                            textAlign: 'center',
-                            textTransform: 'uppercase',
-                            marginBottom: '2rem'
-                        })}>
-                            Because you were not chosen before,
-                            <br />
-                            we are giving you another chance to
-                            <br />
-                            get chosen!
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <div className={css({
-                            height: '3rem',
-                            fontSize: '2rem',
-                            fontWeight: 'bold',
-                            marginBottom: '1rem'
-                        })}>
-                            {numberToFormattedString(currentPoint)}
-                        </div>
-                        <CommonSlider
-                            sliderColor={commonColors.green}
-                            showMark={false}
-                            value={currentPointLevel}
-                            max={10}
-                            onChange={value => {
-                                setCurrentPointLevel(value);
-                            }}
-                        />
-                    </>
-                )}
+                <div className={css({
+                    height: '3rem',
+                    fontSize: '2rem',
+                    fontWeight: 'bold',
+                    marginBottom: '1rem'
+                })}>
+                    {numberToFormattedString(currentPoint)}
+                </div>
+                <CommonSlider
+                    sliderColor={commonColors.green}
+                    showMark={false}
+                    value={currentPointLevel}
+                    max={10}
+                    onChange={value => {
+                        setCurrentPointLevel(value);
+                    }}
+                />
                 <CommonButton
                     className={css({
                         display: 'block',
@@ -164,55 +167,7 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                         marginTop: '0.5rem'
                     })}
                     onClick={() => {
-                        socket.emit('name-sent', nickname);
-
-                        const timestamp = Date.now();
-
-                        socket.emit('button-clicked', {
-                            nickname: nickname,
-                            audio: voiceBlob!!,
-                            donation: currentPoint,
-                            socketid: socket.id,
-                            timestamp: timestamp,
-                            timestampString: timestampToString(timestamp)
-                        });
-
-                        socket.emit('upload-audio', {
-                            nickname: nickname,
-                            audio: voiceBlob!!,
-                            donation: currentPoint,
-                            socketid: socket.id,
-                            timestamp: timestamp
-                        });
-
-                        let isDone = false;
-
-                        const onSuccess = () => {
-                            if (!isDone) {
-                                if (lastResult !== 'FailedFirst') {
-                                    spendPoint();
-                                }
-
-                                setLastResult('StartedOrSucceeded');
-                                isDone = true;
-                            }
-                        };
-
-                        const onFail = () => {
-                            if (!isDone) {
-                                if (lastResult !== 'FailedFirst') {
-                                    spendPoint();
-                                }
-
-                                setLastResult((lastResult === 'StartedOrSucceeded') ? 'FailedFirst' : 'FailedAgain');
-                                isDone = true;
-                            }
-                        };
-
-                        socket.once('cat-tap-success', onSuccess);
-                        socket.once('cat-tap-fail', onFail);
-
-                        onClose();
+                        sendDonation();
                     }}
                 >
                     Send!
