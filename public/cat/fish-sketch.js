@@ -107,7 +107,7 @@ function draw() {
     textAlign(CENTER, CENTER);
     fill(0);
     noStroke();
-    text(titleNickname, width/2, height/10);
+    text(titleNickname, width/2, height/8);
 
     if (fishGroup !== null || fishGroup.length != 0) {
         for (var i = 0; i < fishGroup.length; i++){
