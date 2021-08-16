@@ -327,6 +327,7 @@
  
          // voice file name recorded by user.
          this.voiceFileName = null;
+         this.voiceSound = null;
      }
  
      setToNewPosition() {
@@ -604,10 +605,16 @@
  
      playVoice() {
          console.log(`Playing ${this.voiceFileName}...`);
+
+         if ((this.voiceSound !== null) && this.voiceSound.isPlaying()) {
+            this.voiceSound.stop();
+        }
  
-         const voiceSound = loadSound(`./uploads/${this.voiceFileName}`, () => {
-             voiceSound.setVolume(1.5);
-             voiceSound.play();
+         this.voiceSound = loadSound(`./uploads/${this.voiceFileName}`, () => {
+            this.voiceSound.setVolume(1.5);
+            if (this.voiceSound.isLoaded()) {
+                this.voiceSound.play();
+            }
          });
      }
  }
