@@ -23,17 +23,27 @@
             -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
             -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
         }
+        .mdl-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Override default look */
+            appearance: none;
+            width: 50px; /* Set a specific slider handle width */
+            height: 50px; /* Slider handle height */
+            background: #000000; /* Green background */
+            border-radius: 50%;
+            cursor: pointer; /* Cursor on hover */
+        }
     </style>
 </head>
 <body>
+    <script src="./mouse-sketch.js"></script>
     <div id="slider-container" style="width: 100%; z-index: 9; position: absolute;">
         <p style="font-family: 'Noto Sans KR', sans-serif; margin-left: 1%; margin-bottom: -0.2%;">
-            Slide all the way to change the game mode!
+            Slide all the way to quit!
             <i class="fa fa-arrow-right" aria-hidden="true"></i>
             <i class="fa fa-arrow-right" aria-hidden="true"></i>
             <i class="fa fa-arrow-right" aria-hidden="true"></i>
         </p>
-        <input class="mdl-slider mdl-js-slider" id="slider" style="width: 25%; margin-left: 1%;" type="range" min="0" max="100" value="0" tabindex="0">
+        <input class="mdl-slider mdl-js-slider" id="slider" style="-webkit-appearance: none; width: 28%; height: 25px; border-radius: 10px; margin-left: 1%; margin-top:3%; background: #d3d3d3;" type="range" min="0" max="100" value="0" tabindex="0">
     </div>
     <script>
         let sliderInput = document.getElementById("slider");
@@ -45,12 +55,9 @@
             let value = sliderInput.value;
             //console.log(value);
             if (value >= 98){
-                location.assign('./fish.html');
-                //location.replace('./cat-screen.html');
-                //window.location.href='./cat-screen.html';
+                window.location.href='./cat-screen.html';
             }
         }
     </script>
-    <script src="./mouse-sketch.js"></script>
 </body>
 </html>
