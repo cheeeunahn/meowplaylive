@@ -1,4 +1,2 @@
 node_modules
 public/cat/uploads/*.mp3
-point-database.db
-voice-database.db
