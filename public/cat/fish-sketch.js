@@ -103,7 +103,7 @@ function draw() {
     let showDefaultFish = false;
 
     textFont(nanumFontBold);
-    textSize(windowWidth/12.5);
+    textSize(windowWidth/12.8);
     textAlign(CENTER, CENTER);
     fill(0);
     noStroke();
@@ -354,13 +354,13 @@ class Fish {
 
 
         if (this.donation >= 10000){
-            this.vx = random(7,10);
-            this.vy = random(7,10);
+            this.vx = random(7,9);
+            this.vy = random(7,9);
         }
         else if (this.donation > 0) {
             do{
-                this.vx = random (-10, 10);
-                this.vy = random(-10, 10);
+                this.vx = random (-9, 9);
+                this.vy = random(-9, 9);
             }while (abs(this.vx) < 5);
         }
         else {
