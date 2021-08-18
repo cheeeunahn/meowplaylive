@@ -22,7 +22,7 @@ export const EmojiSelector = ({ onSelect, buttonColor = '#ffffff', className }: 
         marginBottom: '1rem'
     }, className])}>
         {emojiTable.map((row, y) => (
-            <div>
+            <div key={`${y}-${row.join('')}`}>
                 {row.map((emoji, x) => (
                     <CommonButton
                         variant={'text'}

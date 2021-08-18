@@ -68,7 +68,7 @@ interface Props {
 }
 
 export const SuperChatSender = ({ onClose }: Props) => {
-    const { profileColor, nickname } = useContext(StoreContext);
+    const { profileColor, nickname, availablePoint } = useContext(StoreContext);
 
     const [content, setContent] = useState<string>('');
     const [showEmojiSelector, setShowEmojiSelector] = useState<boolean>(false);
@@ -100,8 +100,20 @@ export const SuperChatSender = ({ onClose }: Props) => {
             return;
         }
 
+        if (currentPoint > availablePoint) {
+            alert(`You can't use ${numberToFormattedString(currentPoint)} points since you have ${numberToFormattedString(availablePoint)} points left.`);
+            return;
+        }
+
+        socket.emit('update-chat-point', {
+            socketid: socket.id,
+            nickname: nickname,
+            pointDiff: -currentPoint
+        });
+
         socket.emit('upload-chat', chat);
         cropAndSetContent('');
+        onClose();
     };
 
     return (
@@ -194,7 +206,6 @@ export const SuperChatSender = ({ onClose }: Props) => {
                         onKeyPress={key => {
                             if (key === 'Enter') {
                                 sendSuperChat();
-                                onClose();
                             }
                         }}
                     />
@@ -270,9 +281,9 @@ export const SuperChatSender = ({ onClose }: Props) => {
                     borderRadius: 0
                 })}
                 buttonColor={youTubeColors.lightBlue}
+                isDisabled={content.length === 0}
                 onClick={() => {
                     sendSuperChat();
-                    onClose();
                 }}
             >
                 Buy and send

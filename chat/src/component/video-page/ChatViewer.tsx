@@ -55,19 +55,12 @@ export const ChatViewer = () => {
             })}
         >
             {chats.map((chat, index) => (
-                <div {...((index === chats.length - 1) ? { ref: ref } : {})}>
-                    {(chat.type === 'DefaultChat') && (
-                        <DefaultChatItem
-                            key={`${index}-${chat.timestamp}`}
-                            chat={chat}
-                        />
-                    )}
-                    {(chat.type === 'SuperChat') && (
-                        <SuperChatItem
-                            key={`${index}-${chat.timestamp}`}
-                            chat={chat}
-                        />
-                    )}
+                <div
+                    key={`${index}-${chat.timestamp}`}
+                    {...((index === chats.length - 1) ? { ref: ref } : {})}
+                >
+                    {(chat.type === 'DefaultChat') && <DefaultChatItem chat={chat} />}
+                    {(chat.type === 'SuperChat') && <SuperChatItem chat={chat} />}
                     {(chat.type === 'JoinChat') && (
                         <JoinChatItem
                             key={`${index}-${chat.timestamp}`}

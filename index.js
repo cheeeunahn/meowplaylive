@@ -19,14 +19,17 @@ io.sockets.on('connection', newConnection);
 // Testing nedb database
 const Datastore = require('nedb');
 
-const voiceDatabase = new Datastore('db/voice-database.db');
-voiceDatabase.loadDatabase();
+const viewerVoiceDatabase = new Datastore('db/viewer-voice-database.db');
+viewerVoiceDatabase.loadDatabase();
+
+const viewerPointDatabase = new Datastore('db/viewer-point-database.db');
+viewerPointDatabase.loadDatabase();
 
 const chatDatabase = new Datastore('db/chat-database.db');
 chatDatabase.loadDatabase();
 
-const pointDatabase = new Datastore('db/point-database.db');
-pointDatabase.loadDatabase();
+const chatPointDatabase = new Datastore('db/chat-point-database.db');
+chatPointDatabase.loadDatabase();
 //////////////////////////////////////////////////
 
 // Suppress CORS warning.
@@ -36,7 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/db', express.static(path.join(__dirname, 'db')));
 
 function computeAndEmitDonationSumMap(socket) {
-    voiceDatabase.find({}, { nickname: 1, donation: 1 }, (err, docs) => {
+    viewerVoiceDatabase.find({}, { nickname: 1, donation: 1 }, (err, docs) => {
         // Map of key: string, value: number;
         const donationSumMap = {};
 
@@ -106,7 +109,7 @@ function newConnection(socket) {
 
     socket.on('upload-audio', (arg) => {
         console.log(`Received an audio file from ${arg.nickname} (Socket id: ${arg.socketid})`)
-        voiceDatabase.insert(arg);
+        viewerVoiceDatabase.insert(arg);
         computeAndEmitDonationSumMap(socket);
     });
 
@@ -123,28 +126,18 @@ function newConnection(socket) {
         computeAndEmitDonationSumMap(socket);
     });
 
-    // ===================================================
-    // For fake YouTube chat.
-
-    // arg: {profileColor: string, nickname: string, content: string, donation: number, timestamp: number, type: string}.
-    socket.on('upload-chat', chat => {
-        console.log(`New chat: ${chat.content} by ${chat.nickname}`);
-        chatDatabase.insert(chat);
-        io.emit('upload-chat', chat);
-    });
-
     const maxPoint = 500000;
 
     // Used when initializing the amount of remaining points of viewer ui.
     socket.on('init-point', data => {
         const { socketid, nickname } = data;
 
-        pointDatabase.findOne({ nickname: nickname }, { nickname: 1, point: 1 }, (err, doc) => {
+        viewerPointDatabase.findOne({ nickname: nickname }, { nickname: 1, point: 1 }, (err, doc) => {
             let initialPoint = 0;
 
             if (doc === null) {
                 initialPoint = maxPoint;
-                pointDatabase.insert({ nickname: nickname, point: initialPoint });
+                viewerPointDatabase.insert({ nickname: nickname, point: initialPoint });
             } else {
                 initialPoint = doc.point;
             }
@@ -156,15 +149,15 @@ function newConnection(socket) {
     function processPointUpdate(data) {
         const { socketid, nickname, pointDiff } = data;
 
-        pointDatabase.findOne({ nickname: nickname }, { nickname: 1, point: 1 }, (err, doc) => {
+        viewerPointDatabase.findOne({ nickname: nickname }, { nickname: 1, point: 1 }, (err, doc) => {
             let newPoint = 0;
 
             if (doc === null) {
                 newPoint = maxPoint;
-                pointDatabase.insert({ nickname: nickname, point: newPoint });
+                viewerPointDatabase.insert({ nickname: nickname, point: newPoint });
             } else {
                 newPoint = doc.point + pointDiff;
-                pointDatabase.update({ nickname: nickname }, { nickname: nickname, point: newPoint }, {});
+                viewerPointDatabase.update({ nickname: nickname }, { nickname: nickname, point: newPoint }, {});
             }
 
             io.emit('apply-point', { nickname: nickname, point: newPoint });
@@ -184,6 +177,57 @@ function newConnection(socket) {
         processRemainingPointUpdates();
     });
 
+    // ===================================================
+    // For fake YouTube chat.
+
+    // arg: {profileColor: string, nickname: string, content: string, donation: number, timestamp: number, type: string}.
+    socket.on('upload-chat', chat => {
+        console.log(`New chat: ${chat.content} by ${chat.nickname}`);
+        chatDatabase.insert(chat);
+        io.emit('upload-chat', chat);
+    });
+
+    const maxChatPoint = 500000;
+
+    // Used when initializing the amount of remaining points of viewer ui.
+    socket.on('init-chat-point', data => {
+        const { socketid, nickname } = data;
+
+        chatPointDatabase.findOne({ nickname: nickname }, { nickname: 1, point: 1 }, (err, doc) => {
+            let initialPoint = 0;
+
+            if (doc === null) {
+                initialPoint = maxChatPoint;
+                chatPointDatabase.insert({ nickname: nickname, point: initialPoint });
+            } else {
+                initialPoint = doc.point;
+            }
+
+            io.emit('apply-chat-point', { nickname: nickname, point: initialPoint });
+        });
+    });
+
+    socket.on('update-chat-point', data => {
+        const { socketid, nickname, pointDiff } = data;
+
+        chatPointDatabase.findOne({ nickname: nickname }, { nickname: 1, point: 1 }, (err, doc) => {
+            let newPoint = 0;
+
+            if (doc === null) {
+                newPoint = maxChatPoint;
+                chatPointDatabase.insert({ nickname: nickname, point: newPoint });
+            } else {
+                newPoint = doc.point + pointDiff;
+                chatPointDatabase.update({ nickname: nickname }, { nickname: nickname, point: newPoint }, {});
+            }
+
+            io.emit('apply-chat-point', { nickname: nickname, point: newPoint });
+        });
+    });
+
+    // ===================================================
+    // For the download page.
+
     socket.on('get-all-data', (req) => {
         const { socketid } = req;
 
@@ -199,4 +243,4 @@ function newConnection(socket) {
 
 server.listen(PORT, function () {
     console.log(`initiating server at ${PORT}`);
-})
+});
