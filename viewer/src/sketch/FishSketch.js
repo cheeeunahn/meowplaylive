@@ -18,6 +18,7 @@ import { socket } from 'common/Connection'
 
 let msg; // display thank you message
 let fishGroup;
+let cloneTitle; // displaying the winner viewer
 let rectWidth;
 let rectHeight;
 let rectPosX;
@@ -65,6 +66,7 @@ export function setup(Container) {
 
     drawType = 'mouse';
     fishGroup = null;
+    cloneTitle = "";
 
     const canvas = createCanvas(rectWidth, rectHeight);
     canvas.parent(Container);
@@ -105,6 +107,8 @@ export function setup(Container) {
                 }
             }
         }
+
+        cloneTitle = arg.title.nickname;
 
         bgColor = color(arg.drawType.bg_r, arg.drawType.bg_g, arg.drawType.bg_b);
 
@@ -170,6 +174,13 @@ export function draw() {
             displayRipple = false;
         }
     }
+
+    textFont(nanumFontBold);
+    textSize(height/12.5);
+    textAlign(CENTER, CENTER);
+    fill(0);
+    noStroke();
+    text(cloneTitle, width/2, height/8);
 }
 
 // this funciton has the code for drawing the cat UI
