@@ -217,7 +217,7 @@
      console.log(data);
  }
  
- function touchStarted () {
+ function touchEnded () {
      touchPosX = mouseX;
      touchPosY = mouseY;
  
@@ -363,9 +363,9 @@
          }
          else {
              do{
-                 this.vx = random (-2, 2);
-                 this.vy = random(-2, 2);
-             }while (abs(this.vx) < 1);
+                 this.vx = random (-8, 8);
+                 this.vy = random(-8, 8);
+             }while (abs(this.vx) < 5);
          }
  
          if ((this.vx > 0 && this.px > windowWidth/2)||(this.vx < 0 && this.px < windowWidth/2)){
@@ -387,21 +387,20 @@
  
      show() {
          if (this.velocity != null) {
+ 
              // if it is a default fish
              if (this.donation < 0){
                  if (this.position.x > windowWidth/2){
-                    this.velocity.add(createVector(2*sin(millis()), 2*sin(millis()))); 
-                    /*if (random(-1,3) > 0)
-                         this.velocity.add(createVector(-2,-1));
+                     if (random(-1,1) > 0)
+                         this.velocity.add(createVector(-3,-1));
                      else
-                         this.velocity.add(createVector(1,3));*/
+                         this.velocity.add(createVector(1,3));
                  }
-                 else if (this.position.x > windowWidth/4){
-                    this.velocity.add(createVector(sin(millis()), sin(millis())));  
-                    /*if (random(-1,5) > 2)
-                         this.velocity.add(createVector(2,-1));
+                 else if (this.position.x > windowWidth/3){
+                     if (random(-1,1) > 0)
+                         this.velocity.add(createVector(-1,2));
                      else
-                         this.velocity.add(createVector(0,2));*/
+                         this.velocity.add(createVector(2,0));
                  }
              }
  
