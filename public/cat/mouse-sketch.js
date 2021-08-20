@@ -228,6 +228,10 @@
  
      if(defaultFish.checkHit()){
          defaultCaught = true;
+         splashSound.setVolume(1);
+         if (splashSound.isPlaying())
+             splashSound.stop();
+         splashSound.play();
          tempFishPosX = mouseX;
          tempFishPosY = mouseY;
          tempFishAngle = defaultFish.getAngle();
@@ -305,7 +309,7 @@
          this.position = createVector(this.px, this.py);
          this.velocity = createVector(0,0);
  
-         this.fishSize = windowWidth/4.5;
+         this.fishSize = windowWidth/4;
  
          this.angle = 0;
  
@@ -363,8 +367,8 @@
          }
          else {
              do{
-                 this.vx = random (-8, 8);
-                 this.vy = random(-8, 8);
+                 this.vx = random (-10, 10);
+                 this.vy = random(-10, 10);
              }while (abs(this.vx) < 5);
          }
  

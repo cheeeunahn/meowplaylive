@@ -135,7 +135,7 @@ function draw() {
         defaultFish.show();
         if(!defaultFish.isShowing()) {
             defaultFish.setToNewPosition();
-            bubbleSound.setVolume(0.1);
+            bubbleSound.setVolume(0.4);
             if (bubbleSound.isPlaying())
                 bubbleSound.stop();
             bubbleSound.play();
@@ -227,6 +227,10 @@ function touchEnded () {
 
     if(defaultFish.checkHit()){
         defaultCaught = true;
+        splashSound.setVolume(1);
+        if (splashSound.isPlaying())
+            splashSound.stop();
+        splashSound.play();
         tempFishPosX = mouseX;
         tempFishPosY = mouseY;
         tempFishAngle = defaultFish.getAngle();
@@ -304,7 +308,7 @@ class Fish {
         this.position = createVector(this.px, this.py);
         this.velocity = createVector(0,0);
 
-        this.fishSize = windowWidth/4.8;
+        this.fishSize = windowWidth/4;
 
         this.angle = 0;
 
@@ -365,9 +369,9 @@ class Fish {
         }
         else {
             do{
-                this.vx = random (-8, 8);
-                this.vy = random(-8, 8);
-            }while (abs(this.vx) < 4);
+                this.vx = random (-12, 12);
+                this.vy = random(-12, 12);
+            }while (abs(this.vx) < 5);
         }
 
         if ((this.vx > 0 && this.px > windowWidth/2)||(this.vx < 0 && this.px < windowWidth/2)){
