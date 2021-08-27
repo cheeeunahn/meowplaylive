@@ -38,12 +38,27 @@ export const LandingPage = () => {
             width: '100%',
             height: '100%'
         })}>
+            <img className={css({
+                opacity: 0.25,
+                zIndex: -1,
+                position: 'fixed',
+                resize: 'none',
+                left: -300,
+                top: -300,
+                width: '2000px',
+                height: '2000px'
+            })}
+                src="../viewer/assets/kitten2.jpg"
+                alt="">
+            </img>
             <CommonBox className={css({
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'absolute',
                 justifyContent: 'center',
                 alignItems:'center',
+                backgroundColor: 'white',
+                opacity: '0.88',
                 width: '40rem',
                 height: '16rem',
                 boxShadow: '1rem',
