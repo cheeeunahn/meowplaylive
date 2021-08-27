@@ -116,14 +116,16 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginBottom: '1rem'
+                    marginBottom: '1rem',
+                    marginTop: '1rem'
                 })}>
                     <span className={css({
-                        marginRight: '5rem'
+                        marginRight: '5rem',
+                        fontSize: '1.2rem'
                     })}>
-                        Select the amount of donation
+                        <b>Select the amount of donation
                         <br />
-                        You would like to make
+                        you would like to make</b>
                     </span>
                     <CommonCloseButton onClick={onClose} />
                 </div>
@@ -151,12 +153,13 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                     height: '3rem',
                     fontSize: '2rem',
                     fontWeight: 'bold',
-                    marginBottom: '1rem'
+                    marginBottom: '2rem',
+                    marginTop: '2rem'
                 })}>
-                    {numberToFormattedString(currentPoint)}
+                    {numberToFormattedString(currentPoint)} points
                 </div>
                 <CommonSlider
-                    sliderColor={commonColors.green}
+                    sliderColor={commonColors.purple}
                     showMark={false}
                     value={currentPointLevel}
                     max={10}
@@ -168,8 +171,9 @@ export const DonationDialog = ({ isOpen, onClose }: DonationDialogProps) => {
                     className={css({
                         display: 'block',
                         width: '12rem',
-                        marginTop: '0.5rem'
+                        marginTop: '0.5rem',
                     })}
+                    buttonColor= {commonColors.pink}
                     onClick={() => {
                         sendDonation();
                     }}

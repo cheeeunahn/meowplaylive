@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 
 import { StoreContext } from 'component/Store';
 import { Page } from 'component/Page';
-import { CommonButton, CommonInput } from 'component/Common';
+import { CommonButton, CommonInput, CommonBox } from 'component/Common';
 
 function parseVideoURL(url: string) {
     const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -15,7 +15,7 @@ const formStyle = css({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: '1rem'
+    marginBottom: '2rem'
 });
 
 const labelStyle = css({
@@ -26,56 +26,70 @@ const labelStyle = css({
 export const LandingPage = () => {
     const { setVideoID, setNickname, setPage } = useContext(StoreContext);
 
-    const [currentVideoURL, setCurrentVideoURL] = useState<string>('https://youtu.be/Qulvg_qLt8M');
+    const [currentVideoURL, setCurrentVideoURL] = useState<string>('');
     const [currentNickname, setCurrentNickname] = useState<string>('');
 
     return (
         <Page className={css({
             display: 'flex',
-            flexDirection: 'column',
+            //flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%',
             height: '100%'
         })}>
-            <div className={formStyle}>
-                <span className={labelStyle}>YouTube URL:</span>
-                <CommonInput
-                    value={currentVideoURL}
-                    onChange={value => {
-                        setCurrentVideoURL(value);
+            <CommonBox className={css({
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'absolute',
+                justifyContent: 'center',
+                alignItems:'center',
+                width: '40rem',
+                height: '16rem',
+                boxShadow: '1rem',
+            })}>
+                <div className={formStyle}>
+                    <span className={labelStyle}>YouTube URL</span>
+                    <CommonInput
+                        value={currentVideoURL}
+                        onChange={value => {
+                            setCurrentVideoURL(value);
+                        }}
+                    />
+                </div>
+                <div className={formStyle}>
+                    <span className={labelStyle}>Nickname</span>
+                    <CommonInput
+                        value={currentNickname}
+                        onChange={value => {
+                            setCurrentNickname(value);
+                        }}
+                    />
+                </div>
+                <CommonButton
+                    onClick={() => {
+                        const currentVideoID = parseVideoURL(currentVideoURL);
+
+                        if (currentVideoID === null) {
+                            alert('Please input a valid YouTube URL!');
+                            return;
+                        }
+
+                        if (currentNickname.length === 0) {
+                            alert('Please input a nickname!');
+                        }
+
+                        setVideoID(currentVideoID);
+                        setNickname(currentNickname);
+                        setPage('VideoPage');
                     }}
-                />
-            </div>
-            <div className={formStyle}>
-                <span className={labelStyle}>Nickname:</span>
-                <CommonInput
-                    value={currentNickname}
-                    onChange={value => {
-                        setCurrentNickname(value);
-                    }}
-                />
-            </div>
-            <CommonButton
-                onClick={() => {
-                    const currentVideoID = parseVideoURL(currentVideoURL);
-
-                    if (currentVideoID === null) {
-                        alert('Please input a valid YouTube URL!');
-                        return;
-                    }
-
-                    if (currentNickname.length === 0) {
-                        alert('Please input a nickname!');
-                    }
-
-                    setVideoID(currentVideoID);
-                    setNickname(currentNickname);
-                    setPage('VideoPage');
-                }}
-            >
-                Submit
-            </CommonButton>
+                    className={css({
+                        width: '32rem'
+                    })}
+                >
+                    🎥Enter Live Stream
+                </CommonButton>
+            </CommonBox>
         </Page>
     );
 };

@@ -85,6 +85,7 @@ export const RecorderView = ({ onSave }: Props) => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 width: '100%',
+                fontSize: '2rem',
                 visibility: (currentVoiceBlob || (mode === 'Record')) ? 'visible' : 'hidden'
             })}>
                 <div className={css({
@@ -106,7 +107,7 @@ export const RecorderView = ({ onSave }: Props) => {
                     )}
                 </div>
                 <CommonSlider
-                    sliderColor={commonColors.green}
+                    sliderColor={commonColors.purple}
                     showMark={false}
                     showThumb={false}
                     isReadonly={true}
@@ -116,7 +117,7 @@ export const RecorderView = ({ onSave }: Props) => {
             </div>
             <CommonButton
                 className={buttonStyle}
-                buttonColor={(mode === 'Record') ? commonColors.brown : commonColors.blue}
+                buttonColor={(mode === 'Record') ? commonColors.brown : commonColors.darkblue}
                 onClick={() => {
                     if (mode === 'Stop') {
                         startRecording(onStartRecording);
@@ -129,13 +130,14 @@ export const RecorderView = ({ onSave }: Props) => {
             </CommonButton>
             <CommonButton
                 className={buttonStyle}
+                buttonColor={commonColors.pink}
                 isDisabled={!currentVoiceBlob}
                 onClick={() => {
                     setVoiceBlob(currentVoiceBlob!!);
                     onSave();
                 }}
             >
-                Save recording
+                Save
             </CommonButton>
         </div>
     );

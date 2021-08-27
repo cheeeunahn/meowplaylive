@@ -8,6 +8,7 @@ import { Content } from 'component/content/Content';
 import { Header } from 'component/header/Header';
 import { LevelView } from 'component/level-view/LevelView';
 import { RankView } from 'component/rank-view/RankView';
+import zIndex from '@material-ui/core/styles/zIndex';
 
 
 export const App = () => {
@@ -20,14 +21,26 @@ export const App = () => {
                     width: '100%',
                     height: '100%'
                 })}>
+                    <img className={css({
+                        opacity: 0.25,
+                        zIndex: -1,
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        width: '100%',
+                        height: 'auto'
+                    })}
+                        src="./assets/kitten.jpg"
+                        alt="">
+                    </img>
                     <CommonBox className={css({
                         position: 'absolute',
                         top: 0,
                         left: 0,
                         width: '100%',
-                        height: '7rem',
+                        height: '10rem',
                         boxShadow: 'none',
-                        backgroundColor: commonColors.black
+                        backgroundColor: commonColors.purple
                     })}>
                         {/* Put nothing */}
                     </CommonBox>
@@ -41,17 +54,16 @@ export const App = () => {
                             display: 'flex',
                             flexDirection: 'row',
                             boxSizing: 'border-box',
-                            padding: '2rem',
+                            padding: '1rem',
                             flex: 1
                         })}>
                             <Content />
                             <div className={css({
                                 display: 'flex',
                                 flexDirection: 'column',
-                                width: '300px',
+                                width: '320px',
                                 marginLeft: '1rem'
                             })}>
-                                <LevelView />
                                 <RankView />
                             </div>
                         </div>

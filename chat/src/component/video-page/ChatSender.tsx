@@ -126,8 +126,8 @@ export const ChatSender = () => {
                     </div>
                     <CommonInput
                         className={css({
-                            /*width: '100%'*/
-                            width: '620px'
+                            width: '100%'
+                            /*width: '620px'*/
                         })}
                         variant={'standard'}
                         placeholder={'Say something...'}

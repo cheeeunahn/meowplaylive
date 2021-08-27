@@ -18,9 +18,9 @@ export const NicknameEditor = () => {
             <CommonInput
                 className={css([
                     {
-                        marginRight: '1rem',
+                        marginRight: '0.8rem',
                         '& .MuiInputBase-input': {
-                            color: isEditing ? commonColors.black : commonColors.white,
+                            color: isEditing ? commonColors.darkblue : commonColors.white,
                             zIndex: 100,
                             transition: 'color 0.5s'
                         },
@@ -31,8 +31,10 @@ export const NicknameEditor = () => {
                     },
                     !isEditing && {
                         '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: `${commonColors.white} !important`,
-                            borderWidth: '1px !important'
+                            //borderColor: `${commonColors.white} !important`,
+                            fontStyle: 'bold',
+                            borderWidth: '0px !important',
+                            backgroundColor: '#6030c2 !important'
                         }
                     }
                 ])}
@@ -47,14 +49,14 @@ export const NicknameEditor = () => {
                 className={css({
                     width: '6rem'
                 })}
-                buttonColor={commonColors.brown}
+                buttonColor={commonColors.darkblue}
                 isDisabled={!validateNickname(currentNickname)}
                 onClick={() => {
                     setNickname(currentNickname);
                     setEditing(!isEditing);
                 }}
             >
-                {isEditing ? 'Save' : 'Edit'}
+                {isEditing ? '💾Save' : '✏️Edit'}
             </CommonButton>
         </span>
     );

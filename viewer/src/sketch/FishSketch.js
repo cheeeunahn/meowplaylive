@@ -41,7 +41,7 @@ let bgColor;
 
 export function setup(Container) {
 
-    bgColor = color(255,255,255);
+    bgColor = color(245,245,245);
 
     // load font files - Nanum Square
     nanumFontLight = loadFont('./assets/NanumSquareL.ttf');
@@ -49,8 +49,8 @@ export function setup(Container) {
     nanumFontBold = loadFont('./assets/NanumSquareB.ttf');
     notoSansKRBlack = loadFont('./assets/NotoSansKR-Black.otf');
 
-    rectWidth = 1366 / 2;
-    rectHeight = 1024 / 2; // following ipad pro screen ratio 1366px x 1024px
+    rectWidth = 1366 / 1.5;
+    rectHeight = 1024 / 1.5; // following ipad pro screen ratio 1366px x 1024px
     rectPosX = 0; // the x position of the cat UI screen
     rectPosY = 0; // the y posiiton of the cat UI screen
 
@@ -130,11 +130,11 @@ export function draw() {
     drawCatUI();
 
     textFont(nanumFontRegular);
-    textSize(height/30);
+    textSize(height/35);
     textAlign(CENTER, RIGHT);
-    fill(0);
+    fill(20);
     noStroke();
-    text("[Cat Screen Viewer]", width/7, height/20);
+    text("[Cat Screen Viewer]", width/7, height/15);
 
     textFont(nanumFontBold);
     textSize(width/40);

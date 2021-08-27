@@ -21,14 +21,16 @@ export const RecorderDialog = ({ isOpen, onClose }: RecorderDialogProps) => (
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginBottom: '3rem'
+                marginBottom: '3rem',
+                marginTop: '1rem'
             })}>
                 <span className={css({
-                    marginRight: '5rem'
+                    marginRight: '5rem',
+                    fontSize: '1.2rem'
                 })}>
-                    Record a voice message!
+                    <b>Record a voice message!</b>
                     <br />
-                    You can record up to 10 seconds.
+                    (You can record up to 10 seconds.)
                 </span>
                 <CommonCloseButton onClick={onClose} />
             </div>

@@ -21,11 +21,12 @@ export const PointView = () => {
 
     return (
         <div className={css({
-            marginTop: '1rem'
+            color: commonColors.white,
+            fontSize: '1rem'
         })}>
             I have:&nbsp;
             <span className={css({
-                color: commonColors.green
+                color: commonColors.white
             })}>
                 <div
                     // Re-render the element when the point is changed to make the animation starting again.
@@ -35,9 +36,9 @@ export const PointView = () => {
                         animation: `${pointAnimation} 1 0.5s`
                     })}
                 >
-                    {numberToFormattedString(availablePoint)}
+                    <b>{numberToFormattedString(availablePoint)}</b>
                 </div>
-                &nbsp;Points
+                &nbsp;points
             </span>
         </div>
     );

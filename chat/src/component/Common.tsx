@@ -15,7 +15,8 @@ export const commonColors = {
     blue: '#2e588e',
     pink: '#f48fb1',
     green: '#0a7073',
-    white: '#e5e5e5'
+    white: '#e5e5e5',
+    darkblue: '#5664e8'
 };
 
 // Additional colors.
@@ -66,7 +67,7 @@ interface CommonButtonProps {
 }
 
 export const CommonButton = ({
-    buttonColor = commonColors.blue,
+    buttonColor = commonColors.darkblue,
     variant = 'contained',
     isDisabled = false,
     onClick,
@@ -153,6 +154,7 @@ interface CommonInputProps {
     onChange?: (value: string) => void;
     onKeyPress?: (key: string) => void;
     className?: string;
+    tabIndex?: number;
 }
 
 export const CommonInput = ({
@@ -164,11 +166,13 @@ export const CommonInput = ({
     isReadonly,
     onChange,
     onKeyPress,
+    tabIndex = -1,
     className
 }: CommonInputProps) => {
     const defaultStyle = css({
         fontFamily: 'inherit',
-        fontSize: 'inherit !important'
+        fontSize: 'inherit !important',
+        width: '25rem'
     });
 
     return (
@@ -188,6 +192,7 @@ export const CommonInput = ({
             onKeyPress={event => {
                 onKeyPress && onKeyPress(event.key);
             }}
+            tabIndex={tabIndex}
         />
     );
 };

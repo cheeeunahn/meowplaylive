@@ -21,23 +21,27 @@ export const PointView = () => {
 
     return (
         <div className={css({
-            marginBottom: '1rem'
+            marginBottom: '1rem',
+            alignItems: 'center',
+            textAlign: 'center',
+            fontSize: '1.5rem'
         })}>
             I have:&nbsp;
             <span className={css({
-                color: commonColors.green
+                color: commonColors.purple
             })}>
                 <div
                     // Re-render the element when the point is changed to make the animation starting again.
                     key={availablePoint}
                     className={css({
                         display: 'inline-block',
+                        fontWeight: 'bold',
                         animation: `${pointAnimation} 1 0.5s`
                     })}
                 >
                     {numberToFormattedString(availablePoint)}
                 </div>
-                &nbsp;Points
+                &nbsp;points
             </span>
         </div>
     );

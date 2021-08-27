@@ -13,7 +13,7 @@ export const Clock = ({ time }: Props) => {
     return (
         <div className={css({
             height: '3rem',
-            fontSize: '2rem',
+            fontSize: '2.5rem',
             fontWeight: 'bold'
         })}>
             {minuteString}:{secondString}

@@ -17,7 +17,8 @@ const rankerStyle = css({
     display: 'flex',
     flexDirection: 'row',
     boxSizing: 'border-box',
-    marginBottom: '0.5rem',
+    marginTop: '1.1rem',
+    //marginBottom: '0.5rem',
     paddingLeft: '1rem',
     paddingRight: '1rem',
     animation: `${rankerAnimation} 1 1s`
@@ -33,8 +34,11 @@ const highRankerStyle = (rank: number) => css([rankerStyle, {
     borderRadius: '0.5rem',
     paddingTop: '1rem',
     paddingBottom: '1rem',
+    marginBottom: '0.8rem',
     color: '#ffffff',
-    backgroundColor: highRankerColors[rank]
+    backgroundColor: highRankerColors[rank],
+    fontStyle: 'bold',
+    boxShadow: '3px 3px 1px grey'
 }]);
 
 export const RankView = () => {
@@ -65,16 +69,18 @@ export const RankView = () => {
     return (
         <CommonBox className={css({
             flex: 1,
-            marginTop: '1rem'
+            backgroundColor: 'white',
+            opacity: 0.9
+            //marginTop: '1rem'
         })}>
             <div className={css({
                 textAlign: 'center',
                 width: '100%',
-                marginBottom: '1rem',
-                fontSize: '1.2rem',
+                marginBottom: '1.9rem',
+                fontSize: '1.45rem',
                 fontWeight: 'bold'
             })}>
-                DONATION LEADERBOARD
+                Donation Leaderboard
             </div>
             {sortedDonationSums.filter((item, index) => (index < 15)).map(({ nickname, donation }, index) => (
                 // If the ranking (= index) of the user is changed, draw this div again and show the simple animation.
@@ -83,7 +89,7 @@ export const RankView = () => {
                     (index < highRankerColors.length) && highRankerStyle(index)
                 ])}>
                     <span className={css({ width: '2rem' })}>{index + 1}</span> {nickname}
-                    {(index < highRankerColors.length) && <i className={cx('fa', 'fa-trophy', css({ marginLeft: 'auto' }))} />}
+                    {(index < highRankerColors.length) && <i className={cx('fa', 'fa-star', css({ marginLeft: 'auto' }))} />}
                 </div>
             ))}
         </CommonBox>

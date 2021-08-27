@@ -13,27 +13,33 @@ export const Header = () => (
         alignItems: 'flex-end',
         boxSizing: 'border-box',
         width: '100%',
-        height: '7rem',
+        height: '10rem',
+        paddingRight: '1rem',
         paddingBottom: '1.2rem',
         boxShadow: 'none',
         color: commonColors.white,
-        backgroundColor: commonColors.black
+        backgroundColor: commonColors.purple
     })}>
         <div>
             <div className={css({
-                fontSize: '2rem'
+                fontSize: '3rem', 
+                fontWeight: 'bold',
+                letterSpacing: '0.02rem'
             })}>
-                MeowPlayLive
+                MeowPlayLive🐈
             </div>
-            <div>
-                Play with a cat and win a chance to get heard!
+            <div className={css({
+                marginTop: '0.3rem',
+                fontWeight: 'lighter',
+                letterSpacing: '0.05rem'
+            })}>
+                Play with the cat and win a chance to get heard!
             </div>
         </div>
         <div className={css({
             marginLeft: 'auto' // Align right.
         })}>
             <NicknameEditor />
-            <ExitButton />
         </div>
     </CommonBox>
 );

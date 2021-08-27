@@ -19,23 +19,25 @@ export const Content = () => {
             display: 'flex',
             flexDirection: 'column',
             width: '720px',
-            maxWidth: '100%'
+            maxWidth: '100%',
+            padding: '1.5rem',
+            backgroundColor: 'white',
+            opacity: 0.9
         })}>
-            <PointView />
-            <CatScreen />
             <div className={css({
                 display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between'
+                flexDirection: 'column',
+                justifyContent: 'right',
+                alignItems: 'flex-end'
             })}>
                 <CommonButton
                     className={css({
                         display: 'flex',
-                        flex: '0.5',
-                        alignItems: 'baseline',
-                        marginRight: '2rem'
+                        flex: '0.2',
+                        marginRight: '0.5rem',
+                        marginBottom: '1rem'
                     })}
-                    buttonColor={commonColors.blue}
+                    buttonColor={commonColors.darkblue}
                     onClick={() => {
                         if (nickname.length === 0) {
                             alert('Please set your nickname.');
@@ -44,11 +46,23 @@ export const Content = () => {
                         }
                     }}
                 >
-                    <i className='fa fa-circle' />&nbsp;Record new message
+                    <i className='fa fa-circle' />&nbsp;Record
                 </CommonButton>
+            </div>
+            <CatScreen />
+            <div>
+                <PointView />
+            </div>
+            <div className={css({
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between'
+            })}>
                 <CommonButton
                     className={css({
-                        flex: '0.5'
+                        flex: '1',
+                        fontSize: '1.3rem',
+                        height: '4rem'
                     })}
                     buttonColor={commonColors.pink}
                     isDisabled={!voiceBlob}
@@ -56,7 +70,7 @@ export const Content = () => {
                         setDonationDialogOpen(true);
                     }}
                 >
-                    🐱 Send to cat
+                    <i className="fa fa-paw"></i>&nbsp;Send to cat
                 </CommonButton>
             </div>
             <RecorderDialog

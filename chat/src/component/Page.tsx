@@ -8,9 +8,9 @@ interface Props {
 
 export const Page = ({ className, children }: Props) => (
     <div className={css([{
-        /*width: '100%'*/
-        width: '760px',
-        flex: 1
+        width: '100%',
+        /*width: '760px'*/
+        flex: 1,
     }, className])}>
         {children}
     </div>

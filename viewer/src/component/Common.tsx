@@ -11,11 +11,13 @@ import { css } from '@emotion/css';
 // Basic colors.
 export const commonColors = {
     black: '#3c4449',
+    purple: '#9d6ffc',
     brown: '#824a48',
     blue: '#2e588e',
-    pink: '#f48fb1',
+    pink: '#ff9cee',
     green: '#0a7073',
-    white: '#e5e5e5'
+    white: '#e5e5e5',
+    darkblue: '#5664e8'
 };
 
 // Additional colors.
@@ -39,7 +41,7 @@ export const CommonBox = ({ className, children }: CommonBoxProps) => {
     return (
         <Box
             className={css([defaultStyle, className])}
-            boxShadow={3}
+            boxShadow={2}
         >
             {children}
         </Box>
@@ -187,7 +189,7 @@ interface CommonSliderProps {
 }
 
 export const CommonSlider = ({
-    sliderColor = commonColors.blue,
+    sliderColor = commonColors.darkblue,
     showMark = true,
     showThumb = true,
     isReadonly = false,
@@ -263,13 +265,13 @@ interface CommonCloseButtonProps {
 export const CommonCloseButton = ({ onClick }: CommonCloseButtonProps) => (
     <CommonIconButton
         className={css({
-            fontSize: '1.5rem',
+            fontSize: '2rem',
             width: '3rem',
             height: '3rem'
         })}
         onClick={onClick}
     >
-        X
+        <i className="fa fa-times-circle"></i>
     </CommonIconButton>
 );
 
@@ -280,7 +282,7 @@ interface CommonPlayButtonProps {
     onClick?: () => void;
 }
 
-export const CommonPlayButton = ({ mode, size = '3rem', fontSize = '1.5rem', onClick }: CommonPlayButtonProps) => (
+export const CommonPlayButton = ({ mode, size = '4rem', fontSize = '2rem', onClick }: CommonPlayButtonProps) => (
     <CommonIconButton
         className={css({
             width: size,
@@ -288,7 +290,7 @@ export const CommonPlayButton = ({ mode, size = '3rem', fontSize = '1.5rem', onC
             fontSize: fontSize,
             lineHeight: fontSize
         })}
-        buttonColor={commonColors.green}
+        buttonColor={commonColors.purple}
         onClick={onClick}
     >
         {(mode === 'Play') ? <i className="fa fa-play" /> : <i className="fa fa-stop" />}
