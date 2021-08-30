@@ -14,8 +14,8 @@ export const VideoWidget = () => {
                 marginRight: '1rem',
                 marginBottom: '1rem'
             })}
-            width="820"
-            height="575"
+            width="100%"
+            height="55%"
             frameBorder="0"
             allowFullScreen={true}
             src={`https://www.youtube.com/embed/${videoID}`}

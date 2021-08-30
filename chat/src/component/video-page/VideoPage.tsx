@@ -21,8 +21,13 @@ export const VideoPage = () => (
             <PointView />
         </CommonBox>
         <div className={css({
-            position: 'absolute',
-            marginTop: '5rem'
+            /*position: 'absolute',*/
+            display: 'flex',
+            flexDirection: 'column',
+            marginTop: '4rem',
+            width: '100vw',
+            height: '91vh',
+            maxWidth: '55rem'
         })}>
             <VideoWidget />
             <ChatWidget />

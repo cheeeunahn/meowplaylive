@@ -27,8 +27,8 @@ export const App = () => {
                         position: 'absolute',
                         left: 0,
                         top: 0,
-                        width: '100%',
-                        height: 'auto'
+                        width: '120%',
+                        height: '120%'
                     })}
                         src="./assets/kitten.jpg"
                         alt="">

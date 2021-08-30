@@ -9,14 +9,17 @@ export const ChatWidget = () => {
     return (
         <div className={css({
             display:'inline-flex',
-            position: 'absolute'
+            width: '100%',
+            height: '38%'
+            /*position: 'absolute'*/
             /*resize: 'none',*/
         })}>
             <CommonBox className={css({
                 display: 'inline-flex',
                 flexDirection: 'column',
-                width: '30rem',
-                height:'575px',
+                width:'100%',
+                /*width: '30rem',*/
+                /*height:'575px',*/
                 /*height: '20rem',*/
                 padding: '0'
             })}>
