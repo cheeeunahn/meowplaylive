@@ -69,7 +69,7 @@
      addScreenPositionFunction();
  
      //play background sound
-     waterSound.setVolume(0.2);
+     waterSound.setVolume(0.1);
      waterSound.loop();
  
      rippleRadius = 1;
@@ -93,7 +93,7 @@
      socket.on('button-clicked', drawFish);
 
     window.setInterval(() => {
-        bubbleSound.setVolume(0.3);
+        bubbleSound.setVolume(0.2);
         if (bubbleSound.isPlaying())
             bubbleSound.stop();
         bubbleSound.play();

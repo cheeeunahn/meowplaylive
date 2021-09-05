@@ -152,7 +152,7 @@ function draw() {
         tempFishPosY = mouseY;
         rotate(tempFishAngle);
         imageMode(CENTER);
-        image(tempFish, 0, 0, windowWidth/2.5, windowWidth/2.5);
+        image(tempFish, 0, 0, windowWidth/2.3, windowWidth/2.3);
         pop();
     }
 
@@ -308,7 +308,7 @@ class Fish {
         this.position = createVector(this.px, this.py);
         this.velocity = createVector(0,0);
 
-        this.fishSize = windowWidth/4;
+        this.fishSize = windowWidth/3.8;
 
         this.angle = 0;
 
