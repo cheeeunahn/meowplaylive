@@ -334,7 +334,7 @@ class Fish {
         this.voiceFileName = null;
         this.voiceSound = null;
 
-        this.fishMoveRandom = random(-1.5,1.5);
+        this.fishMoveRandom = random(-2.5,2.5);
     }
 
     setToNewPosition() {
@@ -369,8 +369,8 @@ class Fish {
         }
         else {
             do{
-                this.vx = random (-12, 12);
-                this.vy = random(-12, 12);
+                this.vx = random (-14, 14);
+                this.vy = random(-14, 14);
             }while (abs(this.vx) < 5);
         }
 

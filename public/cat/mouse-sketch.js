@@ -367,8 +367,8 @@
          }
          else {
              do{
-                 this.vx = random (-10, 10);
-                 this.vy = random(-10, 10);
+                 this.vx = random (-11, 11);
+                 this.vy = random(-11, 11);
              }while (abs(this.vx) < 5);
          }
  
