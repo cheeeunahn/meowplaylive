@@ -334,7 +334,7 @@ class Fish {
         this.voiceFileName = null;
         this.voiceSound = null;
 
-        this.fishMoveRandom = random(-2.5,2.5);
+        this.fishMoveRandom = random(-2, 2);
     }
 
     setToNewPosition() {
@@ -358,8 +358,8 @@ class Fish {
 
 
         if (this.donation >= 10000){
-            this.vx = random(7,9);
-            this.vy = random(7,9);
+            this.vx = random(7,10);
+            this.vy = random(7,10);
         }
         else if (this.donation > 0) {
             do{
@@ -369,8 +369,8 @@ class Fish {
         }
         else {
             do{
-                this.vx = random (-14, 14);
-                this.vy = random(-14, 14);
+                this.vx = random (-13, 13);
+                this.vy = random(-13, 13);
             }while (abs(this.vx) < 5);
         }
 
